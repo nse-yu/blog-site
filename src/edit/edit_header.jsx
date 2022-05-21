@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { utilSet } from "../../../css/util_css"
-import { headerSet } from "../../../css/header/header_css"
+import { utilSet } from "../css/util_css"
+import { headerSet } from "../css/header/header_css"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
 

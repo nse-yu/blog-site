@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { useResource } from "../../../components/ResourceProvider";
-import EditHeader from "../header/header";
+import { useResource } from "../../src/components/ResourceProvider";
+import EditHeader from "./edit_header";
 
 export default function EditTop() {
     const {headerInfo,height,headerHeight} = useResource()

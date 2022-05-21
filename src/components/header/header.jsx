@@ -6,6 +6,7 @@ import { useResource } from "../ResourceProvider"
 import { motion } from "framer-motion"
 import { navSet } from "../../css/navigation/nav_css"
 import { useEffect } from "react"
+import { Link } from "react-router-dom"
 
 
 export default function Header({info,setheight}) {
@@ -54,23 +55,25 @@ export default function Header({info,setheight}) {
                         </a>
                     </div>
                     <div className="header-up__edit">
-                        <motion.svg
-                            width="34"
-                            height="34"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#ffffff"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            initial={{opacity:1}}
-                            whileHover={{opacity:0.6}}
-                        >
-                            <path
-                                d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"
-                            />
-                            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-                        </motion.svg>
+                        <Link to="/edit">
+                            <motion.svg
+                                width="34"
+                                height="34"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#ffffff"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                initial={{opacity:1}}
+                                whileHover={{opacity:0.6}}
+                            >
+                                <path
+                                    d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"
+                                />
+                                <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
+                            </motion.svg>
+                        </Link>
                     </div>
                 </div>
                 <div className="header-down" css={headerSet.header_down}>
