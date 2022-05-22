@@ -5,6 +5,10 @@ const verticalize = css`
     flex-direction:column;
     justify-content:space-between;
 `
+const horizontalize = css`
+    display:flex;
+    justify-content:space-between;
+`
 const head_foot_opacity = css`
     opacity:1
 `
@@ -12,5 +16,6 @@ const head_foot_opacity = css`
 
 export const utilSet = {
     verticalize,
+    horizontalize,
     head_foot_opacity
 }

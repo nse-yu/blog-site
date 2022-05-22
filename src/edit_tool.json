@@ -1,0 +1,22 @@
+[
+    {
+        "id":1,
+        "tool":"t",
+        "markdown":"<polyline points='4 7 4 4 20 4 20 7'></polyline><line x1='9' y1='20' x2='15' y2='20'></line><line x1='12' y1='4' x2='12' y2='20'></line>"
+    },
+    {
+        "id":2,
+        "tool":"b",
+        "markdown":"<path d='M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'></path><path d='M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'></path>"
+    },
+    {
+        "id":3,
+        "tool":"l",
+        "markdown":"<path d='M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3'></path><line x1='4' y1='21' x2='20' y2='21'></line>"
+    },
+    {
+        "id":4,
+        "tool":"i",
+        "markdown":"<path d='M19 4h-9M14 20H5M14.7 4.7L9.2 19.4'/>"
+    }
+]

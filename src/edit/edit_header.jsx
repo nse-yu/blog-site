@@ -18,13 +18,14 @@ export default function EditHeader({info,setheight}) {
             css={[
                 headerSet.header_all,
                 utilSet.verticalize,
-                utilSet.head_foot_opacity
+                utilSet.head_foot_opacity,
+                headerSet.header___minimize
             ]}
             ref={info}>
                 <div className="header-up" css={headerSet.header_up_all}>
                     <div className="header-up__logo">
                         <a href="/">
-                            <svg width="400px" height="50px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="250px" height="30px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">
                                 <motion.path
                                     d="
                                     M 10 80 V 10 L 60 80 V 10

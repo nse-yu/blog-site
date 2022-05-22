@@ -1,5 +1,6 @@
 import { css } from "@emotion/react"
 
+//===============base properties==============//
 const header_all = css`
     position: fixed;
     top:0;
@@ -21,10 +22,15 @@ const header_up_all = css`
     align-items:center;
 `
 
+//===============custom properties===============//
+const header___minimize = css`
+    padding:0.5rem 0.5rem 0 0.5rem;
+`
 
 export const headerSet = {
     header_all,
     header_down,
     header_up_all,
+    header___minimize,
     header__test
 }

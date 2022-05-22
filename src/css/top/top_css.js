@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 const top_all = css`
     display:flex;
     justify-content:space-between;
+    gap:2rem;
     background:linear-gradient(#000000,white);
     border-radius:5px;
     padding:1rem;
