@@ -24,6 +24,7 @@ export default function Top() {
         })
             .then(res => res.json())
             .then(res_json => setArticles(res_json))
+            .then(console.log)
             .catch(console.error)
     },[])
 
@@ -42,7 +43,7 @@ export default function Top() {
                 >
                 {
                     Object.keys(articles).map(key => (
-                        <Card key={key} title={articles[key].title} imgURL={articles[key].imgURL}/>
+                        <Card key={key} title={articles[key].title} desc={articles[key].desc} imgURL={articles[key].imgURL}/>
                     ))
                 }
                 </section>

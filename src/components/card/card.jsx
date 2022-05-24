@@ -3,8 +3,8 @@ import { jsx,css } from "@emotion/react"
 import { cardSet } from "../../css/card/card_css"
 import {motion} from "framer-motion"
 
-export default function Card({title,imgURL}) {
-    console.log(imgURL)
+export default function Card({title,desc,imgURL}) {
+    console.log("url: ",imgURL)
     return (
         <>
             <motion.article 
@@ -19,10 +19,16 @@ export default function Card({title,imgURL}) {
                             css={[
                                 cardSet.card_img
                             ]}
-                            src={`http://localhost:8080/img/${imgURL}`} 
+                            src={`http://localhost:8080/img/${encodeURI(imgURL)}`} 
                             alt={title} 
                         />
-                        <figcaption css={{color:"white",padding:5}}>{title}</figcaption>
+                        <div css={cardSet.card_text}>
+                            <figcaption><h3>{title}</h3></figcaption>
+                            <p 
+                                className="card_text___toDesc"
+                                css={cardSet.card_text___toDesc}
+                            >{desc}</p>
+                        </div>
                     </figure>
                 </a>
             </motion.article>

@@ -4,9 +4,10 @@ import { utilSet } from "../css/util_css"
 import { headerSet } from "../css/header/header_css"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
+import { btnSet } from "../css/button/btn_css"
 
 
-export default function EditHeader({info,setheight}) {
+export default function EditHeader({info,setheight,reset,submit}) {
     useEffect(() => {
         //ヘッダー高さを取得し、マージン調整
         setheight(info.current.getBoundingClientRect().height)
@@ -15,13 +16,14 @@ export default function EditHeader({info,setheight}) {
     return (
         <>
             <header 
-            css={[
-                headerSet.header_all,
-                utilSet.verticalize,
-                utilSet.head_foot_opacity,
-                headerSet.header___minimize
-            ]}
-            ref={info}>
+                css={[
+                    headerSet.header_all,
+                    utilSet.verticalize,
+                    utilSet.head_foot_opacity,
+                    headerSet.header___minimize
+                ]}
+                ref={info}
+            >
                 <div className="header-up" css={headerSet.header_up_all}>
                     <div className="header-up__logo">
                         <a href="/">
@@ -44,6 +46,20 @@ export default function EditHeader({info,setheight}) {
                                 />
                             </svg>
                         </a>
+                    </div>
+                    <div className="header-up__edit-options" css={utilSet.horizontalize}>
+                        <motion.div className="btn btn__reset"
+                            css={[btnSet.btn,btnSet.btn___reset]}
+                            whileHover={{opacity:0.5}}
+                        >
+                            <button onClick={reset}>破棄</button>
+                        </motion.div>
+                        <motion.div className="btn btn__submit"
+                            css={[btnSet.btn,btnSet.btn___submit]}
+                            whileHover={{opacity:0.5}}
+                        >
+                            <button onClick={submit}>投稿</button>
+                        </motion.div>
                     </div>
                 </div>
             </header>

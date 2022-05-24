@@ -12,12 +12,24 @@ const card_wrapper = css`
         text-decoration:none;
     }
 `
+//===============for img==============//
 const card_img = css`
     width:100%;
     height:50%;
     object-fit:cover;
     border-radius:5px;
 `
+
+//=============for caption=============//
+const card_text = css`
+    padding:0.5rem;
+    color:white;
+`
+const card_text___toDesc = css`
+    color:gray;
+`
+
+
 //===============test props===============//
 const card_test = css`
     width:100px;
@@ -27,5 +39,7 @@ const card_test = css`
 export const cardSet = {
     card_wrapper,
     card_img,
+    card_text___toDesc,
+    card_text,
     card_test
 }

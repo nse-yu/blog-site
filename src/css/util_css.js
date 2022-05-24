@@ -8,14 +8,35 @@ const verticalize = css`
 const horizontalize = css`
     display:flex;
     justify-content:space-between;
+    gap:1rem;
 `
 const head_foot_opacity = css`
     opacity:1
+`
+const horizontalize___left = css`
+    justify-content:flex-start;
+`
+const horizontalize___right = css`
+    justify-content:flex-end;
+`
+const horizontalize___center = css`
+    justify-content:center;
+`
+const horizontalize__align = css`
+    align-items:center;
+`
+const verticalize___center = css`
+    align-items:center;
 `
 
 
 export const utilSet = {
     verticalize,
     horizontalize,
-    head_foot_opacity
+    head_foot_opacity,
+    verticalize___center,
+    horizontalize___center,
+    horizontalize__align,
+    horizontalize___left,
+    horizontalize___right
 }
