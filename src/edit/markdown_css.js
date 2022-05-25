@@ -1,11 +1,17 @@
 import { css } from "@emotion/react"
 
 const markdown_styles = css`
-    margin-left:15px;
+    padding:1rem;
     h1,h2,h3,h4,h5,h6{
         border-left:8px solid black;
+        border-bottom:1px solid black;
+        margin:0.5rem 0;
+        margin-top:1rem;
         padding:0.5rem;
     };
+    ul,ol{
+        margin-left:2rem;
+    }
     table{
         border-spacing:0;
         border-collapse:"collapse";

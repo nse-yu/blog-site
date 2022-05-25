@@ -4,33 +4,22 @@ import Footer from "../footer/footer"
 import Header from "../header/header"
 import { topSet } from "../../css/top/top_css"
 import ResourceProvider, { useResource } from "../ResourceProvider"
-import { useState } from "react"
-import { useEffect } from "react"
 import Card from "../card/card"
 import { utilSet } from "../../css/util_css"
+import { useEffect } from "react"
 
 export default function Top() {
     //=============imported props============//
-    const {headerInfo,height,headerHeight} = useResource()
+    const {height,articles,side,resetCurrentArticle} = useResource()
 
-    //================tab state===============//
-    const [articles,setArticles] = useState({})
-    const side = ["side1","side2","side3","side4","side5"]
-
-    //=============マウント時に記事取得==============//
+    //==========マウント時の初期化==========//
     useEffect(() => {
-        fetch(`http://localhost:8080/article/all`,{
-            mode:"cors"
-        })
-            .then(res => res.json())
-            .then(res_json => setArticles(res_json))
-            .then(console.log)
-            .catch(console.error)
-    },[])
+        resetCurrentArticle()
+    })
 
     return (
         <>
-            <Header info={headerInfo} setheight={headerHeight}/>
+            <Header />
             <main css={[
                 topSet.top_all,
                 {marginTop:height}
@@ -38,23 +27,26 @@ export default function Top() {
                 <section
                     className="top_cards"
                     css={[
-                        topSet.top_grid_article
+                        topSet.top_cards
                     ]}
                 >
                 {
                     Object.keys(articles).map(key => (
-                        <Card key={key} title={articles[key].title} desc={articles[key].desc} imgURL={articles[key].imgURL}/>
+                        <Card key={key} article={articles[key]} />
                     ))
                 }
                 </section>
                 <aside css={topSet.top_side_all}>
                     <nav
-                        css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
+                        css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el,utilSet.horizontalize___left]}
                     >
+                        <div>
+                            <h3>おすすめサイト</h3>
+                        </div>
                         <ul>
                             {
                                 side.map((item,idx) => (
-                                    <li>{item}</li>
+                                    <li key={idx}>{item}</li>
                                 ))
                             }
                         </ul>
@@ -63,7 +55,7 @@ export default function Top() {
                         css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
                     >
                         <ul>
-                            
+                            <li><a className="twitter-timeline" href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw">Tweets by nagachon0000</a> <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script></li>
                         </ul>
                     </nav>
                 </aside>

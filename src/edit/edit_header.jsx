@@ -7,7 +7,7 @@ import { useEffect } from "react"
 import { btnSet } from "../css/button/btn_css"
 
 
-export default function EditHeader({info,setheight,reset,submit}) {
+export default function EditHeader({info,setheight,open,reset,submit}) {
     useEffect(() => {
         //ヘッダー高さを取得し、マージン調整
         setheight(info.current.getBoundingClientRect().height)
@@ -48,6 +48,12 @@ export default function EditHeader({info,setheight,reset,submit}) {
                         </a>
                     </div>
                     <div className="header-up__edit-options" css={utilSet.horizontalize}>
+                        <motion.div className="btn btn__open"
+                            css={[btnSet.btn,btnSet.btn___reset]}
+                            whileHover={{opacity:0.5}}
+                        >
+                            <button onClick={open}>開く</button>
+                        </motion.div>
                         <motion.div className="btn btn__reset"
                             css={[btnSet.btn,btnSet.btn___reset]}
                             whileHover={{opacity:0.5}}

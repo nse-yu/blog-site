@@ -36,6 +36,8 @@ const card_test = css`
     height:300px;
 `
 
+//===============for cards==============//
+
 export const cardSet = {
     card_wrapper,
     card_img,

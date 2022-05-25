@@ -9,12 +9,12 @@ import { useEffect } from "react"
 import { Link } from "react-router-dom"
 
 
-export default function Header({info,setheight}) {
-    const {tabs_json,onTabSelected,activeTab} = useResource()
+export default function Header() {
+    const {headerInfo,headerHeight,tabs_json,onTabSelected,activeTab} = useResource()
 
     useEffect(() => {
         //ヘッダー高さを取得し、マージン調整
-        setheight(info.current.getBoundingClientRect().height)
+        headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
 
     //================callbacks==================//
@@ -30,7 +30,7 @@ export default function Header({info,setheight}) {
                 utilSet.verticalize,
                 utilSet.head_foot_opacity
             ]}
-            ref={info}>
+            ref={headerInfo}>
                 <div className="header-up" css={headerSet.header_up_all}>
                     <div className="header-up__logo">
                         <a href="/">

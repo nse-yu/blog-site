@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css, ClassNames } from "@emotion/react"
+import { jsx,css } from "@emotion/react"
 import { useResource } from "../../src/components/ResourceProvider";
 import { topSet } from "../css/top/top_css";
 import { utilSet } from "../css/util_css";
@@ -14,21 +14,38 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useReducer } from "react";
 import { markdownSet } from "./markdown_css";
+import { FetchArticles } from "../components/cards/FetchArticles";
+import Cards from "../components/cards/Cards";
+import { useLayoutEffect } from "react";
 
 export default function EditTop() {
-    const {headerInfo,height,headerHeight} = useResource()
+    const {headerInfo,height,headerHeight,article} = useResource()
     const ref = useRef() //innerTextで挿入するのに必要
+    let unique_id = article ? article.articleID : "" //TODO:投稿済みの記事を読み込んだ際に保持される識別id
 
     //TODO:when window are reloading
     useEffect(() => {
+        console.log("[effect]: ",article)
+
         window.onbeforeunload = e => {
             e.returnValue = "更新しますか"
             return "更新しますか"
         }
     })
+    
+    //TODO:layouteffect executed before rendering
+    useLayoutEffect(() => {
+        if(!article) return
+        setForm({title:article.title,desc:article.desc,img:{}}) 
+        setMarkdown(article.content)
+
+        console.log("[layout]: ",article)
+    },[article])
 
     //TODO:admin form values
-    const [form,setForm] = useReducer((form,latest) => ({...form,...latest}),{title:"",desc:"",img:{}})
+    const [form,setForm] = useReducer(
+        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{}}
+    )
     const formChanged = e => {
         if(e.target.name === "form_title") {
             setForm({title:e.target.value})
@@ -40,10 +57,18 @@ export default function EditTop() {
         } 
         setForm({img:e.target.files[0]})
     }
-    
+
+    //TODO:open states
+    const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
+    useEffect(() => {
+        if(!article) return
+        setIsOpen(false)
+
+        console.log("[effect]: isOpen changed")
+    },[article])
 
     //TODO:markdown states
-    const [markdown,setMarkdown] = useState("") //HACK:state of markdown text
+    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
     const textareaChanged = e => {
         setMarkdown(() => e.target.value)
     }
@@ -55,6 +80,7 @@ export default function EditTop() {
     const [tool,setTool] = useState({}) //HACK:state of item clicked
     const appear = e => {
         setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
+        setMarkdown(() => markdown + e.target.dataset.helper)
         setIshover(true) //FIXME
     }
     const cancel = () => {
@@ -72,15 +98,20 @@ export default function EditTop() {
     }
 
     //TODO:callbacks for the edit_header
+    const toggleHidden = () => {
+        setIsOpen(!isOpen)
+    }
     const onResetClicked = () => {
         if(!window.confirm("変更を破棄しますか？")) return
         setMarkdown("")
     }
     const onSubmitClicked = () => {
         if(!window.confirm("投稿しますか？")) return
+        console.log("u-id",unique_id)
 
         const data = new FormData()
         data.append("img",form.img)
+        data.append("articleID",unique_id)
         data.append("title",form.title)
         data.append("desc",form.desc)
         data.append("markdown",markdown)
@@ -101,11 +132,47 @@ export default function EditTop() {
 
     return (
         <>
-            <EditHeader info={headerInfo} setheight={headerHeight} reset={onResetClicked} submit={onSubmitClicked}/>
+        {console.log("[render]",article)}
+            <EditHeader info={headerInfo} setheight={headerHeight} open={toggleHidden} reset={onResetClicked} submit={onSubmitClicked}/>
             <main css={{marginTop:height}}>
                 <section className="top-all" css={[
                     utilSet.verticalize
-                ]}>
+                ]}> 
+                    { isOpen &&
+                        <motion.div 
+                            className="open__hidden"
+                            css={[
+                                utilSet.verticalize,
+                                topSet.top_open_hidden
+                            ]}
+                            layout
+                            initial={{x:-700,opacity:0}}
+                            animate={{x:0,opacity:1}}
+                            transition={{duration:0.6,delay:0.2}}
+                        >
+                            <button
+                                onClick={toggleHidden}
+                            >
+                                <motion.svg 
+                                    whileHover={{scale:1.3,stroke:"red"}}
+                                    width="50" 
+                                    height="50" 
+                                    viewBox="0 0 50 50"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    stroke="white"
+                                >
+                                    <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
+                                </motion.svg>
+                            </button>
+                            <div 
+                                className="hidden_cards_list"
+                                css={[editSet.scrollbar_style]}
+                            >
+                                <Cards grid={false} edit={true}/>
+                            </div>
+                        </motion.div>
+                    }
                     <div className="notes" css={[
                         utilSet.horizontalize,
                         topSet.top_all,
@@ -138,6 +205,7 @@ export default function EditTop() {
                                                 className="tools-element"
                                                 data-tool={item.tool}
                                                 data-desc={item.desc}
+                                                data-helper={item.helper}
                                                 key={index}
                                                 style={editSet.edit_element}
                                                 whileHover={{scale:1.15,opacity:0.3}}

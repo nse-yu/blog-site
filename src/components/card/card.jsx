@@ -2,9 +2,12 @@
 import { jsx,css } from "@emotion/react"
 import { cardSet } from "../../css/card/card_css"
 import {motion} from "framer-motion"
+import { Link } from "react-router-dom"
+import LoadedImg from "../img/Img"
+import { useResource } from "../ResourceProvider"
 
-export default function Card({title,desc,imgURL}) {
-    console.log("url: ",imgURL)
+export default function Card({article,edittable=false}) {
+    const {setCurrentArticle} = useResource()
     return (
         <>
             <motion.article 
@@ -13,24 +16,27 @@ export default function Card({title,desc,imgURL}) {
                     cardSet.card_wrapper
                 ]}
             >
-                <a href="" css={{height:"100%"}}>
+                <Link 
+                    to={edittable ? `/edit` : `/article`} 
+                    css={{height:"100%"}} 
+                    onClick={() => {setCurrentArticle(article)}}
+                >
                     <figure css={{height:"inherit"}}>
-                        <img 
-                            css={[
+                        <LoadedImg
+                            style_css={[
                                 cardSet.card_img
                             ]}
-                            src={`http://localhost:8080/img/${encodeURI(imgURL)}`} 
-                            alt={title} 
+                            url={article.imgURL} 
                         />
                         <div css={cardSet.card_text}>
-                            <figcaption><h3>{title}</h3></figcaption>
+                            <figcaption><h3>{article.title}</h3></figcaption>
                             <p 
                                 className="card_text___toDesc"
                                 css={cardSet.card_text___toDesc}
-                            >{desc}</p>
+                            >{article.desc}</p>
                         </div>
                     </figure>
-                </a>
+                </Link>
             </motion.article>
         </>
     )

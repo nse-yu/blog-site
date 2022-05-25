@@ -29,7 +29,7 @@ const edit_note_tools = css`
 `
 const scrollbar_style = css`
     overflow-x:scroll;
-    overflow-y:scroll;
+    overflow-y:hidden;
     scroll-behavior:smooth;
     &::-webkit-scrollbar{
         height: 4px;

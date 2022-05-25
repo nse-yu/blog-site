@@ -1,17 +1,17 @@
 [
     {
         "id":1,
-        "name":"tab1",
+        "name":"all",
         "url":"hoge"
     },
     {
         "id":2,
-        "name":"tab2",
+        "name":"programming",
         "url":"hoge"
     },
     {
         "id":3,
-        "name":"tab3",
+        "name":"daily",
         "url":"hoge"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
         "id":5,
-        "name":"tab5",
+        "name":"others",
         "url":"hoge"
     }
 ]
