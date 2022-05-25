@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { utilSet } from "../css/util_css"
-import { headerSet } from "../css/header/header_css"
+import { utilSet } from "../others/util_css"
+import { headerSet } from "../header/header_css"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
-import { btnSet } from "../css/button/btn_css"
+import { btnSet } from "../others/btn_css"
 
 
 export default function EditHeader({info,setheight,open,reset,submit}) {

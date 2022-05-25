@@ -2,13 +2,14 @@
 import { jsx,css } from "@emotion/react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { articleSet } from "../../css/article/article_css"
-import { topSet } from "../../css/top/top_css"
-import { utilSet } from "../../css/util_css"
-import { markdownSet } from "../../edit/markdown_css" 
+import { articleSet } from "./article_css"
+import { topSet } from "../top/top_css"
+import { utilSet } from "../others/util_css"
+import { markdownSet } from "../edit/markdown_css" 
 import Header from "../header/header"
 import LoadedImg from "../img/Img"
 import Footer from "../footer/footer"
+import AsideNav from "../nav/aside_nav"
 import { useResource } from "../ResourceProvider"
 
 export default function Article() {
@@ -64,26 +65,7 @@ export default function Article() {
                                 css={markdownSet.markdown_styles}
                             />
                         </section>
-                        <aside css={topSet.top_side_all}>
-                            <nav
-                                css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
-                            >
-                                <ul>
-                                    {
-                                        side.map((item,idx) => (
-                                            <li key={idx}>{item}</li>
-                                        ))
-                                    }
-                                </ul>
-                            </nav>
-                            <nav
-                                css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
-                            >
-                                <ul>
-                        
-                                </ul>
-                            </nav>
-                        </aside>
+                        <AsideNav />
                     </div>
                 </article>
             </main>

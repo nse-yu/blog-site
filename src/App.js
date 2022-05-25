@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Article from "./components/article/article";
 import Top from "./components/top/top";
-import EditTop from "./edit/edit_top";
+import EditTop from "./components/edit/edit_top";
 
 function App() {
   return (

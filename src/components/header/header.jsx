@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { utilSet } from "../../css/util_css"
-import { headerSet } from "../../css/header/header_css"
+import { utilSet } from "../others/util_css"
+import { headerSet } from "../header/header_css"
 import { useResource } from "../ResourceProvider"
 import { motion } from "framer-motion"
-import { navSet } from "../../css/navigation/nav_css"
+import { navSet } from "../nav/nav_css"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 

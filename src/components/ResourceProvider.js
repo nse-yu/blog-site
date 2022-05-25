@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
 import tabs_json from "../tabs.json";
+import recommended from "../recommend_site.json";
 
 const context = createContext()
 export const useResource = () => useContext(context)
@@ -19,9 +20,6 @@ export default function ResourceProvider({children}) {
     //==============state of selected article=============//
     const [articles,setArticles] = useState({})
     const [article,setArticle] = useState({})
-
-    //================tab state===============//
-    const side = ["side1","side2","side3","side4","side5"]
 
     //マウント時に記事取得//
     useEffect(() => {
@@ -63,7 +61,7 @@ export default function ResourceProvider({children}) {
         setCurrentArticle,
         resetCurrentArticle,
         article,
-        side
+        recommended
     }
 
     return (

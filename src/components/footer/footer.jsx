@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import {footerSet} from "../../css/footer/footer_css"
-import { utilSet } from "../../css/util_css"
+import {footerSet} from "./footer_css"
+import { utilSet } from "../others/util_css"
 
 export default function Footer() {
     return (

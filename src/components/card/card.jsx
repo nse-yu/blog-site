@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { cardSet } from "../../css/card/card_css"
+import { cardSet } from "./card_css"
 import {motion} from "framer-motion"
 import { Link } from "react-router-dom"
 import LoadedImg from "../img/Img"

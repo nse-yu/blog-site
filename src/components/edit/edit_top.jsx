@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { useResource } from "../../src/components/ResourceProvider";
-import { topSet } from "../css/top/top_css";
-import { utilSet } from "../css/util_css";
+import { useResource } from "../ResourceProvider";
+import { topSet } from "../top/top_css";
+import { utilSet } from "../others/util_css";
 import { editSet } from "./edit_css";
 import { motion } from "framer-motion";
 import EditHeader from "./edit_header";
-import { edit_tools } from "../edit_tools";
+import { edit_tools } from "../../edit_tools";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,8 +14,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useReducer } from "react";
 import { markdownSet } from "./markdown_css";
-import { FetchArticles } from "../components/cards/FetchArticles";
-import Cards from "../components/cards/Cards";
+import Cards from "../cards/Cards";
 import { useLayoutEffect } from "react";
 
 export default function EditTop() {

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
-import { topSet } from "../../css/top/top_css"
+import { topSet } from "../top/top_css"
 import Card from "../card/card"
 import { useResource } from "../ResourceProvider"
 
