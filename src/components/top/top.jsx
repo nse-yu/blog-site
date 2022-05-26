@@ -9,10 +9,11 @@ import { useEffect } from "react"
 import AsideNav from "../nav/aside_nav"
 
 export default function Top() {
-    //=============imported props============//
+    //===================IMPORT====================//
     const {height,articles,resetCurrentArticle} = useResource()
 
-    //==========マウント時の初期化==========//
+    //==================USE EFFECT=================//
+    //when mounted[reset]
     useEffect(() => {
         resetCurrentArticle()
     })

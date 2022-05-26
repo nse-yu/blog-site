@@ -7,9 +7,13 @@ const article_all = css`
 const article_info = css`
     color:white;
     font-family: 'Zen Maru Gothic', sans-serif;
+    h1{
+        font-size:2rem;
+    }
 `
 const article_desc = css`
     color:black;
+    font-weight:600;
 `
 //=============for big img============//
 const article_bigimg_wrapper = css`

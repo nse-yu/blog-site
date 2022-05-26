@@ -18,11 +18,32 @@ import Cards from "../cards/Cards";
 import { useLayoutEffect } from "react";
 
 export default function EditTop() {
-    const {headerInfo,height,headerHeight,article} = useResource()
-    const ref = useRef() //innerTextで挿入するのに必要
+    const {
+        headerInfo,
+        height,
+        headerHeight,
+        article,
+        resetCurrentArticle
+    } = useResource()
+    
+    //==================DEFINITION==================//
+    //variable
     let unique_id = article ? article.articleID : "" //TODO:投稿済みの記事を読み込んだ際に保持される識別id
 
-    //TODO:when window are reloading
+    //ref
+    const ref = useRef() //innerTextで挿入するのに必要
+    
+    //state
+    const [form,setForm] = useReducer(
+        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{}}
+    )
+    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
+    const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
+    const [ishover,setIshover] = useState(false) //HACK:state of icon hovering
+    const [tool,setTool] = useState({}) //HACK:state of item clicked
+    
+    //==================USE EFFECT=================//
+    //TODO:when reloading[confirm]
     useEffect(() => {
         console.log("[effect]: ",article)
 
@@ -32,7 +53,7 @@ export default function EditTop() {
         }
     })
     
-    //TODO:layouteffect executed before rendering
+    //TODO:before rendering[set]
     useLayoutEffect(() => {
         if(!article) return
         setForm({title:article.title,desc:article.desc,img:{}}) 
@@ -41,10 +62,22 @@ export default function EditTop() {
         console.log("[layout]: ",article)
     },[article])
 
-    //TODO:admin form values
-    const [form,setForm] = useReducer(
-        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{}}
-    )
+    //TODO:article changed[set]
+    useEffect(() => {
+        if(!article) return
+        setIsOpen(false)
+
+        console.log("[effect]: isOpen changed")
+    },[article])
+
+    //TODO:tool changed[set]
+    useEffect(() => {
+        if(!tool.desc) return
+        ref.current.innerText = tool.desc
+    },[tool])
+
+    //==================SET STATES==================//
+    //form 
     const formChanged = e => {
         if(e.target.name === "form_title") {
             setForm({title:e.target.value})
@@ -57,64 +90,54 @@ export default function EditTop() {
         setForm({img:e.target.files[0]})
     }
 
-    //TODO:open states
-    const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
-    useEffect(() => {
-        if(!article) return
-        setIsOpen(false)
-
-        console.log("[effect]: isOpen changed")
-    },[article])
-
-    //TODO:markdown states
-    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
+    //markdown
     const textareaChanged = e => {
         setMarkdown(() => e.target.value)
-    }
+    }    
 
-    //FIXME:hover state
-    const [ishover,setIshover] = useState(false) //HACK:state of icon hovering
-    
-    //TODO:click events
-    const [tool,setTool] = useState({}) //HACK:state of item clicked
+    //tool markdown ishover
     const appear = e => {
         setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
         setMarkdown(() => markdown + e.target.dataset.helper)
         setIshover(true) //FIXME
     }
+
+    //ishover
     const cancel = () => {
         setIshover(false) //FIXME
     }
-    useEffect(() => {
-        if(!tool.desc) return
-        ref.current.innerText = tool.desc
-    },[tool])
 
-    //TODO:pan events
-    const panned = (e,i) => {
-        const off_x = i.offset.x
-        e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
-    }
-
-    //TODO:callbacks for the edit_header
+    //isopen
     const toggleHidden = () => {
         setIsOpen(!isOpen)
     }
-    const onResetClicked = () => {
-        if(!window.confirm("変更を破棄しますか？")) return
-        setMarkdown("")
+
+    //================EVENTS TO PASS===============//
+    //new file
+    const onNewClicked = () => {
+        onResetClicked()
+        resetCurrentArticle()
     }
+
+    //clear text
+    const onResetClicked = () => {
+        if(!window.confirm("変更を破棄してもよろしいですか？")) return
+        setMarkdown("")
+        setForm({title:"",desc:"",img:{}})
+    }
+
+    //submit article
     const onSubmitClicked = () => {
         if(!window.confirm("投稿しますか？")) return
         console.log("u-id",unique_id)
-
+        
         const data = new FormData()
         data.append("img",form.img)
         data.append("articleID",unique_id)
         data.append("title",form.title)
         data.append("desc",form.desc)
         data.append("markdown",markdown)
-
+        
         fetch("http://localhost:8080/article/post",{
             method:"POST",
             mode:"cors",  
@@ -129,10 +152,26 @@ export default function EditTop() {
         .catch(err => console.error(err))
     }
 
+    //pan-scroll
+    const panned = (e,i) => {
+        console.log("panned in ",e.target)
+        const off_x = i.offset.x
+        e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
+    }
+    
     return (
         <>
         {console.log("[render]",article)}
-            <EditHeader info={headerInfo} setheight={headerHeight} open={toggleHidden} reset={onResetClicked} submit={onSubmitClicked}/>
+            <EditHeader 
+                info={headerInfo} 
+                setheight={headerHeight} 
+                methods={{
+                    open:toggleHidden,
+                    reset:onResetClicked,
+                    submit:onSubmitClicked,
+                    newfile:onNewClicked
+                }}
+            />
             <main css={{marginTop:height}}>
                 <section className="top-all" css={[
                     utilSet.verticalize
@@ -147,7 +186,7 @@ export default function EditTop() {
                             layout
                             initial={{x:-700,opacity:0}}
                             animate={{x:0,opacity:1}}
-                            transition={{duration:0.6,delay:0.2}}
+                            transition={{duration:0.6,delay:0.15}}
                         >
                             <button
                                 onClick={toggleHidden}
@@ -164,12 +203,11 @@ export default function EditTop() {
                                     <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
                                 </motion.svg>
                             </button>
-                            <div 
+                            <motion.div 
                                 className="hidden_cards_list"
-                                css={[editSet.scrollbar_style]}
                             >
-                                <Cards grid={false} edit={true}/>
-                            </div>
+                                <Cards grid={false} edit={true} pan={panned}/>
+                            </motion.div>
                         </motion.div>
                     }
                     <div className="notes" css={[
@@ -195,7 +233,6 @@ export default function EditTop() {
                                         editSet.scrollbar_style
                                     ]}
                                     onPan={panned}
-                                    whileDrag={{scale:2.5}}
                                     transition={{duration:0.5,type:"inertia"}}
                                 >
                                     {

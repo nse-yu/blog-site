@@ -7,7 +7,9 @@ import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
 
 
-export default function EditHeader({info,setheight,open,reset,submit}) {
+export default function EditHeader({info,setheight,methods}) {
+    //==================USE EFFECT=================//
+    //only first mounted
     useEffect(() => {
         //ヘッダー高さを取得し、マージン調整
         setheight(info.current.getBoundingClientRect().height)
@@ -49,22 +51,28 @@ export default function EditHeader({info,setheight,open,reset,submit}) {
                     </div>
                     <div className="header-up__edit-options" css={utilSet.horizontalize}>
                         <motion.div className="btn btn__open"
-                            css={[btnSet.btn,btnSet.btn___reset]}
+                            css={[btnSet.btn,btnSet.btn___new]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={open}>開く</button>
+                            <button onClick={methods.newfile}>新規作成</button>
+                        </motion.div>
+                        <motion.div className="btn btn__open"
+                            css={[btnSet.btn,btnSet.btn___open]}
+                            whileHover={{opacity:0.5}}
+                        >
+                            <button onClick={methods.open}>開く</button>
                         </motion.div>
                         <motion.div className="btn btn__reset"
                             css={[btnSet.btn,btnSet.btn___reset]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={reset}>破棄</button>
+                            <button onClick={methods.reset}>破棄</button>
                         </motion.div>
                         <motion.div className="btn btn__submit"
                             css={[btnSet.btn,btnSet.btn___submit]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={submit}>投稿</button>
+                            <button onClick={methods.submit}>投稿</button>
                         </motion.div>
                     </div>
                 </div>

@@ -5,9 +5,10 @@ const card_wrapper = css`
     box-shadow:1px 3px 10px white;
     background-color:rgb(0,0,0);
     border-radius:5px;
-    width:100%;
     height:300px;
     z-index:1;
+    flex-shrink:0;
+    user-select: none;
     a{
         text-decoration:none;
     }

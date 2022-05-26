@@ -31,16 +31,6 @@ const top_side_all = css`
     justify-content:start;
     width:20%;
 `
-const top_side_box = css`
-    height:500px;
-    border:1px solid white;
-    border-radius:5px;
-    background-color:white;
-    padding:10px;
-    li{
-        list-style:none;
-    }
-`
 const top_side_box__el = css`
     margin-bottom:2rem;
 `
@@ -68,6 +58,5 @@ export const topSet = {
     top_cards___horizontalize,
     top_side_box__el,
     top_open_hidden,
-    top_side_box,
     top__test
 }

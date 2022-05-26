@@ -1,14 +1,17 @@
 [
     {
         "name":"IT速報",
-        "url":"http://blog.livedoor.jp/itsoku/"
+        "url":"http://blog.livedoor.jp/itsoku/",
+        "class":"娯楽"
     },
     {
         "name":"カラーコード",
-        "url":"https://www.colordic.org/"
+        "url":"https://www.colordic.org/",
+        "class":"フロント開発"
     },
     {
         "name":"Google Fonts",
-        "url":"https://fonts.google.com/?subset=japanese"
+        "url":"https://fonts.google.com/?subset=japanese",
+        "class":"フロント開発"
     }
 ]

@@ -10,18 +10,18 @@ const context = createContext()
 export const useResource = () => useContext(context)
 
 export default function ResourceProvider({children}) {
-    //==============state of selected tab's instance===============//
-    const [activeTab,setActiveTab] = useState(tabs_json[0])
-
-    //==============state of header's height===============//
+    //==================DEFINITION==================//
+    //ref
     const headerInfo = useRef()
+
+    //state
+    const [activeTab,setActiveTab] = useState(tabs_json[0])
     const [height,setHeight] = useState()
-    
-    //==============state of selected article=============//
     const [articles,setArticles] = useState({})
     const [article,setArticle] = useState({})
-
-    //マウント時に記事取得//
+    
+    //==================USE EFFECT=================//
+    //TODO:only first mounted[fetch set]
     useEffect(() => {
         setArticle({})
         fetch(`http://localhost:8080/article/all`,{
@@ -33,23 +33,31 @@ export default function ResourceProvider({children}) {
             .catch(console.error)
     },[])
 
-    //===============properties(method)===============//
+    //=================SET STATES=================//
+    //active-tab
     const onTabSelected = tab => {
         setActiveTab(() => tab)
     }
+
+    //height
     const headerHeight = current => {
         setHeight(() => current)
     }
+
+    //article
     const setCurrentArticle = current => {
         console.log("current selected article: changed",current)
         setArticle(() => current)
     }
+
+    //================EVENTS TO PASS===============//
+    //reset article
     const resetCurrentArticle = () => {
         console.log("current selected article: cleared")
         setArticle(() => {})
     }
     
-    //=============provide to value=============//
+    //=================ALL TO PASS=================//
     const values = {
         tabs_json, //すべてのタブ情報
         activeTab, //stateで管理された、選択中のタブ情報

@@ -3,6 +3,7 @@ import { jsx,css } from "@emotion/react"
 import { topSet } from "../top/top_css";
 import { utilSet } from "../others/util_css";
 import { useResource } from "../ResourceProvider";
+import { navSet } from "./nav_css";
 
 
 export default function AsideNav() {
@@ -12,9 +13,9 @@ export default function AsideNav() {
         <>
             <aside css={topSet.top_side_all}>
                 <nav
-                    css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el,utilSet.horizontalize___left]}
+                    css={[navSet.nav_list,utilSet.verticalize,topSet.top_side_box__el,utilSet.horizontalize___left]}
                 >
-                    <div>
+                    <div className="nav-list__title" css={navSet.nav_list_title}>
                         <h3>おすすめサイト</h3>
                     </div>
                     <ul>

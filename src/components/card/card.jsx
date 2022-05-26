@@ -15,6 +15,7 @@ export default function Card({article,edittable=false}) {
                 css={[
                     cardSet.card_wrapper
                 ]}
+                onPan={e => {e.preventDefault()}}
             >
                 <Link 
                     to={edittable ? `/edit` : `/article`} 
