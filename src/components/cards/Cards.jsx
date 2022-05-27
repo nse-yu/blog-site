@@ -8,8 +8,10 @@ import { editSet } from "../edit/edit_css"
 
 export default function Cards({grid=true,edit=false,pan}) {
     const {articles} = useResource()
+
     return (
         <>
+        {console.log(articles)}
             <motion.section
                 className="top_cards"
                 css={

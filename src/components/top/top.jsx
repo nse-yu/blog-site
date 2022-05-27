@@ -4,13 +4,13 @@ import Footer from "../footer/footer"
 import Header from "../header/header"
 import { topSet } from "../top/top_css"
 import ResourceProvider, { useResource } from "../ResourceProvider"
-import Card from "../card/card"
 import { useEffect } from "react"
 import AsideNav from "../nav/aside_nav"
+import Cards from "../cards/Cards"
 
 export default function Top() {
     //===================IMPORT====================//
-    const {height,articles,resetCurrentArticle} = useResource()
+    const {height,resetCurrentArticle} = useResource()
 
     //==================USE EFFECT=================//
     //when mounted[reset]
@@ -25,18 +25,7 @@ export default function Top() {
                 topSet.top_all,
                 {marginTop:height}
             ]}>
-                <section
-                    className="top_cards"
-                    css={[
-                        topSet.top_cards
-                    ]}
-                >
-                {
-                    Object.keys(articles).map(key => (
-                        <Card key={key} article={articles[key]} />
-                    ))
-                }
-                </section>
+                <Cards grid={true} edit={false}/>
                 <AsideNav />
             </main>
             <Footer />

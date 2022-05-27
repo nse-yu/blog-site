@@ -4,7 +4,7 @@ import { useResource } from "../ResourceProvider";
 import { topSet } from "../top/top_css";
 import { utilSet } from "../others/util_css";
 import { editSet } from "./edit_css";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import EditHeader from "./edit_header";
 import { edit_tools } from "../../edit_tools";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import { useReducer } from "react";
 import { markdownSet } from "./markdown_css";
 import Cards from "../cards/Cards";
 import { useLayoutEffect } from "react";
+import DesignedSelect from "../select/DesignedSelect";
 
 export default function EditTop() {
     const {
@@ -35,7 +36,7 @@ export default function EditTop() {
     
     //state
     const [form,setForm] = useReducer(
-        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{}}
+        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]}
     )
     const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
     const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
@@ -56,7 +57,7 @@ export default function EditTop() {
     //TODO:before rendering[set]
     useLayoutEffect(() => {
         if(!article) return
-        setForm({title:article.title,desc:article.desc,img:{}}) 
+        setForm({title:article.title,desc:article.desc,img:{},tag:[]}) 
         setMarkdown(article.content)
 
         console.log("[layout]: ",article)
@@ -88,6 +89,11 @@ export default function EditTop() {
             return  
         } 
         setForm({img:e.target.files[0]})
+    }
+
+    //tag(form)
+    const tagChanged = (id,name) => {
+        setForm({tag:[id,name]})
     }
 
     //markdown
@@ -123,19 +129,19 @@ export default function EditTop() {
     const onResetClicked = () => {
         if(!window.confirm("変更を破棄してもよろしいですか？")) return
         setMarkdown("")
-        setForm({title:"",desc:"",img:{}})
+        setForm({title:"",desc:"",img:{},tag:[]})
     }
 
     //submit article
     const onSubmitClicked = () => {
         if(!window.confirm("投稿しますか？")) return
-        console.log("u-id",unique_id)
         
         const data = new FormData()
         data.append("img",form.img)
         data.append("articleID",unique_id)
         data.append("title",form.title)
         data.append("desc",form.desc)
+        data.append("tagID",form.tag[0])
         data.append("markdown",markdown)
         
         fetch("http://localhost:8080/article/post",{
@@ -176,40 +182,43 @@ export default function EditTop() {
                 <section className="top-all" css={[
                     utilSet.verticalize
                 ]}> 
-                    { isOpen &&
-                        <motion.div 
-                            className="open__hidden"
-                            css={[
-                                utilSet.verticalize,
-                                topSet.top_open_hidden
-                            ]}
-                            layout
-                            initial={{x:-700,opacity:0}}
-                            animate={{x:0,opacity:1}}
-                            transition={{duration:0.6,delay:0.15}}
-                        >
-                            <button
-                                onClick={toggleHidden}
+                    <AnimatePresence>
+                        { isOpen &&
+                            <motion.div
+                                className="open__hidden"
+                                css={[
+                                    utilSet.verticalize,
+                                    topSet.top_open_hidden
+                                ]}
+                                layout
+                                initial={{x:-700,opacity:0}}
+                                animate={{x:0,opacity:1}}
+                                exit={{x:-2000,opacity:0}}
+                                transition={{duration:0.6,delay:0.15}}
                             >
-                                <motion.svg 
-                                    whileHover={{scale:1.3,stroke:"red"}}
-                                    width="50" 
-                                    height="50" 
-                                    viewBox="0 0 50 50"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    stroke="white"
+                                <button
+                                    onClick={toggleHidden}
                                 >
-                                    <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
-                                </motion.svg>
-                            </button>
-                            <motion.div 
-                                className="hidden_cards_list"
-                            >
-                                <Cards grid={false} edit={true} pan={panned}/>
+                                    <motion.svg
+                                        whileHover={{scale:1.3,stroke:"red"}}
+                                        width="50"
+                                        height="50"
+                                        viewBox="0 0 50 50"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        stroke="white"
+                                    >
+                                        <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
+                                    </motion.svg>
+                                </button>
+                                <motion.div
+                                    className="hidden_cards_list"
+                                >
+                                    <Cards grid={false} edit={true} pan={panned}/>
+                                </motion.div>
                             </motion.div>
-                        </motion.div>
-                    }
+                        }
+                    </AnimatePresence>
                     <div className="notes" css={[
                         utilSet.horizontalize,
                         topSet.top_all,
@@ -315,8 +324,9 @@ export default function EditTop() {
                             editSet.note_info,
                             utilSet.verticalize
                         ]}>
-                            <div className="note_input_up" css={[editSet.note_input_up,editSet.note_input_el]}>
+                            <div className="note_input_up" css={[editSet.note_input_up,editSet.note_input_el,utilSet.horizontalize,utilSet.horizontalize___left]}>
                                 <input name="form_title" placeholder="title" required type="text" value={form.title} onChange={formChanged} />
+                                <DesignedSelect changed={tagChanged} tag={form.tag}/>
                             </div>
                             <div className="note_input_down" css={[utilSet.horizontalize,utilSet.horizontalize___center,editSet.note_input_down]}>
                                 <textarea name="form_desc" placeholder="description" rows="7" value={form.desc} onChange={formChanged}/>

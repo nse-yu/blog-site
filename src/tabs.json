@@ -1,27 +1,22 @@
 [
     {
         "id":1,
-        "name":"all",
-        "url":"hoge"
+        "name":"all"
     },
     {
         "id":2,
-        "name":"programming",
-        "url":"hoge"
+        "name":"programming"
     },
     {
         "id":3,
-        "name":"daily",
-        "url":"hoge"
+        "name":"daily"
     },
     {
         "id":4,
-        "name":"tab4",
-        "url":"hoge"
+        "name":"gadjet"
     },
     {
         "id":5,
-        "name":"others",
-        "url":"hoge"
+        "name":"others"
     }
 ]

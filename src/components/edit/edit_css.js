@@ -85,7 +85,7 @@ const note_info = css`
     };
 `
 const note_input_up = css`
-    width:20%;
+    width:100%;
 `
 const note_input_down = css`
     width:100%;

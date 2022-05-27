@@ -1,17 +1,45 @@
 [
     {
+        "id":124,
         "name":"IT速報",
         "url":"http://blog.livedoor.jp/itsoku/",
-        "class":"娯楽"
+        "class":"娯楽",
+        "classcode":1
     },
     {
+        "id":245,
         "name":"カラーコード",
         "url":"https://www.colordic.org/",
-        "class":"フロント開発"
+        "class":"フロント開発",
+        "classcode":2
     },
     {
+        "id":233,
         "name":"Google Fonts",
         "url":"https://fonts.google.com/?subset=japanese",
-        "class":"フロント開発"
+        "class":"フロント開発",
+        "classcode":2
+    },
+    {
+        "id":453,
+        "name":"フォトコンバイン",
+        "url":"https://photocombine.net/cb/",
+        "class":"便利ツール",
+        "classcode":3
+    },
+    {
+        "id":568,
+        "name":"正規表現",
+        "url":"https://docs.oracle.com/javase/jp/8/docs/api/java/util/regex/Pattern.html",
+        "class":"バック開発",
+        "classcode":4
+    },
+    {
+        "id":523,
+        "name":"iconsvg",
+        "url":"https://iconsvg.xyz/",
+        "class":"フロント開発",
+        "classcode":2
     }
 ]
+ 

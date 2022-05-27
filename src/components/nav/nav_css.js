@@ -9,6 +9,7 @@ const nav_all = css`
         width:100%;
         background-color:#f8f8ff;
         text-align:center;
+        user-select: none;
         &:hover{
             border-color:black;
         }
@@ -38,15 +39,30 @@ const nav_list = css`
     };
     a{
         text-decoration:none;
+        color:#778899;
     }
 `
 const nav_list_title = css`
     font-family:'Zen Maru Gothic',sans-serif;
+    font-weight:bold;
+    border-bottom:1px solid black;
+`
+const nav_list_group = css`
+    margin-top:1.1rem;
+    .group__title{
+        font-family: 'Zen Maru Gothic', sans-serif;
+    };
+    .group__item{
+        font-style:italic;
+        color:black;
+        margin-top:0.4rem;
+    }
 `
 
 export const navSet = {
     nav_all,
     nav_tab,
     nav_list,
+    nav_list_group,
     nav_list_title
 }

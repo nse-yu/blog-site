@@ -2,12 +2,24 @@
 import { jsx,css } from "@emotion/react"
 import { topSet } from "../top/top_css";
 import { utilSet } from "../others/util_css";
-import { useResource } from "../ResourceProvider";
 import { navSet } from "./nav_css";
+import {motion} from "framer-motion"
+import recommend from "../../recommend_site.json";
 
+//HACK 連想配列のリストを受け取り、指定プロパティの値を基準に、重複をなくして返す。
+function distinctObjByTags(objs,tags=[]){
+    return Array(...objs).filter((entry,i) => {
+        let bools = []
+        Array(...objs).slice(i+1).forEach(obj => {
+            tags.forEach(tag => {
+                bools.push(entry[tag] === obj[tag]) //entryが残りのentryと同じプロパティを持っているかどうか
+            })
+        })
+        return !bools.includes(true)
+    })
+}
 
 export default function AsideNav() {
-    const {recommended} = useResource()
 
     return (
         <>
@@ -20,14 +32,32 @@ export default function AsideNav() {
                     </div>
                     <ul>
                         {
-                            recommended.map((item,idx) => (
-                                <li key={idx}><a target="_blank" rel="noopener noreferrer" href={item.url}>{item.name}</a></li>
-                            ))
+                            distinctObjByTags(recommend,["classcode"]).map(obj => {
+                                return ( 
+                                    <ul key={obj.classcode} className="nav-list__group" css={[navSet.nav_list_group]}>
+                                        <li className="group__title" key={obj.class}><h2>{obj.class}</h2></li>
+                                        {
+                                            recommend.map(item => (
+                                                obj.classcode === item.classcode ? 
+                                                    <motion.li 
+                                                        className="group__item"
+                                                        key={item.id}
+                                                        whileHover={{scale:1.03,opacity:0.7}}
+                                                    >
+                                                        <a target="_blank" rel="noopener noreferrer" href={item.url}>{item.name}</a>
+                                                    </motion.li>    
+                                                    : 
+                                                    (<></>)
+                                            ))
+                                        }
+                                    </ul>
+                                )
+                            })
                         }
                     </ul>
                 </nav>
                 <nav
-                    css={[topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
+                    css={[navSet.nav_list,topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
                 >
                     <ul>
                         <li><a className="twitter-timeline" href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw">Tweets by nagachon0000</a> <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script></li>

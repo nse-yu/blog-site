@@ -98,7 +98,15 @@ export const edit_tools = [
         markdown:<><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></>,
         desc:`moji[^注釈number]
         [^注釈number]: moji-annotated`,
-        helper:`hoge[^1]
+        helper:`hoge[^1]  
         [^1]: hogehoge`
+    },
+    {
+        id:14,
+        tool:"blank line（空行）",
+        markdown:<><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></>,
+        desc:`  &#13;  （前後に半角スペース２つ、その後改行必須）`,
+        helper:`  &#13;  
+        `
     }
 ]

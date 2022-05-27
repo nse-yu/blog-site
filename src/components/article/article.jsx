@@ -65,6 +65,7 @@ export default function Article() {
                                 css={markdownSet.markdown_styles}
                             />
                         </section>
+                        <div css={{borderRight:"1px solid black"}}></div>
                         <AsideNav />
                     </div>
                 </article>

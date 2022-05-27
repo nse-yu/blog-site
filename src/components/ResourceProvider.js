@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
 import tabs_json from "../tabs.json";
-import recommended from "../recommend_site.json";
 
 const context = createContext()
 export const useResource = () => useContext(context)
@@ -37,6 +36,13 @@ export default function ResourceProvider({children}) {
     //active-tab
     const onTabSelected = tab => {
         setActiveTab(() => tab)
+        let fetchString = "http://localhost:8080/" + 
+            (activeTab.id === 1 ? "article/all" : "tag/"+activeTab.id)
+        fetch(fetchString)
+            .then(res => res.json())
+            .then(res_json => setArticles(res_json))
+            .then(console.log)
+            .catch(console.error)
     }
 
     //height
@@ -68,8 +74,7 @@ export default function ResourceProvider({children}) {
         articles, //取得した記事すべて
         setCurrentArticle,
         resetCurrentArticle,
-        article,
-        recommended
+        article
     }
 
     return (
