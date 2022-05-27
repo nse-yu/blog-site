@@ -26,6 +26,7 @@ const edit_note_tools = css`
     padding:5px;
     justify-content:flex-start;
     gap:10px;
+    height:10%;
 `
 const scrollbar_style = css`
     overflow-x:scroll;
@@ -44,9 +45,12 @@ const scrollbar_style = css`
     }
 
 `
+const scrollbar_style___verticalize = css`
+    overflow-y:scroll;
+`
 //=================editable note(down)===============//
 const edit_note_canvas = css`
-    height:100%;
+    height:90%;
     padding:0.5rem;
     color:black;
     textarea{
@@ -67,6 +71,7 @@ const tools_annotation = css`
 //==============preview note==============//
 const preview_note = css`
     overflow-x:scroll;
+    height:100%;
 ` 
 
 //=============note title & desc & img =============//
@@ -139,6 +144,7 @@ export const editSet = {
     img_instruction,
     note_input_down,
     scrollbar_style,
+    scrollbar_style___verticalize,
     tools_annotation,
     note_info___el,
     note_input_img,

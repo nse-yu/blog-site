@@ -17,6 +17,9 @@ import { markdownSet } from "./markdown_css";
 import Cards from "../cards/Cards";
 import { useLayoutEffect } from "react";
 import DesignedSelect from "../select/DesignedSelect";
+import LoadedImg from "../img/Img";
+import ImgCards from "../cards/ImgCards";
+import { cardSet } from "../card/card_css";
 
 export default function EditTop() {
     const {
@@ -24,7 +27,8 @@ export default function EditTop() {
         height,
         headerHeight,
         article,
-        resetCurrentArticle
+        resetCurrentArticle,
+        tabs_json
     } = useResource()
     
     //==================DEFINITION==================//
@@ -38,15 +42,16 @@ export default function EditTop() {
     const [form,setForm] = useReducer(
         (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]}
     )
-    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
+    const [markdown,setMarkdown] = useState(article ? article.content : "u") //HACK:state of markdown text
     const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
+    const [isImgOpen,setIsImgOpen] = useState(false) //HACK:state of hidden list of Images
+    const [imgs,setImgs] = useState([])
     const [ishover,setIshover] = useState(false) //HACK:state of icon hovering
     const [tool,setTool] = useState({}) //HACK:state of item clicked
     
     //==================USE EFFECT=================//
     //TODO:when reloading[confirm]
     useEffect(() => {
-        console.log("[effect]: ",article)
 
         window.onbeforeunload = e => {
             e.returnValue = "更新しますか"
@@ -57,10 +62,9 @@ export default function EditTop() {
     //TODO:before rendering[set]
     useLayoutEffect(() => {
         if(!article) return
-        setForm({title:article.title,desc:article.desc,img:{},tag:[]}) 
+        setForm({title:article.title,desc:article.desc,img:{},tag:findTagById(article.tagID)}) 
         setMarkdown(article.content)
 
-        console.log("[layout]: ",article)
     },[article])
 
     //TODO:article changed[set]
@@ -68,7 +72,6 @@ export default function EditTop() {
         if(!article) return
         setIsOpen(false)
 
-        console.log("[effect]: isOpen changed")
     },[article])
 
     //TODO:tool changed[set]
@@ -95,6 +98,15 @@ export default function EditTop() {
     const tagChanged = (id,name) => {
         setForm({tag:[id,name]})
     }
+    const findTagById = id => {
+        let tag = []
+        tabs_json.map(row => {
+            if(row.id === parseInt(id)){
+                tag.push(id,row.name)
+            }
+        })
+        return tag
+    }
 
     //markdown
     const textareaChanged = e => {
@@ -103,9 +115,13 @@ export default function EditTop() {
 
     //tool markdown ishover
     const appear = e => {
+        if(parseInt(e.target.dataset.id) === 6){
+            fetchImgUrls()
+            setIsImgOpen(!isImgOpen)
+        }
         setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
-        setMarkdown(() => markdown + e.target.dataset.helper)
         setIshover(true) //FIXME
+        setMarkdown(() => markdown + e.target.dataset.helper)
     }
 
     //ishover
@@ -117,6 +133,21 @@ export default function EditTop() {
     const toggleHidden = () => {
         setIsOpen(!isOpen)
     }
+
+    //isImgOpen
+    const toggleImgHidden = () => {
+        setIsImgOpen(!isImgOpen)
+    }
+
+    //imgs
+    const fetchImgUrls = () => {
+        fetch("http://localhost:8080/img/all")
+            .then(res => res.json())
+            .then(res_list => {
+                setImgs(() => [...res_list])
+            })
+    }
+
 
     //================EVENTS TO PASS===============//
     //new file
@@ -164,10 +195,16 @@ export default function EditTop() {
         const off_x = i.offset.x
         e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
     }
+
+    //set one img url
+    const onImgClicked = e => {
+        console.log(e.target)
+        setMarkdown(() => markdown + e.target.dataset.url + ")")
+        setIsImgOpen(!isImgOpen)
+    }
     
     return (
         <>
-        {console.log("[render]",article)}
             <EditHeader 
                 info={headerInfo} 
                 setheight={headerHeight} 
@@ -219,6 +256,45 @@ export default function EditTop() {
                             </motion.div>
                         }
                     </AnimatePresence>
+
+                    <AnimatePresence>
+                        { isImgOpen &&
+                            <motion.div
+                                className="open__hidden"
+                                css={[
+                                    utilSet.verticalize,
+                                    topSet.top_open_hidden___imgs
+                                ]}
+                                layout
+                                initial={{x:-700,opacity:0}}
+                                animate={{x:0,opacity:1}}
+                                exit={{x:-2000,opacity:0}}
+                                transition={{duration:0.6,delay:0.15}}
+                            >
+                                <button
+                                    onClick={toggleImgHidden}
+                                >
+                                    <motion.svg
+                                        whileHover={{scale:1.3,stroke:"red"}}
+                                        width="50"
+                                        height="50"
+                                        viewBox="0 0 50 50"
+                                        fill="none"
+                                        strokeLinecap="round"
+                                        stroke="white"
+                                    >
+                                        <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
+                                    </motion.svg>
+                                </button>
+                                <motion.div
+                                    className="hidden_cards_list"
+                                    css={[cardSet.cards_wrapper,editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
+                                >
+                                    <ImgCards imgs={imgs} pan={panned} grid={true} clicked={onImgClicked}/>
+                                </motion.div>
+                            </motion.div>
+                        }
+                    </AnimatePresence>
                     <div className="notes" css={[
                         utilSet.horizontalize,
                         topSet.top_all,
@@ -251,6 +327,7 @@ export default function EditTop() {
                                                 data-tool={item.tool}
                                                 data-desc={item.desc}
                                                 data-helper={item.helper}
+                                                data-id={item.id}
                                                 key={index}
                                                 style={editSet.edit_element}
                                                 whileHover={{scale:1.15,opacity:0.3}}
@@ -270,7 +347,7 @@ export default function EditTop() {
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 >
-                                                    {item.markdown}
+                                                    {item.dom}
                                                 </motion.svg>
                                             </motion.div>
                                         ))
@@ -295,6 +372,7 @@ export default function EditTop() {
                                         onChange={textareaChanged}
                                         autoFocus
                                         style={{resize:"none"}}
+                                        css={[editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                     />
                                 </motion.div>
                             </div>
@@ -308,7 +386,12 @@ export default function EditTop() {
                             </div>
                             <div className="preview-note" css={editSet.edit_note}>
                                 <div className="preview-note-canvas"
-                                    css={[editSet.edit_note_canvas,editSet.preview_note,editSet.scrollbar_style]}
+                                    css={[
+                                        editSet.edit_note_canvas,
+                                        editSet.preview_note,
+                                        editSet.scrollbar_style,
+                                        editSet.scrollbar_style___verticalize
+                                    ]}
                                 >
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}

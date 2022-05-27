@@ -63,6 +63,19 @@ export default function ResourceProvider({children}) {
         setArticle(() => {})
     }
     
+    //==================UTILITY====================//
+    function distinctObjByTags(objs,tags=[]){
+        return Array(...objs).filter((entry,i) => {
+            let bools = []
+            Array(...objs).slice(i+1).forEach(obj => {
+                tags.forEach(tag => {
+                    bools.push(entry[tag] === obj[tag]) //entryが残りのentryと同じプロパティを持っているかどうか
+                })
+            })
+            return !bools.includes(true)
+        })
+    }
+
     //=================ALL TO PASS=================//
     const values = {
         tabs_json, //すべてのタブ情報
@@ -74,7 +87,8 @@ export default function ResourceProvider({children}) {
         articles, //取得した記事すべて
         setCurrentArticle,
         resetCurrentArticle,
-        article
+        article,
+        distinctObjByTags
     }
 
     return (

@@ -33,7 +33,6 @@ const nav_list = css`
     border-radius:5px;
     background-color:white;
     padding:10px;
-    height:500px;
     li{
         list-style:none;
     };

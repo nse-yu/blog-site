@@ -14,7 +14,7 @@ import { useResource } from "../ResourceProvider"
 
 export default function Article() {
     const {article} = useResource()
-    const {height,side} = useResource()
+    const {height} = useResource()
 
     return (
         <>

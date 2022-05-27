@@ -45,6 +45,14 @@ const top_open_hidden = css`
     align-items:flex-start;
     background-color:#d3d3d3
 `
+const top_open_hidden___imgs = css`
+    margin:0.5rem;
+    padding:1rem;
+    border-radius:8px;
+    position:absolute;
+    background-color:#d3d3d3;
+    width:60%;
+`
 
 //============test props============//
 const top__test = css`
@@ -57,6 +65,7 @@ export const topSet = {
     top_cards,
     top_cards___horizontalize,
     top_side_box__el,
+    top_open_hidden___imgs,
     top_open_hidden,
     top__test
 }

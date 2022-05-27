@@ -40,6 +40,20 @@
         "url":"https://iconsvg.xyz/",
         "class":"フロント開発",
         "classcode":2
+    },
+    {
+        "id":523,
+        "name":"損保パーク",
+        "url":"https://park.sjnk.co.jp/",
+        "class":"娯楽",
+        "classcode":1
+    },
+    {
+        "id":517,
+        "name":"baeldung",
+        "url":"https://www.baeldung.com/",
+        "class":"バック開発",
+        "classcode":4
     }
 ]
  

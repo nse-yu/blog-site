@@ -65,7 +65,7 @@ export default function DesignedSelect({changed,tag}) {
                     }
                     {
                         tag[0] &&
-                            <span>{tag[1]}</span>
+                            <span>#{tag[1]}</span>
                     }
                 </motion.div>
             }

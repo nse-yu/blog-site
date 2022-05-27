@@ -37,12 +37,35 @@ const card_test = css`
     height:300px;
 `
 
+//===============for cards================//
+const cards_wrapper = css`
+    height:400px;
+`
+const cards_img = css`
+    width:100%;
+    object-fit:cover;
+`
+
+//===============for motion==============//
+const cards_img__motion___animate = {
+    opacity:0.6,
+    borderRadius:10,
+    x:5
+}
+const cards_img__motion___trans = {
+    duration:0.6
+}
+
 //===============for cards==============//
 
 export const cardSet = {
     card_wrapper,
     card_img,
     card_text___toDesc,
+    cards_wrapper,
+    cards_img__motion___animate,
+    cards_img__motion___trans,
+    cards_img,
     card_text,
     card_test
 }

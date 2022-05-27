@@ -5,21 +5,10 @@ import { utilSet } from "../others/util_css";
 import { navSet } from "./nav_css";
 import {motion} from "framer-motion"
 import recommend from "../../recommend_site.json";
-
-//HACK 連想配列のリストを受け取り、指定プロパティの値を基準に、重複をなくして返す。
-function distinctObjByTags(objs,tags=[]){
-    return Array(...objs).filter((entry,i) => {
-        let bools = []
-        Array(...objs).slice(i+1).forEach(obj => {
-            tags.forEach(tag => {
-                bools.push(entry[tag] === obj[tag]) //entryが残りのentryと同じプロパティを持っているかどうか
-            })
-        })
-        return !bools.includes(true)
-    })
-}
+import { useResource } from "../ResourceProvider";
 
 export default function AsideNav() {
+    const {distinctObjByTags} = useResource()
 
     return (
         <>
