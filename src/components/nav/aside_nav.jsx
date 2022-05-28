@@ -22,24 +22,25 @@ export default function AsideNav() {
                     <ul>
                         {
                             distinctObjByTags(recommend,["classcode"]).map(obj => {
-                                return ( 
-                                    <ul key={obj.classcode} className="nav-list__group" css={[navSet.nav_list_group]}>
-                                        <li className="group__title" key={obj.class}><h2>{obj.class}</h2></li>
-                                        {
-                                            recommend.map(item => (
-                                                obj.classcode === item.classcode ? 
-                                                    <motion.li 
-                                                        className="group__item"
-                                                        key={item.id}
-                                                        whileHover={{scale:1.03,opacity:0.7}}
-                                                    >
-                                                        <a target="_blank" rel="noopener noreferrer" href={item.url}>{item.name}</a>
-                                                    </motion.li>    
-                                                    : 
-                                                    (<></>)
-                                            ))
-                                        }
-                                    </ul>
+                                return (
+                                    <li key={obj.classcode}>
+                                        <ul className="nav-list__group" css={[navSet.nav_list_group]}>
+                                            <li key={obj.class} className="group__title"><h2>{obj.class}</h2></li>
+                                            {
+                                                recommend.map(item => (
+                                                    obj.classcode === item.classcode && (
+                                                        <motion.li
+                                                            key={item.id}
+                                                            className="group__item"
+                                                            whileHover={{scale:1.03,opacity:0.7}}
+                                                        >
+                                                            <a target="_blank" rel="noopener noreferrer" href={item.url}>{item.name}</a>
+                                                        </motion.li>
+                                                    )
+                                                ))
+                                            }
+                                        </ul>
+                                    </li>
                                 )
                             })
                         }

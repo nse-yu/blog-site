@@ -11,7 +11,6 @@ export default function Cards({grid=true,edit=false,pan}) {
 
     return (
         <>
-        {console.log(articles)}
             <motion.section
                 className="top_cards"
                 css={

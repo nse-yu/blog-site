@@ -11,10 +11,20 @@ import LoadedImg from "../img/Img"
 import Footer from "../footer/footer"
 import AsideNav from "../nav/aside_nav"
 import { useResource } from "../ResourceProvider"
+import { useParams } from "react-router-dom"
+import { useEffect } from "react"
 
 export default function Article() {
-    const {article} = useResource()
-    const {height} = useResource()
+    //====================IMPORT====================//
+    const {article,articles,height,setCurrentArticle,findByArticleId} = useResource()
+    //==================DEFINITION==================//
+    //param
+    const {articleID} = useParams("")
+
+    useEffect(() => {
+        if(!articles) return
+        setCurrentArticle(findByArticleId(articleID))
+    })
 
     return (
         <>

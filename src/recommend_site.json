@@ -54,6 +54,13 @@
         "url":"https://www.baeldung.com/",
         "class":"バック開発",
         "classcode":4
+    },
+    {
+        "id":127,
+        "name":"deepL",
+        "url":"https://www.deepl.com/translator",
+        "class":"便利ツール",
+        "classcode":3
     }
 ]
  

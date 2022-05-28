@@ -9,8 +9,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Top />} />
-          <Route path="/edit" element={<EditTop />} />
-          <Route path="/article" element={<Article />} />
+          <Route path="/tab/:tabID" element={<Top />} />
+          <Route path="/edit/:articleID" element={<EditTop />} />
+          <Route path="/edit/" element={<EditTop />} />
+          <Route path="/article/:articleID" element={<Article />} />
         </Routes>
       </BrowserRouter>
     </>   

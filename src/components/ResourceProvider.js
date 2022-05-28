@@ -16,51 +16,38 @@ export default function ResourceProvider({children}) {
     //state
     const [activeTab,setActiveTab] = useState(tabs_json[0])
     const [height,setHeight] = useState()
-    const [articles,setArticles] = useState({})
-    const [article,setArticle] = useState({})
-    
+    const [articles,setArticles] = useState(0)
+    const [article,setArticle] = useState(0) //falsy狙いで0にする
+
     //==================USE EFFECT=================//
     //TODO:only first mounted[fetch set]
     useEffect(() => {
-        setArticle({})
-        fetch(`http://localhost:8080/article/all`,{
-            mode:"cors"
-        })
-            .then(res => res.json())
-            .then(res_json => setArticles(res_json))
-            .then(console.log)
-            .catch(console.error)
+        findAll()
     },[])
 
     //=================SET STATES=================//
     //active-tab
     const onTabSelected = tab => {
-        setActiveTab(() => tab)
-        let fetchString = "http://localhost:8080/" + 
-            (activeTab.id === 1 ? "article/all" : "tag/"+activeTab.id)
+        let fetchString = "http://localhost:8080/" + (tab.id === 1 ? "article/all" : "tag/"+tab.id)
+        
         fetch(fetchString)
             .then(res => res.json())
-            .then(res_json => setArticles(res_json))
-            .then(console.log)
+            .then(res_json => setArticles(() => res_json))
+            .finally(() => setActiveTab(() => tab))
             .catch(console.error)
     }
-
     //height
     const headerHeight = current => {
         setHeight(() => current)
     }
-
     //article
     const setCurrentArticle = current => {
-        console.log("current selected article: changed",current)
+        console.log("set complete")
         setArticle(() => current)
     }
-
-    //================EVENTS TO PASS===============//
-    //reset article
+    //article
     const resetCurrentArticle = () => {
-        console.log("current selected article: cleared")
-        setArticle(() => {})
+        setArticle(0)
     }
     
     //==================UTILITY====================//
@@ -75,6 +62,17 @@ export default function ResourceProvider({children}) {
             return !bools.includes(true)
         })
     }
+    function findByArticleId(ArticleID){
+        return articles.filter(item => item.articleID === ArticleID)[0]
+    }
+    function findAll(){
+        fetch(`http://localhost:8080/article/all`,{
+            mode:"cors"
+        })
+            .then(res => res.json())
+            .then(res_json => setArticles(res_json))
+            .catch(console.error)
+    }
 
     //=================ALL TO PASS=================//
     const values = {
@@ -88,7 +86,9 @@ export default function ResourceProvider({children}) {
         setCurrentArticle,
         resetCurrentArticle,
         article,
-        distinctObjByTags
+        distinctObjByTags,
+        findByArticleId,
+        findAll
     }
 
     return (

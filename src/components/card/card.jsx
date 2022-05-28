@@ -8,6 +8,7 @@ import { useResource } from "../ResourceProvider"
 
 export default function Card({article,edittable=false}) {
     const {setCurrentArticle} = useResource()
+
     return (
         <>
             <motion.article 
@@ -18,9 +19,9 @@ export default function Card({article,edittable=false}) {
                 onPan={e => {e.preventDefault()}}
             >
                 <Link 
-                    to={edittable ? `/edit` : `/article`} 
-                    css={{height:"100%"}} 
-                    onClick={() => {setCurrentArticle(article)}}
+                    to={edittable ? `/edit/${article.articleID}` : `/article/${article.articleID}`} 
+                    css={{height:"100%"}}
+                    onClick={() => {setCurrentArticle(article)}} 
                 >
                     <figure css={{height:"inherit"}}>
                         <LoadedImg

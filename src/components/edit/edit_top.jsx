@@ -17,9 +17,9 @@ import { markdownSet } from "./markdown_css";
 import Cards from "../cards/Cards";
 import { useLayoutEffect } from "react";
 import DesignedSelect from "../select/DesignedSelect";
-import LoadedImg from "../img/Img";
 import ImgCards from "../cards/ImgCards";
 import { cardSet } from "../card/card_css";
+import { useParams } from "react-router-dom";
 
 export default function EditTop() {
     const {
@@ -28,21 +28,28 @@ export default function EditTop() {
         headerHeight,
         article,
         resetCurrentArticle,
-        tabs_json
+        tabs_json,
+        findAll,
+        articles,
+        setCurrentArticle,
+        findByArticleId
     } = useResource()
     
     //==================DEFINITION==================//
     //variable
     let unique_id = article ? article.articleID : "" //TODO:投稿済みの記事を読み込んだ際に保持される識別id
 
+    //param
+    const {articleID} = useParams("")
+
     //ref
-    const ref = useRef() //innerTextで挿入するのに必要
+    const ref = useRef() //toolの注釈文をinnetTextで改行もするために必要
     
     //state
     const [form,setForm] = useReducer(
         (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]}
     )
-    const [markdown,setMarkdown] = useState(article ? article.content : "u") //HACK:state of markdown text
+    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
     const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
     const [isImgOpen,setIsImgOpen] = useState(false) //HACK:state of hidden list of Images
     const [imgs,setImgs] = useState([])
@@ -52,29 +59,39 @@ export default function EditTop() {
     //==================USE EFFECT=================//
     //TODO:when reloading[confirm]
     useEffect(() => {
-
         window.onbeforeunload = e => {
             e.returnValue = "更新しますか"
             return "更新しますか"
         }
+        console.log(form)
+    })
+
+    //TODO:when mounted, set articles
+    useEffect(() => {
+        findAll()
+    },[])
+
+    //TODO:when loaded, set article
+    useEffect(() => {
+        if(!articles) return
+        setCurrentArticle(findByArticleId(articleID))
     })
     
-    //TODO:before rendering[set]
+    //TODO:before useeffect
     useLayoutEffect(() => {
+        //articleが空の場合にデフォルトのフォーム値を使用する
         if(!article) return
         setForm({title:article.title,desc:article.desc,img:{},tag:findTagById(article.tagID)}) 
         setMarkdown(article.content)
-
     },[article])
 
     //TODO:article changed[set]
     useEffect(() => {
         if(!article) return
         setIsOpen(false)
-
     },[article])
 
-    //TODO:tool changed[set]
+    //FIXME:tool changed[set]
     useEffect(() => {
         if(!tool.desc) return
         ref.current.innerText = tool.desc
@@ -100,7 +117,7 @@ export default function EditTop() {
     }
     const findTagById = id => {
         let tag = []
-        tabs_json.map(row => {
+        tabs_json.forEach(row => {
             if(row.id === parseInt(id)){
                 tag.push(id,row.name)
             }
@@ -110,6 +127,7 @@ export default function EditTop() {
 
     //markdown
     const textareaChanged = e => {
+        console.log("textarea changed")
         setMarkdown(() => e.target.value)
     }    
 
@@ -154,6 +172,7 @@ export default function EditTop() {
     const onNewClicked = () => {
         onResetClicked()
         resetCurrentArticle()
+        window.location = "/edit"
     }
 
     //clear text
