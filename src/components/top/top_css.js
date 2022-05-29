@@ -8,6 +8,9 @@ const top_all = css`
     background:linear-gradient(#000000,white);
     border-radius:5px;
     padding:1rem;
+    @media (max-width: 600px){
+        flex-direction:column;
+    }
 `
 
 //===============section==============//
@@ -44,7 +47,7 @@ const top_open_hidden = css`
     padding:1rem;
     border-radius:8px;
     justify-content:flex-start;
-    align-items:flex-start;
+    align-items:flex-end;
     background-color:#d3d3d3;
     width:70vw;
     height:90vh;

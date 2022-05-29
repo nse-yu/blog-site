@@ -21,12 +21,17 @@ const edit_note = css`
     border-radius:10px;
     background-color:white;
 `
+const edit_note___left = css`
+    
+`
 //==============editable note(up)==============//
 const edit_note_tools = css`
     padding:5px;
     justify-content:flex-start;
     gap:10px;
     height:10%;
+    position:fixed;
+    background-color:white;
 `
 const scrollbar_style = css`
     overflow-x:scroll;
@@ -143,6 +148,7 @@ export const editSet = {
     note_input_up,
     img_instruction,
     note_input_down,
+    edit_note___left,
     scrollbar_style,
     scrollbar_style___verticalize,
     tools_annotation,

@@ -17,10 +17,16 @@ import { useEffect } from "react"
 export default function Article() {
     //====================IMPORT====================//
     const {article,articles,height,setCurrentArticle,findByArticleId} = useResource()
+    
     //==================DEFINITION==================//
     //param
     const {articleID} = useParams("")
 
+    //variable
+    const page_id = "article"
+
+    //==================USE EFFECT=================//
+    //when every mounted
     useEffect(() => {
         if(!articles) return
         setCurrentArticle(findByArticleId(articleID))

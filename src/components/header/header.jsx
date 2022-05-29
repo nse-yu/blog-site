@@ -32,6 +32,22 @@ export default function Header() {
         ]}
         ref={headerInfo}>
             <div className="header-up" css={headerSet.header_up_all}>
+                <div className="header-up__nav" css={{display:"none"}}>
+                    <svg 
+                        width="31" 
+                        height="31" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="#ffffff" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                    >
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </div>
                 <div className="header-up__logo">
                     <a href="/">
                         <svg width="400px" height="50px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">

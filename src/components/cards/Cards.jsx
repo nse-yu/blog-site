@@ -16,7 +16,10 @@ export default function Cards({grid=true,edit=false,pan,del=false}) {
                     grid ? topSet.top_cards : [topSet.top_cards___horizontalize]               
                 }
                 onPan={pan}
-                layout
+                //layout
+                initial={{x:-1000}}
+                animate={{x:0}}
+                transition={{duration:0.5}}
             >   
                 {
                     Object.keys(articles).map(key => (

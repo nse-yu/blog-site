@@ -43,7 +43,9 @@ export default function EditTop() {
     const {articleID} = useParams("")
 
     //ref
-    const ref = useRef() //toolの注釈文をinnetTextで改行もするために必要
+    const ref_text = useRef() //toolの注釈文をinnetTextで改行もするために必要
+    const ref_note = useRef()
+    const ref_tools = useRef()
     
     //state
     const [form,setForm] = useReducer(
@@ -55,7 +57,9 @@ export default function EditTop() {
     const [imgs,setImgs] = useState([])
     const [ishover,setIshover] = useState(false) //HACK:state of icon hovering
     const [tool,setTool] = useState({}) //HACK:state of item clicked
-    
+    const [noteWidth,setNodeWidth] = useState(0)
+    const [toolsHeight,setToolsHeight] = useState(0)
+
     //==================USE EFFECT=================//
     //TODO:when reloading[confirm]
     useEffect(() => {
@@ -63,8 +67,16 @@ export default function EditTop() {
             e.returnValue = "更新しますか"
             return "更新しますか"
         }
-        console.log(form)
+        window.onresize = e => {
+            setNodeWidth(ref_note.current.getBoundingClientRect().width - 20)
+        }
+        setToolsHeight(ref_tools.current.getBoundingClientRect().height)
     },[])
+
+    //TODO:when note's width has changed
+    useEffect(() => {
+        setNodeWidth(ref_note.current.getBoundingClientRect().width - 20)
+    },[ref_note])
 
     //TODO:when mounted, set articles
     useEffect(() => {
@@ -94,7 +106,7 @@ export default function EditTop() {
     //FIXME:tool changed[set]
     useEffect(() => {
         if(!tool.desc) return
-        ref.current.innerText = tool.desc
+        ref_text.current.innerText = tool.desc
     },[tool])
 
     //==================SET STATES==================//
@@ -289,7 +301,8 @@ export default function EditTop() {
                                 className="open__hidden"
                                 css={[
                                     utilSet.verticalize,
-                                    topSet.top_open_hidden___imgs
+                                    topSet.top_open_hidden___imgs,
+                                    {alignItems:"flex-start"}
                                 ]}
                                 layout
                                 initial={{x:-700,opacity:0}}
@@ -334,16 +347,19 @@ export default function EditTop() {
                                 <h2>編集ノート</h2>
                             </div>
                             <div className="editable-note"
-                                css={editSet.edit_note}
+                                ref={ref_note}
+                                css={[editSet.edit_note,editSet.edit_note___left]}
                             >
                                 <motion.div
                                     className="editable-note-tools"
                                     css={[
                                         utilSet.horizontalize,
                                         editSet.edit_note_tools,
-                                        editSet.scrollbar_style
+                                        editSet.scrollbar_style,
+                                        {width:noteWidth}
                                     ]}
                                     onPan={panned}
+                                    ref={ref_tools}
                                     transition={{duration:0.5,type:"inertia"}}
                                 >
                                     {
@@ -385,14 +401,16 @@ export default function EditTop() {
                                                 css={[editSet.tools_annotation,utilSet.verticalize]}
                                             >
                                                 <strong>{tool.tool}</strong>
-                                                <p ref={ref}></p>
+                                                <p ref={ref_text}></p>
                                             </section>
                                         )
                                     }
                                 </motion.div>
-                                <hr></hr>
                                 <motion.div className="editable-note-canvas"
-                                    css={[editSet.edit_note_canvas]}
+                                    css={[
+                                        editSet.edit_note_canvas,
+                                        {marginTop:toolsHeight}
+                                    ]}
                                 >
                                     <textarea
                                         value={markdown}

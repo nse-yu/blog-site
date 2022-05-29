@@ -2,6 +2,9 @@ import { css } from "@emotion/react"
 
 const markdown_styles = css`
     padding:1rem;
+    font-family: 'Kiwi Maru', serif;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-size:1.2rem;
     h1,h2,h3,h4,h5,h6{
         border-left:8px solid black;
         border-bottom:1px solid black;

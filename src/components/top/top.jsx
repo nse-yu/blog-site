@@ -10,12 +10,16 @@ import Cards from "../cards/Cards"
 import { useParams } from "react-router-dom"
 
 export default function Top() {
+    //==================DEFINITION==================//
+    //variable
+    const page_id = "top"
+
     //===================IMPORT====================//
     const {height,resetCurrentArticle,onTabSelected,tabs_json} = useResource()
     const {tabID} = useParams(0)
 
     //==================USE EFFECT=================//
-    //when mounted[reset]
+    //when every mounted[reset]
     useEffect(() => {
         resetCurrentArticle()
     })
@@ -33,10 +37,13 @@ export default function Top() {
     return (
         <>
             <Header />
-            <main css={[
-                topSet.top_all,
-                {marginTop:height}
-            ]}>
+            <main 
+                className="top-main__wrapper"
+                css={[
+                    topSet.top_all,
+                    {marginTop:height}
+                ]}
+            >
                 <Cards grid={true} edit={false}/>
                 <AsideNav />
             </main>
