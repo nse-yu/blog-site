@@ -42,13 +42,27 @@ export default function ResourceProvider({children}) {
     }
     //article
     const setCurrentArticle = current => {
-        console.log("set complete")
         setArticle(() => current)
     }
     //article
     const resetCurrentArticle = () => {
         setArticle(0)
     }
+    //delArticle
+    const deleteArticle = id => {
+        console.log(id)
+        if(!window.confirm("本当に削除してもよろしいですか？")) return
+        fetch(`http://localhost:8080/article/${id}/delete`,{
+            method:"delete"
+        })
+            .then(res => {
+                if(res.ok) {
+                    window.alert("削除が完了しました。")
+                    findAll()
+                }
+            })
+            .catch(err => console.log(err))
+    } 
     
     //==================UTILITY====================//
     function distinctObjByTags(objs,tags=[]){
@@ -88,7 +102,8 @@ export default function ResourceProvider({children}) {
         article,
         distinctObjByTags,
         findByArticleId,
-        findAll
+        findAll,
+        deleteArticle
     }
 
     return (

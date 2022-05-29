@@ -34,6 +34,15 @@ const markdown_styles = css`
             background-color:white;
         };
     };
+    code{
+        background-color:#333333;
+        padding:1rem;
+        border-radius:8px;
+        color:white;
+    };
+    pre{
+        margin:1.2rem 0;
+    }
 `
 
 export const markdownSet = {

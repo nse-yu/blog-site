@@ -49,9 +49,14 @@ export default function AsideNav() {
                 <nav
                     css={[navSet.nav_list,topSet.top_side_box,utilSet.verticalize,topSet.top_side_box__el]}
                 >
-                    <ul>
-                        <li><a className="twitter-timeline" href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw">Tweets by nagachon0000</a> <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script></li>
-                    </ul>
+                    <a 
+                        className="twitter-timeline" 
+                        data-width="250" 
+                        data-height="400" 
+                        href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw"
+                    >
+                        Tweets by nagachon0000</a> 
+                    <script src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
                 </nav>
             </aside>
         </>

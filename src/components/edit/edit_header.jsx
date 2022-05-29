@@ -5,9 +5,13 @@ import { headerSet } from "../header/header_css"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
+import { useResource } from "../ResourceProvider"
 
 
 export default function EditHeader({info,setheight,methods}) {
+    //==================IMPORT====================//
+    const {article} = useResource()
+
     //==================USE EFFECT=================//
     //only first mounted
     useEffect(() => {
@@ -49,30 +53,61 @@ export default function EditHeader({info,setheight,methods}) {
                             </svg>
                         </a>
                     </div>
+                    {article &&
+                        <div className="header-up__current-edit">
+                            <motion.p 
+                                style={{
+                                    color:"#dc143c",
+                                    filter:"drop-shadow(1px 1px 1px #ffffff)",
+                                    fontFamily: "'Kiwi Maru', serif"
+                                }}
+                                animate={{scale:0.95,opacity:0.7,color:"#000000"}}
+                                transition={{duration:1.5,repeatType:"mirror",repeat:"Infinity"}}
+                            >
+                                タイトル「{article.title}」を編集中です...
+                            </motion.p>
+                        </div>
+                    }
                     <div className="header-up__edit-options" css={utilSet.horizontalize}>
                         <motion.div className="btn btn__open"
-                            css={[btnSet.btn,btnSet.btn___new]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={methods.newfile}>新規作成</button>
+                            <button 
+                                css={[btnSet.btn,btnSet.btn___new]}
+                                onClick={methods.newfile}
+                            >
+                                新規作成
+                            </button>
                         </motion.div>
                         <motion.div className="btn btn__open"
-                            css={[btnSet.btn,btnSet.btn___open]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={methods.open}>開く</button>
+                            <button 
+                                css={[btnSet.btn,btnSet.btn___open]}
+                                onClick={methods.open}
+                            >
+                                開く
+                            </button>
                         </motion.div>
                         <motion.div className="btn btn__reset"
-                            css={[btnSet.btn,btnSet.btn___reset]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={methods.reset}>破棄</button>
+                            <button 
+                                css={[btnSet.btn,btnSet.btn___reset]}
+                                onClick={methods.reset}
+                            >
+                                破棄
+                            </button>
                         </motion.div>
                         <motion.div className="btn btn__submit"
-                            css={[btnSet.btn,btnSet.btn___submit]}
                             whileHover={{opacity:0.5}}
                         >
-                            <button onClick={methods.submit}>投稿</button>
+                            <button 
+                                css={[btnSet.btn,btnSet.btn___submit]}
+                                onClick={methods.submit}
+                            >
+                                投稿
+                            </button>
                         </motion.div>
                     </div>
                 </div>

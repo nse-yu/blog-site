@@ -9,6 +9,7 @@ const card_wrapper = css`
     z-index:1;
     flex-shrink:0;
     user-select: none;
+    position: relative;
     a{
         text-decoration:none;
     }
@@ -45,6 +46,11 @@ const cards_img = css`
     width:100%;
     object-fit:cover;
 `
+const cards___deletable = css`
+    position:absolute;
+    top:0.5rem;
+    left:0.5rem;
+`
 
 //===============for motion==============//
 const cards_img__motion___animate = {
@@ -67,5 +73,6 @@ export const cardSet = {
     cards_img__motion___trans,
     cards_img,
     card_text,
+    cards___deletable,
     card_test
 }

@@ -12,11 +12,12 @@ const top_all = css`
 
 //===============section==============//
 const top_cards = css`
-    width:75%;
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:3rem;
     align-content:center;
+    padding:0 1rem;
+    width:100%;
 `
 const top_cards___horizontalize = css`
     width:100%;
@@ -29,7 +30,7 @@ const top_side_all = css`
     display:flex;
     flex-direction:column;
     justify-content:start;
-    width:20%;
+    width:250px;
 `
 const top_side_box__el = css`
     margin-bottom:2rem;
@@ -37,13 +38,17 @@ const top_side_box__el = css`
 
 //===========hidden guide============//
 const top_open_hidden = css`
+    position:absolute;
+    left:40px;
     margin:0.5rem;
     padding:1rem;
     border-radius:8px;
-    position:absolute;
     justify-content:flex-start;
     align-items:flex-start;
-    background-color:#d3d3d3
+    background-color:#d3d3d3;
+    width:70vw;
+    height:90vh;
+    z-index:10;
 `
 const top_open_hidden___imgs = css`
     margin:0.5rem;
@@ -52,6 +57,11 @@ const top_open_hidden___imgs = css`
     position:absolute;
     background-color:#d3d3d3;
     width:60%;
+    z-index:9;
+`
+const top_open_hidden___list = css`
+    width:100%;
+    overflow-y:scroll;
 `
 
 //============test props============//
@@ -67,5 +77,6 @@ export const topSet = {
     top_side_box__el,
     top_open_hidden___imgs,
     top_open_hidden,
-    top__test
+    top__test,
+    top_open_hidden___list
 }

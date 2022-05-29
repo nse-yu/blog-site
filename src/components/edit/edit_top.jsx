@@ -64,7 +64,7 @@ export default function EditTop() {
             return "更新しますか"
         }
         console.log(form)
-    })
+    },[])
 
     //TODO:when mounted, set articles
     useEffect(() => {
@@ -137,9 +137,14 @@ export default function EditTop() {
             fetchImgUrls()
             setIsImgOpen(!isImgOpen)
         }
-        setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
-        setIshover(true) //FIXME
+        //setIshover(true) //FIXME
         setMarkdown(() => markdown + e.target.dataset.helper)
+    }
+    
+    //ishover
+    const showDesc = e => {
+        setIshover(true)
+        setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
     }
 
     //ishover
@@ -170,16 +175,17 @@ export default function EditTop() {
     //================EVENTS TO PASS===============//
     //new file
     const onNewClicked = () => {
-        onResetClicked()
+        if(!onResetClicked()) return
         resetCurrentArticle()
-        window.location = "/edit"
+        window.location = "/edit" //urlを変更するためにやむを得ず
     }
 
     //clear text
     const onResetClicked = () => {
-        if(!window.confirm("変更を破棄してもよろしいですか？")) return
+        if(!window.confirm("変更を破棄してもよろしいですか？")) return false
         setMarkdown("")
         setForm({title:"",desc:"",img:{},tag:[]})
+        return true
     }
 
     //submit article
@@ -249,7 +255,7 @@ export default function EditTop() {
                                 layout
                                 initial={{x:-700,opacity:0}}
                                 animate={{x:0,opacity:1}}
-                                exit={{x:-2000,opacity:0}}
+                                exit={{opacity:0}}
                                 transition={{duration:0.6,delay:0.15}}
                             >
                                 <button
@@ -269,8 +275,9 @@ export default function EditTop() {
                                 </button>
                                 <motion.div
                                     className="hidden_cards_list"
+                                    css={[topSet.top_open_hidden___list,editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                 >
-                                    <Cards grid={false} edit={true} pan={panned}/>
+                                    <Cards grid={true} edit={true} pan={panned} del={true}/>
                                 </motion.div>
                             </motion.div>
                         }
@@ -351,6 +358,7 @@ export default function EditTop() {
                                                 style={editSet.edit_element}
                                                 whileHover={{scale:1.15,opacity:0.3}}
                                                 onClick={appear}
+                                                //onHoverStart={showDesc}
                                                 onMouseLeave={cancel}
                                                 onPan={e => {e.preventDefault()}}
                                                 {...editSet.hover_props}

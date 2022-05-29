@@ -55,7 +55,7 @@ export default function Header() {
                     </a>
                 </div>
                 <div className="header-up__edit">
-                    <Link to="/edit">
+                    <Link to={`/edit` + (article ? "/"+article.articleID : '')}>
                         <motion.svg
                             width="34"
                             height="34"

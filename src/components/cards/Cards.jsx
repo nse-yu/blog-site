@@ -3,27 +3,27 @@ import { jsx,css } from "@emotion/react"
 import { topSet } from "../top/top_css"
 import Card from "../card/card"
 import { useResource } from "../ResourceProvider"
-import {motion} from "framer-motion"
-import { editSet } from "../edit/edit_css"
+import {AnimatePresence, motion} from "framer-motion"
 
-export default function Cards({grid=true,edit=false,pan}) {
+export default function Cards({grid=true,edit=false,pan,del=false}) {
     const {articles} = useResource()
 
     return (
-        <>
+        <AnimatePresence>
             <motion.section
                 className="top_cards"
                 css={
-                    grid ? topSet.top_cards : [topSet.top_cards___horizontalize,editSet.scrollbar_style]               
+                    grid ? topSet.top_cards : [topSet.top_cards___horizontalize]               
                 }
                 onPan={pan}
-            >
+                layout
+            >   
                 {
                     Object.keys(articles).map(key => (
-                        <Card key={key} edittable={edit} article={articles[key]} />
+                        <Card key={key} edittable={edit} article={articles[key]} del={del}/>
                     ))
                 }
                 </motion.section>
-        </>
+        </AnimatePresence>
     )
 }
