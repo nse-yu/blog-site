@@ -2,6 +2,9 @@ import { css } from "@emotion/react"
 
 const article_all = css`
     padding:1rem;
+    @media (max-width:600px){
+        flex-direction:column;
+    }
 `
 //============for info===========//
 const article_info = css`
@@ -25,6 +28,17 @@ const article_bigimg_wrapper__el = css`
 //==============for page markdown===========//
 const article_content = css`
     width:75%;
+    @media (max-width:600px){
+        width:100%;
+    }
+`
+
+//==============for page line==============//
+const article_page__line = css`
+    border-right:1px solid black;
+    @media (max-width:600px){
+        border-bottom:1px solid black;
+    }
 `
 
 export const articleSet = {
@@ -33,5 +47,6 @@ export const articleSet = {
     article_desc,
     article_content,
     article_bigimg_wrapper,
-    article_bigimg_wrapper__el
+    article_bigimg_wrapper__el,
+    article_page__line
 }

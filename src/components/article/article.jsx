@@ -81,7 +81,7 @@ export default function Article() {
                                 css={markdownSet.markdown_styles}
                             />
                         </section>
-                        <div css={{borderRight:"1px solid black"}}></div>
+                        <div css={articleSet.article_page__line}></div>
                         <AsideNav />
                     </div>
                 </article>

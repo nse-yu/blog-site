@@ -21,6 +21,10 @@ const top_cards = css`
     align-content:center;
     padding:0 1rem;
     width:100%;
+    @media (max-width: 600px){
+        display:flex;
+        flex-direction:column;
+    }
 `
 const top_cards___horizontalize = css`
     width:100%;

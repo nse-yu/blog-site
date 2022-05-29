@@ -34,7 +34,7 @@ export default function AsideNav() {
                                                             className="group__item"
                                                             whileHover={{scale:1.03,opacity:0.7}}
                                                         >
-                                                            <a target="_blank" rel="noopener noreferrer" href={item.url}>{item.name}</a>
+                                                            <motion.a target="_blank" rel="noopener noreferrer" href={item.url} whileHover={{color:"#ff0000"}}>{item.name}</motion.a>
                                                         </motion.li>
                                                     )
                                                 ))

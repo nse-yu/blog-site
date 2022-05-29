@@ -70,26 +70,49 @@ export default function Header() {
                         </svg>
                     </a>
                 </div>
-                <div className="header-up__edit">
-                    <Link to={`/edit` + (article ? "/"+article.articleID : '')}>
-                        <motion.svg
-                            width="34"
-                            height="34"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#ffffff"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            initial={{opacity:1}}
-                            whileHover={{opacity:0.6}}
-                        >
-                            <path
-                                d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"
-                            />
-                            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-                        </motion.svg>
-                    </Link>
+                <div className="header-up__right"
+                    css={[utilSet.horizontalize,utilSet.horizontalize___right,utilSet.verticalize___center]}    
+                >
+                    <div className="header-up__github">
+                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/nse-yu?tab=repositories">
+                            <motion.svg
+                                width="40"
+                                height="40"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#ffffff"
+                                strokeWidth="1"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                initial={{opacity:1}}
+                                whileHover={{opacity:0.5}}
+                            >
+                                <path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/>
+                                <circle cx="12" cy="10" r="3"/><circle cx="12" cy="12" r="10"/>
+                            </motion.svg>
+                        </a>
+                    </div>
+                    <div className="header-up__edit">
+                        <Link to={`/edit` + (article ? "/"+article.articleID : '')}>
+                            <motion.svg
+                                width="34"
+                                height="34"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#ffffff"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                initial={{opacity:1}}
+                                whileHover={{opacity:0.6}}
+                            >
+                                <path
+                                    d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"
+                                />
+                                <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
+                            </motion.svg>
+                        </Link>
+                    </div>
                 </div>
             </div>
             <div className="header-down" css={headerSet.header_down}>

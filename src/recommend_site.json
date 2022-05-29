@@ -61,6 +61,27 @@
         "url":"https://www.deepl.com/translator",
         "class":"便利ツール",
         "classcode":3
+    },
+    {
+        "id":327,
+        "name":"Gitコミット頻出単語",
+        "url":"https://qiita.com/shikichee/items/a5f922a3ef3aa58a1839",
+        "class":"開発全般",
+        "classcode":5
+    },
+    {
+        "id":141,
+        "name":"ワンパンマン",
+        "url":"https://tonarinoyj.jp/episode/13932016480028985383",
+        "class":"娯楽",
+        "classcode":1
+    },
+    {
+        "id":321,
+        "name":"framer-motion docs",
+        "url":"https://www.framer.com/docs/",
+        "class":"フロント開発",
+        "classcode":2
     }
 ]
  

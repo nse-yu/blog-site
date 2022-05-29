@@ -45,6 +45,10 @@ const markdown_styles = css`
     };
     pre{
         margin:1.2rem 0;
+    };
+    img{
+        width:100%;
+        height:100%;
     }
 `
 
