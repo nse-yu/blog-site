@@ -12,6 +12,7 @@ export default function AsideNav() {
 
     return (
         <>
+            {console.log("AsideNav")}
             <aside css={topSet.top_side_all}>
                 <nav
                     css={[navSet.nav_list,utilSet.verticalize,topSet.top_side_box__el,utilSet.horizontalize___left]}

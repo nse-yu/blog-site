@@ -9,6 +9,7 @@ const card_wrapper = css`
     z-index:1;
     flex-shrink:0;
     user-select: none;
+    overflow:hidden;
     position: relative;
     a{
         text-decoration:none;

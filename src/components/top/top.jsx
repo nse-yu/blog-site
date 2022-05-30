@@ -36,6 +36,7 @@ export default function Top() {
 
     return (
         <>
+            {console.log("Top")}
             <Header />
             <main 
                 className="top-main__wrapper"

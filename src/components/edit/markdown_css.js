@@ -49,6 +49,17 @@ const markdown_styles = css`
     img{
         width:100%;
         height:100%;
+    };
+    .footnotes{
+        font-size:0.9rem;
+        h2{
+            font-size:0;
+            border-left:8px solid #b0c4de;
+            &:before{
+                font-size:0.9rem;
+                content:"用語説明"
+            }
+        }
     }
 `
 

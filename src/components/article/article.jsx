@@ -31,9 +31,14 @@ export default function Article() {
         if(!articles) return
         setCurrentArticle(findByArticleId(articleID))
     })
+    //when first mounted
+    useEffect(() => {
+        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
+    },[])
 
     return (
         <>
+            {console.log("Article")}
             <Header />
             <main
                 css={[

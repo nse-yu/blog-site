@@ -10,6 +10,7 @@ export default function Cards({grid=true,edit=false,pan,del=false}) {
 
     return (
         <AnimatePresence>
+            {console.log("Cards")}
             <motion.section
                 className="top_cards"
                 css={

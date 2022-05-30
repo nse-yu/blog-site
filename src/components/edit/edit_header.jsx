@@ -21,6 +21,7 @@ export default function EditHeader({info,setheight,methods}) {
 
     return (
         <>
+            {console.log("EditHeader")}
             <header 
                 css={[
                     headerSet.header_all,

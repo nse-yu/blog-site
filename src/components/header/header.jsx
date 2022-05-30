@@ -25,12 +25,14 @@ export default function Header() {
 
     return (
         <header 
-        css={[
-            headerSet.header_all,
-            utilSet.verticalize,
-            utilSet.head_foot_opacity
-        ]}
-        ref={headerInfo}>
+            css={[
+                headerSet.header_all,
+                utilSet.verticalize,
+                utilSet.head_foot_opacity
+            ]}
+            ref={headerInfo}
+        >
+            {console.log("Header")}
             <div className="header-up" css={headerSet.header_up_all}>
                 <div className="header-up__nav" css={{display:"none"}}>
                     <svg 

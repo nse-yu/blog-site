@@ -46,6 +46,7 @@ export default function EditTop() {
     const ref_text = useRef() //toolの注釈文をinnetTextで改行もするために必要
     const ref_note = useRef()
     const ref_tools = useRef()
+    const ref_markdown = useRef()
     
     //state
     const [form,setForm] = useReducer(
@@ -109,6 +110,11 @@ export default function EditTop() {
         ref_text.current.innerText = tool.desc
     },[tool])
 
+    //TODO:when textarea changed
+    useEffect(() => {
+        ref_markdown.current.focus()
+    },[markdown])
+
     //==================SET STATES==================//
     //form 
     const formChanged = e => {
@@ -139,7 +145,6 @@ export default function EditTop() {
 
     //markdown
     const textareaChanged = e => {
-        console.log("textarea changed")
         setMarkdown(() => e.target.value)
     }    
 
@@ -181,6 +186,7 @@ export default function EditTop() {
             .then(res_list => {
                 setImgs(() => [...res_list])
             })
+            console.log("changed")
     }
 
 
@@ -242,6 +248,7 @@ export default function EditTop() {
     
     return (
         <>
+            {console.log("EditTop")}
             <EditHeader 
                 info={headerInfo} 
                 setheight={headerHeight} 
@@ -329,7 +336,7 @@ export default function EditTop() {
                                     className="hidden_cards_list"
                                     css={[cardSet.cards_wrapper,editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                 >
-                                    <ImgCards imgs={imgs} pan={panned} grid={true} clicked={onImgClicked}/>
+                                    <ImgCards imgs={imgs} pan={panned} preUpload={true} grid={true} clicked={onImgClicked} changed={fetchImgUrls}/>
                                 </motion.div>
                             </motion.div>
                         }
@@ -416,6 +423,7 @@ export default function EditTop() {
                                         value={markdown}
                                         onChange={textareaChanged}
                                         autoFocus
+                                        ref={ref_markdown}
                                         style={{resize:"none"}}
                                         css={[editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                     />

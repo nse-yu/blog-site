@@ -110,6 +110,7 @@ export default function ResourceProvider({children}) {
         <context.Provider 
             value={values}
         >
+        {console.log("Provider")}
             {children}
         </context.Provider>
     )
