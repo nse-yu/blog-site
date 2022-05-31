@@ -9,14 +9,14 @@ import AsideNav from "../nav/aside_nav"
 import Cards from "../cards/Cards"
 import { useParams } from "react-router-dom"
 
-export default function Top() {
+export default function Top({defaultTab}) {
     //==================DEFINITION==================//
     //variable
     const page_id = "top"
 
     //===================IMPORT====================//
     const {height,resetCurrentArticle,onTabSelected,tabs_json} = useResource()
-    const {tabID} = useParams(0)
+    const {tabName} = useParams(0)
 
     //==================USE EFFECT=================//
     //when every mounted[reset]
@@ -24,15 +24,15 @@ export default function Top() {
         resetCurrentArticle()
     })
     //when first mounted and tabID changed
-    useEffect(() => {
-        if(!tabID) return 
+    useEffect(() => { 
+        let activeName = tabName ? tabName : defaultTab
         tabs_json.forEach(row => {
-            if(row.id === parseInt(tabID)){
-                onTabSelected({id:parseInt(tabID),name:row.name})
+            if(row.name === activeName){
+                onTabSelected({id:row.id,name:activeName})
                 return
             }
         })
-    },[tabID])
+    },[tabName])
 
     return (
         <>

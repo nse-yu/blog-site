@@ -14,7 +14,6 @@ export default function ResourceProvider({children}) {
     const headerInfo = useRef()
 
     //state
-    const [activeTab,setActiveTab] = useState(tabs_json[0])
     const [height,setHeight] = useState()
     const [articles,setArticles] = useState(0)
     const [article,setArticle] = useState(0) //falsy狙いで0にする
@@ -33,7 +32,6 @@ export default function ResourceProvider({children}) {
         fetch(fetchString)
             .then(res => res.json())
             .then(res_json => setArticles(() => res_json))
-            .finally(() => setActiveTab(() => tab))
             .catch(console.error)
     }
     //height
@@ -91,7 +89,6 @@ export default function ResourceProvider({children}) {
     //=================ALL TO PASS=================//
     const values = {
         tabs_json, //すべてのタブ情報
-        activeTab, //stateで管理された、選択中のタブ情報
         onTabSelected, //タブ選択時（クリック時）のコールバック
         headerInfo, //headerへの参照を保持するインスタンス
         height, //headerの高さを保持するstate

@@ -6,7 +6,7 @@ import { useResource } from "../ResourceProvider"
 import { AnimatePresence, motion } from "framer-motion"
 import { navSet } from "../nav/nav_css"
 import { useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { useState } from "react"
 
 const sidebar = {
@@ -28,7 +28,7 @@ const sidebar = {
 };
 
 export default function Header() {
-    const {headerInfo,headerHeight,tabs_json,onTabSelected,activeTab,article} = useResource()
+    const {headerInfo,headerHeight,tabs_json,article} = useResource()
     const [isNavOpen,setIsNavOpen] = useState(false)
 
 
@@ -44,7 +44,6 @@ export default function Header() {
     //================callbacks==================//
     function tabClicked(e) {
         if(article) return
-        onTabSelected({id:parseInt(e.target.dataset.id),name:e.target.dataset.name})
         if(!isNavOpen) return
         setIsNavOpen(!isNavOpen)
     }
@@ -75,34 +74,26 @@ export default function Header() {
                                 navSet.nav_list___humberger
                             ]}>
                                 {tabs_json.map((item,index) => (
-                                    <motion.div 
+                                    <NavLink 
                                         className="nav-tab__item" 
                                         key={index}
                                         onClick={tabClicked}
-                                        style={item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}}
-                                        whileHover={{opacity:0.3,scaleY:1.1}}
+                                        style={({isActive}) => { 
+                                            return isActive ? 
+                                            {backgroundColor:"black",color:"white",textDecoration:"none"}
+                                            :
+                                            {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
+                                        }}
+                                        to={`/category/${item.name}`}
                                     >
-                                        <li
+                                        <motion.li
+                                            whileHover={{opacity:0.3}}
                                             data-id={item.id}
                                             data-name={item.name}
                                         >
-                                            {!article ? 
-                                                item.name 
-                                                : 
-                                                <Link 
-                                                    css={
-                                                        [
-                                                        {textDecoration:"none",color:"black"},
-                                                        item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}
-                                                        ]
-                                                    }
-                                                    to={`/tab/${item.id}`}
-                                                >
-                                                    {item.name}
-                                                </Link>
-                                            }
-                                        </li>
-                                    </motion.div>
+                                            {item.name}
+                                        </motion.li>
+                                    </NavLink>
                                 ))}
                             </ul>
                         </motion.nav>
@@ -150,7 +141,7 @@ export default function Header() {
                 </div>
                 <div className="header-up__logo">
                     <a href="/">
-                        <svg width="200px" height="50px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="200px" height="35px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
                             <motion.text
                                 x="10"
                                 y="45" 
@@ -224,42 +215,36 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            <div className="header-down" css={headerSet.header_down}>
-                <nav className="nav-tab" css={navSet.nav_all}>
-                    <ul css={[utilSet.horizontalize]}>
-                        {tabs_json.map((item,index) => (
-                            <motion.div 
-                                className="nav-tab__item" 
-                                key={index}
-                                onClick={tabClicked}
-                                style={item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}}
-                                whileHover={{opacity:0.3}}
-                            >
-                                <li
-                                    data-id={item.id}
-                                    data-name={item.name}
+            {!article &&
+                <div className="header-down" css={headerSet.header_down}>
+                    <nav className="nav-tab" css={navSet.nav_all}>
+                        <ul css={[utilSet.horizontalize]}>
+                            {tabs_json.map((item,index) => (
+                                <NavLink 
+                                    className="nav-tab__item" 
+                                    key={index}
+                                    onClick={tabClicked}
+                                    style={({isActive}) => { 
+                                        return isActive ? 
+                                        {backgroundColor:"black",color:"white",textDecoration:"none"}
+                                        :
+                                        {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
+                                    }}
+                                    to={`/category/${item.name}`}
                                 >
-                                    {!article ? 
-                                        item.name 
-                                        : 
-                                        <Link 
-                                            css={
-                                                [
-                                                {textDecoration:"none",color:"black"},
-                                                item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}
-                                                ]
-                                            }
-                                            to={`/tab/${item.id}`}
-                                        >
-                                            {item.name}
-                                        </Link>
-                                    }
-                                </li>
-                            </motion.div>
-                        ))}
-                    </ul>
-                </nav>
-            </div>
+                                    <motion.li
+                                        whileHover={{opacity:0.3}}
+                                        data-id={item.id}
+                                        data-name={item.name}
+                                    >
+                                        {item.name}
+                                    </motion.li>
+                                </NavLink>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+            }
         </header>
     )
 }
