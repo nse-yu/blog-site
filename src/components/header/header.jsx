@@ -167,7 +167,7 @@ export default function Header() {
                                 d="
                                 M 140 25 L 150 35 L 160 25 M 150 50 V 35
                                 M 170 25 V 40 A 5 5 0 0 0 185 40 V 25
-                                M 10 48 H 400
+                                M 15 48 H 197
                                 "
                                 stroke="#ffffff"
                                 strokeWidth="4"

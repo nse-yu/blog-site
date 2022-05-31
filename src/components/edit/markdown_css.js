@@ -47,8 +47,10 @@ const markdown_styles = css`
         margin:1.2rem 0;
     };
     img{
-        width:100%;
-        height:100%;
+        border-radius:5px;
+        width:80%;
+        height:80%;
+        box-shadow:1px 2px 6px gray;
     };
     .footnotes{
         font-size:0.9rem;
