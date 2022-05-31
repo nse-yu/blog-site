@@ -82,6 +82,13 @@
         "url":"https://www.framer.com/docs/",
         "class":"フロント開発",
         "classcode":2
+    },
+    {
+        "id":672,
+        "name":"SVGグラフィック",
+        "url":"https://developer.mozilla.org/ja/docs/Web/SVG/Element#graphics_elements",
+        "class":"フロント開発",
+        "classcode":2
     }
 ]
  

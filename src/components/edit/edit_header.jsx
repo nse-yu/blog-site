@@ -8,17 +8,17 @@ import { btnSet } from "../others/btn_css"
 import { useResource } from "../ResourceProvider"
 
 
-export default function EditHeader({info,methods}) {
+export default function EditHeader({methods}) {
     //==================IMPORT====================//
     const {article,headerInfo,headerHeight} = useResource()
-
 
     //==================USE EFFECT=================//
     //only first mounted
     useEffect(() => {
-        window.onresize = () => {
+        window.addEventListener("resize",() => {
             headerHeight(headerInfo.current.getBoundingClientRect().height)
-        }
+        })
+       
         //ヘッダー高さを取得し、マージン調整
         headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
@@ -33,7 +33,7 @@ export default function EditHeader({info,methods}) {
                     utilSet.head_foot_opacity,
                     headerSet.header___minimize
                 ]}
-                ref={info}
+                ref={headerInfo}
             >
                 <div className="header-up" css={[headerSet.header_up_all,headerSet.header_up_all___edit]}>
                     <div className="header-up__logo">

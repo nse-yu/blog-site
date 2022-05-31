@@ -20,13 +20,10 @@ import DesignedSelect from "../select/DesignedSelect";
 import ImgCards from "../cards/ImgCards";
 import { cardSet } from "../card/card_css";
 import { useParams } from "react-router-dom";
-import { PureComponent } from "react";
 
 export default function EditTop() {
     const {
-        headerInfo,
         height,
-        headerHeight,
         article,
         resetCurrentArticle,
         tabs_json,
@@ -272,8 +269,6 @@ export default function EditTop() {
         <>
             {console.log("EditTop")}
             <EditHeader 
-                info={headerInfo} 
-                setheight={headerHeight} 
                 methods={{
                     open:onOpenClicked,
                     reset:onResetClicked,

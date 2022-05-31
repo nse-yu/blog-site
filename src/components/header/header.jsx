@@ -34,6 +34,7 @@ export default function Header() {
 
     useEffect(() => {
         window.onresize = () => {
+            console.log("resize")
             headerHeight(headerInfo.current.getBoundingClientRect().height)
         }
         //ヘッダー高さを取得し、マージン調整
@@ -150,11 +151,20 @@ export default function Header() {
                 <div className="header-up__logo">
                     <a href="/">
                         <svg width="200px" height="50px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
+                            <motion.text
+                                x="10"
+                                y="45" 
+                                fontSize="3.2rem"   
+                                fill="white"
+                                fontFamily="Varela Round, sans-serif"
+                                initial={{filter:"drop-shadow(3px 3px 10px black)"}}
+                                animate={{filter:"drop-shadow(4px 6px 5px white)"}}
+                                transition={{duration:0.7,repeat:"Infinity",repeatType:"reverse"}}
+                            >
+                                NAG
+                            </motion.text>
                             <motion.path
                                 d="
-                                M 10 45 V 10 L 37 45 V 10
-                                M 50 45 L 65 10 L 80 45 M 75 35 H 55
-                                M 118 20 A 20 14 0 0 0 111 10 A 20 38 0 0 0 92 19 A 20 20 0 0 0 99 45 A 22 45 0 0 0 106 46  A 20 85 0 0 0 107.9 45.4 A 103 28 0 0 0 118 30 H 106                                
                                 M 140 25 L 150 35 L 160 25 M 150 50 V 35
                                 M 170 25 V 40 A 5 5 0 0 0 185 40 V 25
                                 M 10 48 H 400
