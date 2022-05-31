@@ -13,10 +13,14 @@
     },
     {
         "id":4,
-        "name":"gadjet"
+        "name":"learning"
     },
     {
         "id":5,
+        "name":"gadjet"
+    },
+    {
+        "id":6,
         "name":"others"
     }
 ]

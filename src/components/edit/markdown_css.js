@@ -60,6 +60,12 @@ const markdown_styles = css`
                 content:"用語説明"
             }
         }
+    };
+    .contains-task-list{
+        list-style:none;
+    };
+    strong{
+        color:red;
     }
 `
 

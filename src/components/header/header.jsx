@@ -3,16 +3,39 @@ import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { headerSet } from "../header/header_css"
 import { useResource } from "../ResourceProvider"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { navSet } from "../nav/nav_css"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 
+const sidebar = {
+    open: {
+      transition: {
+        type: "spring",
+        stiffness: 10,
+        restDelta: 2
+      }
+    },
+    closed: {
+      transition: {
+        delay: 0.4,
+        type: "spring",
+        stiffness: 90,
+        damping: 15
+      }
+    }
+};
 
 export default function Header() {
     const {headerInfo,headerHeight,tabs_json,onTabSelected,activeTab,article} = useResource()
+    const [isNavOpen,setIsNavOpen] = useState(false)
+
 
     useEffect(() => {
+        window.onresize = () => {
+            headerHeight(headerInfo.current.getBoundingClientRect().height)
+        }
         //ヘッダー高さを取得し、マージン調整
         headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
@@ -21,6 +44,8 @@ export default function Header() {
     function tabClicked(e) {
         if(article) return
         onTabSelected({id:parseInt(e.target.dataset.id),name:e.target.dataset.name})
+        if(!isNavOpen) return
+        setIsNavOpen(!isNavOpen)
     }
 
     return (
@@ -33,9 +58,63 @@ export default function Header() {
             ref={headerInfo}
         >
             {console.log("Header")}
+            <AnimatePresence>
+                {
+                    isNavOpen && (
+                        <motion.nav
+                            css={{height:"100vh",width:"50%",position:"absolute",backgroundColor:"rgba(97, 97, 97, 0.875)",top:0,left:0}}
+                            initial={{x:-1000}}
+                            animate={{x:0}}
+                            transition={{duration:0.5}}
+                            exit={{x:-1000}}
+                        >
+                            <ul css={[
+                                utilSet.horizontalize,
+                                utilSet.verticalize,
+                                navSet.nav_list___humberger
+                            ]}>
+                                {tabs_json.map((item,index) => (
+                                    <motion.div 
+                                        className="nav-tab__item" 
+                                        key={index}
+                                        onClick={tabClicked}
+                                        style={item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}}
+                                        whileHover={{opacity:0.3,scaleY:1.1}}
+                                    >
+                                        <li
+                                            data-id={item.id}
+                                            data-name={item.name}
+                                        >
+                                            {!article ? 
+                                                item.name 
+                                                : 
+                                                <Link 
+                                                    css={
+                                                        [
+                                                        {textDecoration:"none",color:"black"},
+                                                        item.id === activeTab.id ? {backgroundColor:"black",color:"white"} : {backgroundColor:"#f8f8ff"}
+                                                        ]
+                                                    }
+                                                    to={`/tab/${item.id}`}
+                                                >
+                                                    {item.name}
+                                                </Link>
+                                            }
+                                        </li>
+                                    </motion.div>
+                                ))}
+                            </ul>
+                        </motion.nav>
+                    )
+                }
+            </AnimatePresence>
             <div className="header-up" css={headerSet.header_up_all}>
-                <div className="header-up__nav" css={{display:"none"}}>
-                    <svg 
+                <div className="header-up__nav" 
+                    css={{display:"none",zIndex:3}}
+                    onClick={() => setIsNavOpen(!isNavOpen)}
+                >
+                    <motion.svg 
+                        whileHover={{stroke:"#ff0000"}}
                         width="31" 
                         height="31" 
                         viewBox="0 0 24 24" 
@@ -44,23 +123,41 @@ export default function Header() {
                         strokeWidth="2" 
                         strokeLinecap="round" 
                         strokeLinejoin="round"
+                        variants={sidebar}
+                        animate={isNavOpen ? "open" : "closed"}
                     >
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
+                        <motion.line 
+                            variants={{
+                                open:{x1:3, y1:6, x2:21, y2:18},
+                                closed:{x1:3, y1:6, x2:21, y2:6}
+                            }}
+                        />
+                        <motion.line 
+                            x1="3" y1="12" x2="21" y2="12"
+                            variants={{
+                                open:{opacity:0},
+                                closed:{opacity:1}
+                            }}
+                        />
+                        <motion.line 
+                            variants={{
+                                open:{x1:3, y1:18, x2:21, y2:6},
+                                closed:{x1:3, y1:18, x2:21, y2:18}
+                            }}
+                        />
+                    </motion.svg>
                 </div>
                 <div className="header-up__logo">
                     <a href="/">
-                        <svg width="400px" height="50px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="200px" height="50px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
                             <motion.path
                                 d="
-                                M 10 80 V 10 L 60 80 V 10
-                                M 80 80 L 110 10 L 140 80 M 130 60 H 90
-                                M 210 25 A 30 40 0 0 0 160 30 A 40 40 0 0 0 170 75 A 26 28 0 0 0 211 50 H 190
-                                M 250 50 L 260 65 L 270 50 M 260 80 V 65
-                                M 290 50 V 70 A 10 10 0 0 0 310 70 V 50
-                                M 10 80 H 400
+                                M 10 45 V 10 L 37 45 V 10
+                                M 50 45 L 65 10 L 80 45 M 75 35 H 55
+                                M 118 20 A 20 14 0 0 0 111 10 A 20 38 0 0 0 92 19 A 20 20 0 0 0 99 45 A 22 45 0 0 0 106 46  A 20 85 0 0 0 107.9 45.4 A 103 28 0 0 0 118 30 H 106                                
+                                M 140 25 L 150 35 L 160 25 M 150 50 V 35
+                                M 170 25 V 40 A 5 5 0 0 0 185 40 V 25
+                                M 10 48 H 400
                                 "
                                 stroke="#ffffff"
                                 strokeWidth="4"
@@ -119,7 +216,7 @@ export default function Header() {
             </div>
             <div className="header-down" css={headerSet.header_down}>
                 <nav className="nav-tab" css={navSet.nav_all}>
-                    <ul css={[navSet.nav_tab]}>
+                    <ul css={[utilSet.horizontalize]}>
                         {tabs_json.map((item,index) => (
                             <motion.div 
                                 className="nav-tab__item" 

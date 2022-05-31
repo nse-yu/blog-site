@@ -8,15 +8,19 @@ import { btnSet } from "../others/btn_css"
 import { useResource } from "../ResourceProvider"
 
 
-export default function EditHeader({info,setheight,methods}) {
+export default function EditHeader({info,methods}) {
     //==================IMPORT====================//
-    const {article} = useResource()
+    const {article,headerInfo,headerHeight} = useResource()
+
 
     //==================USE EFFECT=================//
     //only first mounted
     useEffect(() => {
+        window.onresize = () => {
+            headerHeight(headerInfo.current.getBoundingClientRect().height)
+        }
         //ヘッダー高さを取得し、マージン調整
-        setheight(info.current.getBoundingClientRect().height)
+        headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
 
     return (
@@ -31,7 +35,7 @@ export default function EditHeader({info,setheight,methods}) {
                 ]}
                 ref={info}
             >
-                <div className="header-up" css={headerSet.header_up_all}>
+                <div className="header-up" css={[headerSet.header_up_all,headerSet.header_up_all___edit]}>
                     <div className="header-up__logo">
                         <a href="/">
                             <svg width="250px" height="30px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">
@@ -69,7 +73,8 @@ export default function EditHeader({info,setheight,methods}) {
                             </motion.p>
                         </div>
                     }
-                    <div className="header-up__edit-options" css={utilSet.horizontalize}>
+                    <div className="header-up__edit-options" 
+                        css={[headerSet.header_up_options___edit,utilSet.horizontalize]}>
                         <motion.div className="btn btn__open"
                             whileHover={{opacity:0.5}}
                         >

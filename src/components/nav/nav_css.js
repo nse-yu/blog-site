@@ -15,15 +15,8 @@ const nav_all = css`
         }
         li{
             padding:10px;
+            list-style:none;
         }
-    }
-`
-const nav_tab = css`
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    li{
-        list-style:none;
     }
 `
 
@@ -58,10 +51,18 @@ const nav_list_group = css`
     }
 `
 
+const nav_list___humberger = css`
+    margin-top:100px;
+    .nav-tab__item > li{
+        padding:1rem 0;
+        text-align:center;
+    }
+`
+
 export const navSet = {
     nav_all,
-    nav_tab,
     nav_list,
     nav_list_group,
+    nav_list___humberger,
     nav_list_title
 }

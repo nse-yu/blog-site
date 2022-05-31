@@ -6,7 +6,6 @@ import LoadedImg from "../img/Img"
 import { cardSet } from "../card/card_css"
 import { utilSet } from "../others/util_css"
 import { useState } from "react"
-import { useLayoutEffect } from "react"
 import { useEffect } from "react"
 
 export default function ImgCards({

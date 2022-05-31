@@ -24,7 +24,7 @@ const article_bigimg_wrapper = css`
     width:90%;
 `
 const article_bigimg_wrapper__el = css`
-    margin:0 70px;
+    margin:0 auto;
 `
 //==============for page markdown===========//
 const article_content = css`

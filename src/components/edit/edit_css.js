@@ -10,6 +10,9 @@ const edit_note_wrapper = css`
     width:50%;
     color:white;
     font-family:'Zen Maru Gothic', sans-serif;
+    @media (max-width:600px){
+        width:100%;
+    }
 `
 const edit_note_title = css`
     text-align:center;

@@ -25,6 +25,9 @@ const top_cards = css`
         display:flex;
         flex-direction:column;
     }
+    @media (max-width: 900px){
+        grid-template-columns:repeat(2,1fr);
+    }
 `
 const top_cards___horizontalize = css`
     width:100%;

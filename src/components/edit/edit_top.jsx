@@ -20,6 +20,7 @@ import DesignedSelect from "../select/DesignedSelect";
 import ImgCards from "../cards/ImgCards";
 import { cardSet } from "../card/card_css";
 import { useParams } from "react-router-dom";
+import { PureComponent } from "react";
 
 export default function EditTop() {
     const {
@@ -43,10 +44,9 @@ export default function EditTop() {
     const {articleID} = useParams("")
 
     //ref
-    const ref_text = useRef() //toolの注釈文をinnetTextで改行もするために必要
     const ref_note = useRef()
     const ref_tools = useRef()
-    const ref_markdown = useRef()
+    const ref_markdown = useRef() //stateのmarkdownは、テキストのみだが、refなら要素自体にアクセスできる
     
     //state
     const [form,setForm] = useReducer(
@@ -56,10 +56,7 @@ export default function EditTop() {
     const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
     const [isImgOpen,setIsImgOpen] = useState(false) //HACK:state of hidden list of Images
     const [imgs,setImgs] = useState([])
-    const [ishover,setIshover] = useState(false) //HACK:state of icon hovering
-    const [tool,setTool] = useState({}) //HACK:state of item clicked
-    const [noteWidth,setNodeWidth] = useState(0)
-    const [toolsHeight,setToolsHeight] = useState(0)
+    const [noteRect,setNoteRect] = useState({width:0,height:0})
 
     //==================USE EFFECT=================//
     //TODO:when reloading[confirm]
@@ -68,15 +65,21 @@ export default function EditTop() {
             e.returnValue = "更新しますか"
             return "更新しますか"
         }
-        window.onresize = e => {
-            setNodeWidth(ref_note.current.getBoundingClientRect().width - 20)
+        window.onresize = () => {
+            setNoteRect({
+                width:ref_note.current.getBoundingClientRect().width - 20,
+                height:ref_note.current.getBoundingClientRect().height * 0.1
+            })
+            
         }
-        setToolsHeight(ref_tools.current.getBoundingClientRect().height)
     },[])
 
     //TODO:when note's width has changed
     useEffect(() => {
-        setNodeWidth(ref_note.current.getBoundingClientRect().width - 20)
+        setNoteRect({
+            width:ref_note.current.getBoundingClientRect().width - 20,
+            height:ref_note.current.getBoundingClientRect().height * 0.1
+        })
     },[ref_note])
 
     //TODO:when mounted, set articles
@@ -94,21 +97,50 @@ export default function EditTop() {
     useLayoutEffect(() => {
         //articleが空の場合にデフォルトのフォーム値を使用する
         if(!article) return
-        setForm({title:article.title,desc:article.desc,img:{},tag:findTagById(article.tagID)}) 
+
+        fetch("http://localhost:8080/img/"+article.imgURL)
+            .then(res => {
+                const reader = res.body.getReader()
+                return new ReadableStream({
+                    start(controller){
+                        return pump()
+
+                        function pump(){
+                            return reader.read().then(({done,value}) => {
+                                if(done){
+                                    controller.close()
+                                    return
+                                }
+                                controller.enqueue(value)
+                                return pump()
+                            })
+                        }
+                    }
+                })
+            })
+            .then(stream => new Response(stream))
+            .then(response => response.blob())
+            .then(blob => {
+                const file = new File([blob],article.imgURL)
+                return file
+            })
+            .then(file => {
+                setForm({title:article.title,desc:article.desc,img:file,tag:findTagById(article.tagID)}) 
+            })
+            .catch(err => console.error(err))
+
         setMarkdown(article.content)
     },[article])
+
+    useEffect(() => {
+        console.log(form.img.name)
+    },[form])
 
     //TODO:article changed[set]
     useEffect(() => {
         if(!article) return
         setIsOpen(false)
     },[article])
-
-    //FIXME:tool changed[set]
-    useEffect(() => {
-        if(!tool.desc) return
-        ref_text.current.innerText = tool.desc
-    },[tool])
 
     //TODO:when textarea changed
     useEffect(() => {
@@ -133,60 +165,30 @@ export default function EditTop() {
     const tagChanged = (id,name) => {
         setForm({tag:[id,name]})
     }
-    const findTagById = id => {
-        let tag = []
-        tabs_json.forEach(row => {
-            if(row.id === parseInt(id)){
-                tag.push(id,row.name)
-            }
-        })
-        return tag
-    }
 
     //markdown
     const textareaChanged = e => {
         setMarkdown(() => e.target.value)
     }    
 
-    //tool markdown ishover
+    //tool markdown 
     const appear = e => {
         if(parseInt(e.target.dataset.id) === 6){
             fetchImgUrls()
             setIsImgOpen(!isImgOpen)
         }
-        //setIshover(true) //FIXME
-        setMarkdown(() => markdown + e.target.dataset.helper)
-    }
-    
-    //ishover
-    const showDesc = e => {
-        setIshover(true)
-        setTool({tool:e.target.dataset.tool,desc:e.target.dataset.desc})
-    }
-
-    //ishover
-    const cancel = () => {
-        setIshover(false) //FIXME
+        let cursor = ref_markdown.current.selectionStart
+        setMarkdown(() => markdown.slice(0,cursor) + e.target.dataset.helper + markdown.slice(cursor))
     }
 
     //isopen
-    const toggleHidden = () => {
+    const onOpenClicked = () => {
         setIsOpen(!isOpen)
     }
 
     //isImgOpen
     const toggleImgHidden = () => {
         setIsImgOpen(!isImgOpen)
-    }
-
-    //imgs
-    const fetchImgUrls = () => {
-        fetch("http://localhost:8080/img/all")
-            .then(res => res.json())
-            .then(res_list => {
-                setImgs(() => [...res_list])
-            })
-            console.log("changed")
     }
 
 
@@ -245,7 +247,27 @@ export default function EditTop() {
         setMarkdown(() => markdown + e.target.dataset.url + ")")
         setIsImgOpen(!isImgOpen)
     }
-    
+
+    //==================UTILITY====================//
+    //imgs
+    const fetchImgUrls = () => {
+        fetch("http://localhost:8080/img/all")
+            .then(res => res.json())
+            .then(res_list => {
+                setImgs(() => [...res_list])
+            })
+            console.log("changed")
+    }
+    const findTagById = id => {
+        let tag = []
+        tabs_json.forEach(row => {
+            if(row.id === parseInt(id)){
+                tag.push(id,row.name)
+            }
+        })
+        return tag
+    }
+
     return (
         <>
             {console.log("EditTop")}
@@ -253,7 +275,7 @@ export default function EditTop() {
                 info={headerInfo} 
                 setheight={headerHeight} 
                 methods={{
-                    open:toggleHidden,
+                    open:onOpenClicked,
                     reset:onResetClicked,
                     submit:onSubmitClicked,
                     newfile:onNewClicked
@@ -278,7 +300,7 @@ export default function EditTop() {
                                 transition={{duration:0.6,delay:0.15}}
                             >
                                 <button
-                                    onClick={toggleHidden}
+                                    onClick={onOpenClicked}
                                 >
                                     <motion.svg
                                         whileHover={{scale:1.3,stroke:"red"}}
@@ -363,7 +385,7 @@ export default function EditTop() {
                                         utilSet.horizontalize,
                                         editSet.edit_note_tools,
                                         editSet.scrollbar_style,
-                                        {width:noteWidth}
+                                        {width:noteRect.width,height:noteRect.height}
                                     ]}
                                     onPan={panned}
                                     ref={ref_tools}
@@ -381,8 +403,6 @@ export default function EditTop() {
                                                 style={editSet.edit_element}
                                                 whileHover={{scale:1.15,opacity:0.3}}
                                                 onClick={appear}
-                                                //onHoverStart={showDesc}
-                                                onMouseLeave={cancel}
                                                 onPan={e => {e.preventDefault()}}
                                                 {...editSet.hover_props}
                                             >
@@ -402,21 +422,11 @@ export default function EditTop() {
                                             </motion.div>
                                         ))
                                     }
-                                    {
-                                        ishover && tool && (
-                                            <section className="tools-annotation"
-                                                css={[editSet.tools_annotation,utilSet.verticalize]}
-                                            >
-                                                <strong>{tool.tool}</strong>
-                                                <p ref={ref_text}></p>
-                                            </section>
-                                        )
-                                    }
                                 </motion.div>
                                 <motion.div className="editable-note-canvas"
                                     css={[
                                         editSet.edit_note_canvas,
-                                        {marginTop:toolsHeight}
+                                        {marginTop:noteRect.height}
                                     ]}
                                 >
                                     <textarea
