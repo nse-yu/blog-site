@@ -5,33 +5,53 @@ import Header from "../header/header"
 import { topSet } from "../top/top_css"
 import ResourceProvider, { useResource } from "../ResourceProvider"
 import { useEffect } from "react"
-import AsideNav from "../nav/aside_nav"
-import Cards from "../cards/Cards"
-import { useParams } from "react-router-dom"
+import { Outlet, useParams, useSearchParams } from "react-router-dom"
+import { useLayoutEffect } from "react"
 
-export default function Top({defaultTab}) {
+export default function Top() {
+    //===================IMPORT====================//
+    const {height,resetCurrentArticle,onTabSelected,tabs_json,article,activeTab,activeTabChanged} = useResource()
+    const {tabName,articleID} = useParams(0)
+
     //==================DEFINITION==================//
     //variable
     const page_id = "top"
+    //queryparams
+    const [params,setParams] = useSearchParams()
 
-    //===================IMPORT====================//
-    const {height,resetCurrentArticle,onTabSelected,tabs_json} = useResource()
-    const {tabName} = useParams(0)
-
+    
     //==================USE EFFECT=================//
+    //cardの選択に反応し、activeTabをパラメータに格納
+    useLayoutEffect(() => {
+        if(!article) return
+        setParams(activeTab)
+    },[article])
+
+    useEffect(() => {
+        if(!params) return 
+        activeTabChanged({id:params.get("id"),name:params.get("name")})
+    },[params])
     //when every mounted[reset]
     useEffect(() => {
+        if(articleID) return
         resetCurrentArticle()
     })
     //when first mounted and tabID changed
     useEffect(() => { 
-        let activeName = tabName ? tabName : defaultTab
+        if(!tabName && !articleID){ //初期のみ有効
+            window.location = "/category/"+tabs_json[0].name
+        }
         tabs_json.forEach(row => {
-            if(row.name === activeName){
-                onTabSelected({id:row.id,name:activeName})
+            if(row.name === tabName){
+                onTabSelected({id:row.id,name:tabName})
                 return
             }
         })
+    },[tabName])
+    //reset param
+    useEffect(() => {
+        if(articleID) return
+        setParams(0)
     },[tabName])
 
     return (
@@ -42,11 +62,11 @@ export default function Top({defaultTab}) {
                 className="top-main__wrapper"
                 css={[
                     topSet.top_all,
-                    {marginTop:height}
+                    {marginTop:height},
+                    {padding:article ? 0 : "1rem"}
                 ]}
             >
-                <Cards grid={true} edit={false}/>
-                <AsideNav />
+                <Outlet />
             </main>
             <Footer />
         </>

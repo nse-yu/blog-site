@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
+import { useSearchParams } from "react-router-dom";
 import tabs_json from "../tabs.json";
 
 const context = createContext()
@@ -14,6 +15,7 @@ export default function ResourceProvider({children}) {
     const headerInfo = useRef()
 
     //state
+    const [activeTab,setActiveTab] = useState(0)
     const [height,setHeight] = useState()
     const [articles,setArticles] = useState(0)
     const [article,setArticle] = useState(0) //falsy狙いで0にする
@@ -33,6 +35,7 @@ export default function ResourceProvider({children}) {
             .then(res => res.json())
             .then(res_json => setArticles(() => res_json))
             .catch(console.error)
+        setActiveTab(tab)
     }
     //height
     const headerHeight = current => {
@@ -61,7 +64,11 @@ export default function ResourceProvider({children}) {
             })
             .catch(err => console.log(err))
     } 
-    
+    //activeTab
+    const activeTabChanged = active => {
+        setActiveTab(active)
+    }
+
     //==================UTILITY====================//
     function distinctObjByTags(objs,tags=[]){
         return Array(...objs).filter((entry,i) => {
@@ -97,8 +104,10 @@ export default function ResourceProvider({children}) {
         setCurrentArticle,
         resetCurrentArticle,
         article,
+        activeTab,
         distinctObjByTags,
         findByArticleId,
+        activeTabChanged,
         findAll,
         deleteArticle
     }

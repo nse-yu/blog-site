@@ -2,21 +2,23 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Article from "./components/article/article";
 import Top from "./components/top/top";
 import EditTop from "./components/edit/edit_top";
-import { useResource } from "./components/ResourceProvider";
-import Root from "./Root";
+import AsideNav from "./components/nav/aside_nav";
+import Cards from "./components/cards/Cards";
 
 function App() {
-  const {tabs_json} = useResource()
   
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Root/>}/>
-          <Route path="/category/:tabName" element={<Top />} />
+          <Route path="/" element={<Top/>}>
+            <Route path="/category/:tabName" element={
+              <><Cards grid={true} edit={false}/><AsideNav /></>
+            }/>
+            <Route path="/article/:articleID" element={<Article />}/>
+          </Route>
           <Route path="/edit/:articleID" element={<EditTop />} />
           <Route path="/edit/" element={<EditTop />} />
-          <Route path="/article/:articleID" element={<Article />} />
         </Routes>
       </BrowserRouter>
     </>   

@@ -7,7 +7,7 @@ import LoadedImg from "../img/Img"
 import { useResource } from "../ResourceProvider"
 
 export default function Card({article,edittable=false,del=false}) {
-    const {setCurrentArticle,deleteArticle} = useResource()
+    const {deleteArticle} = useResource()
 
     return (
         <AnimatePresence>
@@ -48,7 +48,6 @@ export default function Card({article,edittable=false,del=false}) {
                 <Link 
                     to={edittable ? `/edit/${article.articleID}` : `/article/${article.articleID}`} 
                     css={{height:"100%"}}
-                    onClick={() => {setCurrentArticle(article)}} 
                 >
                     <figure css={{height:"inherit"}}>
                         <LoadedImg

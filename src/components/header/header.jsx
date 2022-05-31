@@ -28,7 +28,7 @@ const sidebar = {
 };
 
 export default function Header() {
-    const {headerInfo,headerHeight,tabs_json,article} = useResource()
+    const {headerInfo,headerHeight,tabs_json,article,activeTab,activeTabChanged} = useResource()
     const [isNavOpen,setIsNavOpen] = useState(false)
 
 
@@ -43,9 +43,9 @@ export default function Header() {
 
     //================callbacks==================//
     function tabClicked(e) {
+        setIsNavOpen(!isNavOpen)
         if(article) return
         if(!isNavOpen) return
-        setIsNavOpen(!isNavOpen)
     }
 
     return (
@@ -79,10 +79,10 @@ export default function Header() {
                                         key={index}
                                         onClick={tabClicked}
                                         style={({isActive}) => { 
-                                            return isActive ? 
-                                            {backgroundColor:"black",color:"white",textDecoration:"none"}
-                                            :
-                                            {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
+                                            return (isActive || parseInt(activeTab.id) === item.id) ? 
+                                                {backgroundColor:"black",color:"white",textDecoration:"none"}
+                                                :
+                                                {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
                                         }}
                                         to={`/category/${item.name}`}
                                     >
@@ -215,7 +215,7 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            {!article &&
+            {1 &&
                 <div className="header-down" css={headerSet.header_down}>
                     <nav className="nav-tab" css={navSet.nav_all}>
                         <ul css={[utilSet.horizontalize]}>
@@ -225,7 +225,7 @@ export default function Header() {
                                     key={index}
                                     onClick={tabClicked}
                                     style={({isActive}) => { 
-                                        return isActive ? 
+                                        return (isActive || parseInt(activeTab.id) === item.id) ? 
                                         {backgroundColor:"black",color:"white",textDecoration:"none"}
                                         :
                                         {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
