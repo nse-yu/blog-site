@@ -66,9 +66,8 @@ export default function EditTop() {
             setNoteRect({
                 width:ref_note.current.getBoundingClientRect().width - 20,
                 height:ref_note.current.getBoundingClientRect().height * 0.1
-            })
-            
-        }
+            })   
+        }  
     },[])
 
     //TODO:when note's width has changed

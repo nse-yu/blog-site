@@ -43,9 +43,9 @@ export default function Header() {
 
     //================callbacks==================//
     function tabClicked(e) {
+        if(!isNavOpen) return
         setIsNavOpen(!isNavOpen)
         if(article) return
-        if(!isNavOpen) return
     }
 
     return (
