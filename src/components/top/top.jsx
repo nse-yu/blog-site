@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
+import { jsx,css, ThemeProvider } from "@emotion/react"
 import Footer from "../footer/footer"
 import Header from "../header/header"
 import { topSet } from "../top/top_css"
@@ -13,7 +13,16 @@ import { useLayoutEffect } from "react"
  */
 export default function Top() {
     //===================IMPORT====================//
-    const {height,resetCurrentArticle,onTabSelected,tabs_json,article,activeTab,activeTabChanged} = useResource()
+    const {
+        height,
+        resetCurrentArticle,
+        onTabSelected,
+        tabs_json,
+        article,
+        activeTab,
+        activeTabChanged,
+        isLight
+    } = useResource()
     const {articleID,tabName} = useParams(0) // category,articleそれぞれのマッチング変数
 
     //==================DEFINITION==================//
@@ -57,18 +66,45 @@ export default function Top() {
     return (
         <>
             {console.log("Top")}
-            <Header />
+            <Header 
+                themes={theme => ({
+                    background: isLight ? theme.headerBack.light : theme.headerBack.default,
+                    fill : isLight ? theme.fill.light : theme.fill.default
+                })}
+                svgThemes={theme => ({
+                    stroke: isLight ? theme.fill.light : theme.fill.default,
+                })}
+                tabThemesOn={theme => ({
+                    color: isLight ? theme.background.default : theme.background.light,
+                    backgroundColor: isLight ? theme.background.light : theme.background.default
+                })}
+                tabThemesOff={theme => ({
+                    color: isLight ? theme.background.light : theme.background.default,
+                    backgroundColor: isLight ? theme.background.default : theme.background.light
+                })}
+            />
             <main 
                 className="top-main__wrapper"
                 css={[
-                    topSet.top_all,
+                    topSet.top_all, 
                     {marginTop:height},
-                    {padding:article ? 0 : "1rem"}
+                    {padding:article ? 0 : "1rem"},
+                    theme => ({
+                        //color: isLight ? theme.text.light : theme.text.default,
+                        background: isLight ? theme.background.light : theme.background.default
+                    })
                 ]}
             >
                 <Outlet />
             </main>
-            <Footer />
+            <Footer themes={
+                theme => ({
+                    color: isLight ? theme.text.default : theme.text.light,
+                    backgroundColor: isLight ? theme.background.light : theme.background.default,
+                    fill: isLight ? theme.fill.light : theme.fill.default,
+                    borderColor: isLight ? theme.border.light : theme.border.default,
+                })
+            }/>
         </>
     )
 }

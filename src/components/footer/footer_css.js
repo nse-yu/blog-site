@@ -1,9 +1,8 @@
 import { css } from "@emotion/react"
 
 const footer_all = css`
+    border-top:2px solid white;
     width:100%;
-    background:black;
-    color:white;
     padding:2rem;
     font-family:'Source Code Pro', monospace;
 `

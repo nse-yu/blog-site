@@ -9,14 +9,12 @@ const article_all = css`
 `
 //============for info===========//
 const article_info = css`
-    color:white;
     font-family: 'Zen Maru Gothic', sans-serif;
     h1{
         font-size:2rem;
     }
 `
 const article_desc = css`
-    color:black;
     font-weight:600;
 `
 const breadcrumb_wrapper = css`
@@ -24,7 +22,6 @@ const breadcrumb_wrapper = css`
 `
 const breadcrumb_link = css`
     a{
-        color:white;
         &:hover{
             opacity:0.5;
         }

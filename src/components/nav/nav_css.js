@@ -7,7 +7,6 @@ const nav_all = css`
         border-bottom:none;
         border-radius:8px 8px 0 0;
         width:100%;
-        background-color:#f8f8ff;
         text-align:center;
         user-select: none;
         &:hover{

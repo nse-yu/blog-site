@@ -5,7 +5,7 @@ import Card from "../card/card"
 import { useResource } from "../ResourceProvider"
 import {AnimatePresence, motion} from "framer-motion"
 
-export default function Cards({grid=true,edit=false,pan,del=false}) {
+export default function Cards({grid=true,edit=false,pan,del=false,themes}) {
     const {articles} = useResource()
 
     return (
@@ -17,14 +17,19 @@ export default function Cards({grid=true,edit=false,pan,del=false}) {
                     grid ? topSet.top_cards : [topSet.top_cards___horizontalize]               
                 }
                 onPan={pan}
-                //layout
                 initial={{x:-1000}}
                 animate={{x:0}}
                 transition={{duration:0.5}}
             >   
                 {
                     Object.keys(articles).map(key => (
-                        <Card key={key} edittable={edit} article={articles[key]} del={del}/>
+                        <Card 
+                            key={key} 
+                            edittable={edit} 
+                            article={articles[key]} 
+                            del={del}
+                            themes={themes}    
+                        />
                     ))
                 }
                 </motion.section>

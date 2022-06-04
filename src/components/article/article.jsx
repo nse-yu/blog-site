@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
+import { jsx,css, ThemeProvider } from "@emotion/react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { articleSet } from "./article_css"
@@ -8,6 +8,7 @@ import { utilSet } from "../others/util_css"
 import { markdownSet } from "../edit/markdown_css" 
 import LoadedImg from "../img/Img"
 import AsideNav from "../nav/aside_nav"
+import { baseThemes } from "../../theme"
 import { useResource } from "../ResourceProvider"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { useEffect } from "react"
@@ -21,7 +22,8 @@ export default function Article() {
         articles,
         setCurrentArticle,
         findByArticleId,
-        findTagById
+        findTagById,
+        isLight
     } = useResource()
     
     //==================DEFINITION==================//
@@ -43,25 +45,73 @@ export default function Article() {
     },[])
 
     return (
-        <>
+        <ThemeProvider theme={baseThemes}>
             {console.log("Article")}
             <article css={{width:"100%"}}>
                 <section className="article_info" 
-                    css={[topSet.top_all,articleSet.article_info,utilSet.verticalize]}
+                    css={[
+                        topSet.top_all,
+                        articleSet.article_info,
+                        utilSet.verticalize,
+                        theme => ({
+                            background: isLight ? theme.linear.light : theme.linear.default
+                        })
+                    ]}
                 >
-                    <div className="breadcrumb" css={[articleSet.breadcrumb_wrapper,utilSet.horizontalize,utilSet.horizontalize___right]}>
-                        <span className="breadcrumb-link" css={[articleSet.breadcrumb_link]}>
-                            <Link to="/">top</Link>
+                    <div className="breadcrumb" 
+                        css={[
+                            articleSet.breadcrumb_wrapper,
+                            utilSet.horizontalize,
+                            utilSet.horizontalize___right,
+                        ]}>
+                        <span className="breadcrumb-link" 
+                            css={[
+                                articleSet.breadcrumb_link,
+                                theme => ({
+                                    color: isLight ? theme.text.default : theme.text.light
+                                })
+                            ]}>
+                            <Link to="/" 
+                                css={[
+                                    theme => ({
+                                    color: isLight ? theme.text.default : theme.text.light
+                                    })
+                                ]}
+                            >
+                                top
+                            </Link>
                         </span>
-                        <span className="breadcrumb-link" css={[articleSet.breadcrumb_link]}>
-                            <Link to={`/category/${tagName}`}>{tagName}</Link>
+                        <span className="breadcrumb-link" 
+                            css={[
+                                articleSet.breadcrumb_link,
+                                theme => ({
+                                    color: isLight ? theme.text.default : theme.text.light
+                                })
+                            ]}>
+                            <Link to={`/category/${tagName}`} 
+                                css={[
+                                    theme => ({
+                                    color: isLight ? theme.text.default : theme.text.light
+                                    })
+                                ]}
+                            >{tagName}</Link>
                         </span>
-                        <span className="breadcrumb-end" css={[articleSet.breadcrumb_link___end]}>
+                        <span className="breadcrumb-end" 
+                            css={[
+                                articleSet.breadcrumb_link___end,
+                                theme => ({
+                                    color: isLight ? theme.text.default : theme.text.light
+                                })
+                            ]}>
                             {article.title}
                         </span>
                     </div>
                     <div className="article_title">
-                        <h1>{article.title}</h1>
+                        <h1 css={[
+                            theme => ({
+                                color: isLight ? theme.text.default : theme.text.light
+                            })
+                        ]}>{article.title}</h1>
                     </div>
                     <div className="article_img_wrapper"
                         css={[
@@ -79,7 +129,10 @@ export default function Article() {
                     </div>
                     <div className="article_description"
                         css={[
-                            articleSet.article_desc
+                            articleSet.article_desc,
+                            theme => ({
+                                color: isLight ? theme.text.light : theme.text.defualt
+                            })
                         ]}
                     >
                         {article.desc}
@@ -95,9 +148,18 @@ export default function Article() {
                         />
                     </section>
                     <div css={articleSet.article_page__line}></div>
-                    <AsideNav />
+                    <AsideNav 
+                        themes={
+                            theme => ({
+                                color: isLight ? theme.text.light : theme.text.default,
+                                backgroundColor: isLight ? theme.background.default : theme.background.light,
+                                borderColor: isLight ? theme.border.default : theme.border.light,
+                                fill: isLight ? theme.fill.default : theme.fill.light
+                            })
+                        }
+                    />
                 </div>
             </article>
-        </>
+        </ThemeProvider>
     )
 }

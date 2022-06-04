@@ -35,7 +35,6 @@ const list_reset = css`
     }
     li{
         list-style:none;
-        color:white;
     }
 `
 

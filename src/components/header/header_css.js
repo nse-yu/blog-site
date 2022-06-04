@@ -9,7 +9,6 @@ const header_all = css`
     gap:5px;
     background:linear-gradient(#1a1a1a,white);
     padding: 1rem 1rem 0 1rem;
-    box-shadow:0px 0px 11px black;
     @media (max-width:600px){
         .header-down{
             display:none;

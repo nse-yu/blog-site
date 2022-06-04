@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import LoadedImg from "../img/Img"
 import { useResource } from "../ResourceProvider"
 
-export default function Card({article,edittable=false,del=false}) {
+export default function Card({article,edittable=false,del=false,themes}) {
     const {deleteArticle} = useResource()
 
     return (
@@ -14,7 +14,8 @@ export default function Card({article,edittable=false,del=false}) {
             <motion.article 
                 whileHover={{opacity:0.6}}
                 css={[
-                    cardSet.card_wrapper
+                    cardSet.card_wrapper,
+                    themes
                 ]}
                 onPan={e => {e.preventDefault()}}
             >

@@ -28,7 +28,7 @@ const sidebar = {
     }
 };
 
-export default function Header() {
+export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
     const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
     const [isNavOpen,setIsNavOpen] = useState(false)
 
@@ -54,7 +54,8 @@ export default function Header() {
             css={[
                 headerSet.header_all,
                 utilSet.verticalize,
-                utilSet.head_foot_opacity
+                utilSet.head_foot_opacity,
+                themes
             ]}
             ref={headerInfo}
         >
@@ -108,12 +109,14 @@ export default function Header() {
                     onClick={() => setIsNavOpen(!isNavOpen)}
                 >
                     <motion.svg 
-                        whileHover={{stroke:"#ff0000"}}
+                        css={svgThemes}
+                        initial={{opacity:1}}
+                        whileHover={{opacity:0.3}}
+                        transition={{duration:0.4}}
                         width="31" 
                         height="31" 
                         viewBox="0 0 24 24" 
                         fill="none" 
-                        stroke="#ffffff" 
                         strokeWidth="2" 
                         strokeLinecap="round" 
                         strokeLinejoin="round"
@@ -145,10 +148,10 @@ export default function Header() {
                     <a href="/">
                         <svg width="200px" height="35px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
                             <motion.text
+                                css={themes}
                                 x="10"
                                 y="45" 
                                 fontSize="3.2rem"   
-                                fill="white"
                                 fontFamily="Varela Round, sans-serif"
                                 initial={{filter:"drop-shadow(3px 3px 10px black)"}}
                                 animate={{filter:"drop-shadow(4px 6px 5px white)"}}
@@ -157,12 +160,12 @@ export default function Header() {
                                 NAG
                             </motion.text>
                             <motion.path
+                                css={svgThemes}
                                 d="
                                 M 140 25 L 150 35 L 160 25 M 150 50 V 35
                                 M 170 25 V 40 A 5 5 0 0 0 185 40 V 25
                                 M 15 48 H 197
                                 "
-                                stroke="#ffffff"
                                 strokeWidth="4"
                                 fill="none"
                                 initial={{filter:"drop-shadow(3px 3px 10px black)"}}
@@ -218,11 +221,11 @@ export default function Header() {
                     <div className="header-up__github">
                         <a target="_blank" rel="noopener noreferrer" href="https://github.com/nse-yu?tab=repositories">
                             <motion.svg
+                                css={svgThemes}
                                 width="40"
                                 height="40"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="#ffffff"
                                 strokeWidth="1"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -237,11 +240,11 @@ export default function Header() {
                     <div className="header-up__edit">
                         <Link to={`/edit` + (article ? "/"+article.articleID : '')}>
                             <motion.svg
+                                css={svgThemes}
                                 width="34"
                                 height="34"
                                 viewBox="0 0 24 24"
                                 fill="none"
-                                stroke="#ffffff"
                                 strokeWidth="1.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -259,17 +262,17 @@ export default function Header() {
             </div>
             <div className="header-down" css={headerSet.header_down}>
                 <nav className="nav-tab" css={navSet.nav_all}>
-                    <ul css={[utilSet.horizontalize]}>
+                    <ul css={[utilSet.horizontalize,utilSet.list_reset]}>
                         {tabs_json.map((item,index) => (
                             <NavLink 
                                 className="nav-tab__item" 
                                 key={index}
                                 onClick={tabClicked}
-                                style={({isActive}) => { 
+                                css={({isActive}) => { 
                                     return (isActive || parseInt(activeTab.id) === item.id) ? 
-                                    {backgroundColor:"black",color:"white",textDecoration:"none"}
+                                    tabThemesOn
                                     :
-                                    {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
+                                    tabThemesOff
                                 }}
                                 to={`/category/${item.name}`}
                             >
