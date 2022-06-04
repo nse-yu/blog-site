@@ -6,7 +6,6 @@ const top_all = css`
     align-items:flex-start;
     gap:2rem;
     background:linear-gradient(#000000,white);
-    border-radius:5px;
     padding:1rem;
     @media (max-width: 600px){
         flex-direction:column;

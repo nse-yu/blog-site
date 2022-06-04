@@ -8,37 +8,38 @@ import { useEffect } from "react"
 import { Outlet, useParams, useSearchParams } from "react-router-dom"
 import { useLayoutEffect } from "react"
 
+/**tabNameには、Linkからcategory/へのアクセス時に値が入る
+ * articleIDには、Linkからarticle/へのアクセス時に値が入る
+ */
 export default function Top() {
     //===================IMPORT====================//
     const {height,resetCurrentArticle,onTabSelected,tabs_json,article,activeTab,activeTabChanged} = useResource()
-    const {tabName,articleID} = useParams(0)
+    const {articleID,tabName} = useParams(0) // category,articleそれぞれのマッチング変数
 
     //==================DEFINITION==================//
-    //variable
-    const page_id = "top"
     //queryparams
     const [params,setParams] = useSearchParams()
 
     
     //==================USE EFFECT=================//
-    //cardの選択に反応し、activeTabをパラメータに格納
-    useLayoutEffect(() => {
+    useLayoutEffect(() => { //card選択（onclick） -> 現在active状態のtabをquery paramに追加 ##記事閲覧ページでactive状態のtabを判別するため
         if(!article) return
         setParams(activeTab)
     },[article])
 
-    useEffect(() => {
+    useEffect(() => { //query paramからactive状態とするtabの情報を読み取る
         if(!params) return 
         activeTabChanged({id:params.get("id"),name:params.get("name")})
     },[params])
-    //when every mounted[reset]
-    useEffect(() => {
+
+    useEffect(() => { //記事閲覧ページ以外では、articleが未選択であることの保証
         if(articleID) return
         resetCurrentArticle()
     })
-    //when first mounted and tabID changed
-    useEffect(() => { 
-        if(!tabName && !articleID){ //初期のみ有効
+
+    useEffect(() => { //urlで指定されたcategoryと表示されているタブの状態を同期する
+        console.log("top",articleID,tabName)
+        if(!tabName && !articleID){ //index(/)へのアクセス時、リダイレクト制御
             window.location = "/category/"+tabs_json[0].name
         }
         tabs_json.forEach(row => {
@@ -47,12 +48,11 @@ export default function Top() {
                 return
             }
         })
-    },[tabName])
-    //reset param
-    useEffect(() => {
-        if(articleID) return
-        setParams(0)
-    },[tabName])
+    },[tabName,articleID])
+
+    useEffect(() => { //画面をトップから始める
+        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
+    })
 
     return (
         <>

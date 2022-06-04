@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
+import { btnSet } from "../others/btn_css"
 import { headerSet } from "../header/header_css"
 import { useResource } from "../ResourceProvider"
 import { AnimatePresence, motion } from "framer-motion"
@@ -28,7 +29,7 @@ const sidebar = {
 };
 
 export default function Header() {
-    const {headerInfo,headerHeight,tabs_json,article,activeTab,activeTabChanged} = useResource()
+    const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
     const [isNavOpen,setIsNavOpen] = useState(false)
 
 
@@ -62,7 +63,8 @@ export default function Header() {
                 {
                     isNavOpen && (
                         <motion.nav
-                            css={{height:"100vh",width:"50%",position:"absolute",backgroundColor:"rgba(97, 97, 97, 0.875)",top:0,left:0}}
+                            className="header-up__nav-wrapper"
+                            css={{height:"100vh",width:"50%",position:"absolute",backgroundColor:"rgba(97, 97, 97, 0.875)",top:0,left:0,display:"none"}}
                             initial={{x:-1000}}
                             animate={{x:0}}
                             transition={{duration:0.5}}
@@ -172,7 +174,47 @@ export default function Header() {
                 </div>
                 <div className="header-up__right"
                     css={[utilSet.horizontalize,utilSet.horizontalize___right,utilSet.verticalize___center]}    
-                >
+                >   
+                    <div className="header-up__theme" 
+                        css={[
+                            utilSet.horizontalize,
+                            utilSet.verticalize___center,
+                            btnSet.toggle_btn_area,
+                            btnSet.toggle_btn_area___long,
+                            {backgroundColor: isLight ? "#ffcc99" : "rgb(198, 168, 255)",}
+                        ]}
+                        onClick={() => {toggleIsLight()}}
+                    >
+                        <motion.div 
+                            css={[{
+                                border: isLight ?  "1.5px solid #ff8000" : "1.5px solid #5731fe",
+                                padding:1,
+                                borderRadius:"50%"
+                                },utilSet.horizontalize
+                            ]}
+                            initial={{x:0}}
+                            animate={isLight ? {x:35} : {}}
+                        >
+                            <svg 
+                                width="20" height="20" 
+                                viewBox="0 0 24 24" 
+                                fill="white" 
+                                stroke={isLight ? "#ff8000" : "#5731fe"}
+                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                            >
+                            {isLight ? 
+                                (<>
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+                                </>) 
+                                : 
+                                (<>
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </>)
+                            }    
+                            </svg>
+                        </motion.div>
+                    </div>
                     <div className="header-up__github">
                         <a target="_blank" rel="noopener noreferrer" href="https://github.com/nse-yu?tab=repositories">
                             <motion.svg
@@ -215,36 +257,34 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            {1 &&
-                <div className="header-down" css={headerSet.header_down}>
-                    <nav className="nav-tab" css={navSet.nav_all}>
-                        <ul css={[utilSet.horizontalize]}>
-                            {tabs_json.map((item,index) => (
-                                <NavLink 
-                                    className="nav-tab__item" 
-                                    key={index}
-                                    onClick={tabClicked}
-                                    style={({isActive}) => { 
-                                        return (isActive || parseInt(activeTab.id) === item.id) ? 
-                                        {backgroundColor:"black",color:"white",textDecoration:"none"}
-                                        :
-                                        {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
-                                    }}
-                                    to={`/category/${item.name}`}
+            <div className="header-down" css={headerSet.header_down}>
+                <nav className="nav-tab" css={navSet.nav_all}>
+                    <ul css={[utilSet.horizontalize]}>
+                        {tabs_json.map((item,index) => (
+                            <NavLink 
+                                className="nav-tab__item" 
+                                key={index}
+                                onClick={tabClicked}
+                                style={({isActive}) => { 
+                                    return (isActive || parseInt(activeTab.id) === item.id) ? 
+                                    {backgroundColor:"black",color:"white",textDecoration:"none"}
+                                    :
+                                    {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
+                                }}
+                                to={`/category/${item.name}`}
+                            >
+                                <motion.li
+                                    whileHover={{opacity:0.3}}
+                                    data-id={item.id}
+                                    data-name={item.name}
                                 >
-                                    <motion.li
-                                        whileHover={{opacity:0.3}}
-                                        data-id={item.id}
-                                        data-name={item.name}
-                                    >
-                                        {item.name}
-                                    </motion.li>
-                                </NavLink>
-                            ))}
-                        </ul>
-                    </nav>
-                </div>
-            }
+                                    {item.name}
+                                </motion.li>
+                            </NavLink>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
         </header>
     )
 }

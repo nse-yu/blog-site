@@ -4,7 +4,7 @@ import { useResource } from "../ResourceProvider";
 import { topSet } from "../top/top_css";
 import { utilSet } from "../others/util_css";
 import { editSet } from "./edit_css";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useCycle } from "framer-motion";
 import EditHeader from "./edit_header";
 import { edit_tools } from "../../edit_tools";
 import { useState } from "react";
@@ -26,7 +26,7 @@ export default function EditTop() {
         height,
         article,
         resetCurrentArticle,
-        tabs_json,
+        findTagById,
         findAll,
         articles,
         setCurrentArticle,
@@ -42,6 +42,7 @@ export default function EditTop() {
 
     //ref
     const ref_note = useRef()
+    const ref_preview = useRef()
     const ref_tools = useRef()
     const ref_markdown = useRef() //stateのmarkdownは、テキストのみだが、refなら要素自体にアクセスできる
     
@@ -54,9 +55,10 @@ export default function EditTop() {
     const [isImgOpen,setIsImgOpen] = useState(false) //HACK:state of hidden list of Images
     const [imgs,setImgs] = useState([])
     const [noteRect,setNoteRect] = useState({width:0,height:0})
+    const [isPrevFollow,toggleFollow] = useCycle(false,true)
 
     //==================USE EFFECT=================//
-    //TODO:when reloading[confirm]
+    //TODO:イベント処理の設定
     useEffect(() => {
         window.onbeforeunload = e => {
             e.returnValue = "更新しますか"
@@ -70,7 +72,12 @@ export default function EditTop() {
         }  
     },[])
 
-    //TODO:when note's width has changed
+    //TODO:articlesの読み込み（優先順位１）
+    useLayoutEffect(() => {
+        findAll()
+    },[])
+
+    //TODO:ノートサイズの変更に応じてstate変更
     useEffect(() => {
         setNoteRect({
             width:ref_note.current.getBoundingClientRect().width - 20,
@@ -78,19 +85,14 @@ export default function EditTop() {
         })
     },[ref_note])
 
-    //TODO:when mounted, set articles
-    useEffect(() => {
-        findAll()
-    },[])
-
-    //TODO:when loaded, set article
-    useEffect(() => {
-        if(!articles) return
-        setCurrentArticle(findByArticleId(articleID))
-    })
-    
-    //TODO:before useeffect
+    //FIXME[dependency]:paramで指定されたarticleをarticlesから読み込む（優先順位２）
     useLayoutEffect(() => {
+        if(!articles || !articleID) return
+        setCurrentArticle(findByArticleId(articleID))
+    },[articleID,articles])
+    
+    //FIXME[error-handling]:再編集時のsumnailを読み込んだ後、フォームを設定する（優先順位３）
+    useEffect(() => {
         //articleが空の場合にデフォルトのフォーム値を使用する
         if(!article) return
 
@@ -128,22 +130,22 @@ export default function EditTop() {
         setMarkdown(article.content)
     },[article])
 
-    useEffect(() => {
-        console.log(form.img.name)
-    },[form])
-
-    //TODO:article changed[set]
+    //TODO:articleがarticle-boxから選択されたらboxをcloseする(選択状態でのcloseを保証する)
     useEffect(() => {
         if(!article) return
         setIsOpen(false)
     },[article])
-
-    //TODO:when textarea changed
+    
+    //FIXME[focus location]:tool-helper挿入時にtextboxへフォーカス & 追従処理
     useEffect(() => {
         ref_markdown.current.focus()
+
+        if(!isPrevFollow) return
+        let max_scroll = ref_preview.current.scrollHeight
+        ref_preview.current.scrollTo(0,max_scroll * ref_markdown.current.selectionStart / ref_markdown.current.value.length - 50) //字数比をスクロール幅にかけ、ある程度マージンを追加
     },[markdown])
 
-    //==================SET STATES==================//
+    //==================ON CHANGE==================//
     //form 
     const formChanged = e => {
         if(e.target.name === "form_title") {
@@ -156,46 +158,42 @@ export default function EditTop() {
         } 
         setForm({img:e.target.files[0]})
     }
-
-    //tag(form)
+    //tag
     const tagChanged = (id,name) => {
         setForm({tag:[id,name]})
     }
-
     //markdown
     const textareaChanged = e => {
         setMarkdown(() => e.target.value)
     }    
 
-    //tool markdown 
+    //=================ON CLICK====================//
+    //tool-helperをカーソル位置に挿入するための処理とimg-helperに関する処理
     const appear = e => {
         if(parseInt(e.target.dataset.id) === 6){
             fetchImgUrls()
             setIsImgOpen(!isImgOpen)
         }
+        //cursor位置へのhelper挿入
         let cursor = ref_markdown.current.selectionStart
         setMarkdown(() => markdown.slice(0,cursor) + e.target.dataset.helper + markdown.slice(cursor))
     }
-
-    //isopen
+    //article-box表示切替
     const onOpenClicked = () => {
         setIsOpen(!isOpen)
     }
-
-    //isImgOpen
+    //img-box表示切替
     const toggleImgHidden = () => {
         setIsImgOpen(!isImgOpen)
     }
 
-
-    //================EVENTS TO PASS===============//
+    //================FOR EDIT HEADER===============//
     //new file
     const onNewClicked = () => {
         if(!onResetClicked()) return
         resetCurrentArticle()
         window.location = "/edit" //urlを変更するためにやむを得ず
     }
-
     //clear text
     const onResetClicked = () => {
         if(!window.confirm("変更を破棄してもよろしいですか？")) return false
@@ -203,7 +201,6 @@ export default function EditTop() {
         setForm({title:"",desc:"",img:{},tag:[]})
         return true
     }
-
     //submit article
     const onSubmitClicked = () => {
         if(!window.confirm("投稿しますか？")) return
@@ -229,51 +226,47 @@ export default function EditTop() {
         })
         .catch(err => console.error(err))
     }
+    //toggle isPrevFollow callback
+    const togglePrevFollowing = () => {
+        toggleFollow()
+    }
 
-    //pan-scroll
+    //================FOR CARDS TO SCROLL===============//
+    //panスクロール対応
     const panned = (e,i) => {
         console.log("panned in ",e.target)
         const off_x = i.offset.x
         e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
     }
-
-    //set one img url
+    //img-helper挿入時の後処理
     const onImgClicked = e => {
-        console.log(e.target)
         setMarkdown(() => markdown + e.target.dataset.url + ")")
         setIsImgOpen(!isImgOpen)
     }
 
     //==================UTILITY====================//
-    //imgs
+    //アップロード済みimgsを取得
     const fetchImgUrls = () => {
         fetch("http://localhost:8080/img/all")
             .then(res => res.json())
             .then(res_list => {
                 setImgs(() => [...res_list])
             })
-            console.log("changed")
     }
-    const findTagById = id => {
-        let tag = []
-        tabs_json.forEach(row => {
-            if(row.id === parseInt(id)){
-                tag.push(id,row.name)
-            }
-        })
-        return tag
-    }
+    
 
     return (
         <>
             {console.log("EditTop")}
             <EditHeader 
                 methods={{
-                    open:onOpenClicked,
-                    reset:onResetClicked,
-                    submit:onSubmitClicked,
-                    newfile:onNewClicked
+                    newfile:[onNewClicked,"新規"],
+                    open:[onOpenClicked,"開く"],
+                    reset:[onResetClicked,"破棄"],
+                    submit:[onSubmitClicked,"投稿"],
+                    toggle:togglePrevFollowing
                 }}
+                prev_follow={isPrevFollow}
             />
             <main css={{marginTop:height}}>
                 <section className="top-all" css={[
@@ -443,6 +436,7 @@ export default function EditTop() {
                             </div>
                             <div className="preview-note" css={editSet.edit_note}>
                                 <div className="preview-note-canvas"
+                                    ref={ref_preview}
                                     css={[
                                         editSet.edit_note_canvas,
                                         editSet.preview_note,

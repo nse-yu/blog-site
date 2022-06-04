@@ -9,28 +9,35 @@ import { markdownSet } from "../edit/markdown_css"
 import LoadedImg from "../img/Img"
 import AsideNav from "../nav/aside_nav"
 import { useResource } from "../ResourceProvider"
-import { useParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import { useEffect } from "react"
 import { useLayoutEffect } from "react"
 
+/**articleはこのページに来てから読み込む */
 export default function Article() {
     //====================IMPORT====================//
-    const {article,articles,setCurrentArticle,findByArticleId} = useResource()
+    const {
+        article,
+        articles,
+        setCurrentArticle,
+        findByArticleId,
+        findTagById
+    } = useResource()
     
     //==================DEFINITION==================//
     //param
     const {articleID} = useParams("")
 
     //variable
-    const page_id = "article"
+    const tagName = findTagById(article.tagID)[1]
 
     //==================USE EFFECT=================//
-    //when every mounted
+    //paramの情報を使用し、articlesからarticleを読み込む（articlesに依存させないと、順序的にarticlesの取得が後になってしまう）
     useLayoutEffect(() => {
         if(!articles) return
         setCurrentArticle(findByArticleId(articleID))
-    })
-    //when first mounted
+    },[articles])
+    //画面をトップから始める
     useEffect(() => {
         document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
     },[])
@@ -42,8 +49,16 @@ export default function Article() {
                 <section className="article_info" 
                     css={[topSet.top_all,articleSet.article_info,utilSet.verticalize]}
                 >
-                    <div className="breadcrumb">
-
+                    <div className="breadcrumb" css={[articleSet.breadcrumb_wrapper,utilSet.horizontalize,utilSet.horizontalize___right]}>
+                        <span className="breadcrumb-link" css={[articleSet.breadcrumb_link]}>
+                            <Link to="/">top</Link>
+                        </span>
+                        <span className="breadcrumb-link" css={[articleSet.breadcrumb_link]}>
+                            <Link to={`/category/${tagName}`}>{tagName}</Link>
+                        </span>
+                        <span className="breadcrumb-end" css={[articleSet.breadcrumb_link___end]}>
+                            {article.title}
+                        </span>
                     </div>
                     <div className="article_title">
                         <h1>{article.title}</h1>

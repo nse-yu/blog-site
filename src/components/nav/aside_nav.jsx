@@ -6,8 +6,9 @@ import { navSet } from "./nav_css";
 import {motion} from "framer-motion"
 import recommend from "../../recommend_site.json";
 import { useResource } from "../ResourceProvider";
+import { useEffect } from "react";
 
-export default function AsideNav() {
+export default function AsideNav({props}) {
     const {distinctObjByTags} = useResource()
 
     return (

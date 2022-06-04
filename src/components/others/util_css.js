@@ -29,6 +29,16 @@ const verticalize___center = css`
     align-items:center;
 `
 
+const list_reset = css`
+    a{
+        text-decoration:none;
+    }
+    li{
+        list-style:none;
+        color:white;
+    }
+`
+
 
 export const utilSet = {
     verticalize,
@@ -38,5 +48,6 @@ export const utilSet = {
     horizontalize___center,
     horizontalize__align,
     horizontalize___left,
-    horizontalize___right
+    horizontalize___right,
+    list_reset
 }

@@ -19,6 +19,24 @@ const article_desc = css`
     color:black;
     font-weight:600;
 `
+const breadcrumb_wrapper = css`
+    width:100%;
+`
+const breadcrumb_link = css`
+    a{
+        color:white;
+        &:hover{
+            opacity:0.5;
+        }
+    }
+    &::after{
+        content:">";
+        margin-left:0.3rem;
+    }
+`
+const breadcrumb_link___end = css`
+    margin-top:1.5px;
+`
 //=============for big img============//
 const article_bigimg_wrapper = css`
     width:90%;
@@ -49,5 +67,8 @@ export const articleSet = {
     article_content,
     article_bigimg_wrapper,
     article_bigimg_wrapper__el,
-    article_page__line
+    article_page__line,
+    breadcrumb_link,
+    breadcrumb_link___end,
+    breadcrumb_wrapper
 }

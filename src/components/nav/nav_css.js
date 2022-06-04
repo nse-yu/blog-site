@@ -38,6 +38,7 @@ const nav_list_title = css`
     font-family:'Zen Maru Gothic',sans-serif;
     font-weight:bold;
     border-bottom:1px solid black;
+    user-select: none;
 `
 const nav_list_group = css`
     margin-top:1.1rem;
@@ -50,7 +51,6 @@ const nav_list_group = css`
         margin-top:0.4rem;
     }
 `
-
 const nav_list___humberger = css`
     margin-top:100px;
     .nav-tab__item > li{

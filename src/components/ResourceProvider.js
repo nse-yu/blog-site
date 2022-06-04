@@ -1,9 +1,9 @@
+import { useCycle } from "framer-motion";
 import { useContext } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
-import { useSearchParams } from "react-router-dom";
 import tabs_json from "../tabs.json";
 
 const context = createContext()
@@ -18,10 +18,11 @@ export default function ResourceProvider({children}) {
     const [activeTab,setActiveTab] = useState(0)
     const [height,setHeight] = useState()
     const [articles,setArticles] = useState(0)
-    const [article,setArticle] = useState(0) //falsy狙いで0にする
+    const [article,setArticle] = useState("") //falsy狙いで0にする
+    const [isLight,turnLight] = useCycle(false,true)
 
     //==================USE EFFECT=================//
-    //TODO:only first mounted[fetch set]
+    //TODO:リロードした後にはarticlesが利用可能になる
     useEffect(() => {
         findAll()
     },[])
@@ -47,7 +48,7 @@ export default function ResourceProvider({children}) {
     }
     //article
     const resetCurrentArticle = () => {
-        setArticle(0)
+        setArticle("")
     }
     //delArticle
     const deleteArticle = id => {
@@ -67,6 +68,9 @@ export default function ResourceProvider({children}) {
     //activeTab
     const activeTabChanged = active => {
         setActiveTab(active)
+    }
+    const toggleIsLight = () => {
+        turnLight()
     }
 
     //==================UTILITY====================//
@@ -88,11 +92,21 @@ export default function ResourceProvider({children}) {
         fetch(`http://localhost:8080/article/all`,{
             mode:"cors"
         })
-            .then(res => res.json())
-            .then(res_json => setArticles(res_json))
-            .catch(console.error)
+        .then(res => res.json())
+        .then(res_json => setArticles(res_json))
+        .catch(console.error)
+    }
+    const findTagById = id => {
+        let tag = []
+        tabs_json.forEach(row => {
+            if(row.id === parseInt(id)){
+                tag.push(id,row.name)
+            }
+        })
+        return tag
     }
 
+    
     //=================ALL TO PASS=================//
     const values = {
         tabs_json, //すべてのタブ情報
@@ -109,7 +123,10 @@ export default function ResourceProvider({children}) {
         findByArticleId,
         activeTabChanged,
         findAll,
-        deleteArticle
+        toggleIsLight,
+        deleteArticle,
+        findTagById,
+        isLight
     }
 
     return (

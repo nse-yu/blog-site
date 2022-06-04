@@ -6,11 +6,18 @@ import { motion } from "framer-motion"
 import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
 import { useResource } from "../ResourceProvider"
+import { memo } from "react"
+import { type } from "@testing-library/user-event/dist/type"
+import { useState } from "react"
 
 
-export default function EditHeader({methods}) {
+export default function EditHeader({methods,prev_follow}) {
     //==================IMPORT====================//
     const {article,headerInfo,headerHeight} = useResource()
+
+    //=================DEFINITION==================//
+    //state
+    const [isMenuOpen,setIsMenuOpen] = useState(false)
 
     //==================USE EFFECT=================//
     //only first mounted
@@ -36,9 +43,9 @@ export default function EditHeader({methods}) {
                 ref={headerInfo}
             >
                 <div className="header-up" css={[headerSet.header_up_all,headerSet.header_up_all___edit]}>
-                    <div className="header-up__logo">
+                    <div className="header-up__logo" css={headerSet.header_logo__el}>
                         <a href="/">
-                            <svg width="250px" height="30px" viewBox="200 0 400 100" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="100px" height="30px" viewBox="0 0 350 100" strokeLinecap="round" strokeLinejoin="round">
                                 <motion.path
                                     d="
                                     M 10 80 V 10 L 60 80 V 10
@@ -73,51 +80,121 @@ export default function EditHeader({methods}) {
                             </motion.p>
                         </div>
                     }
+                    <div className="header-up__prev-following" 
+                        css={[utilSet.verticalize,utilSet.verticalize___center,btnSet.toggle_btn_wrapper]}>
+                        <p>プレビュー追従</p>
+                        <div 
+                            css={[utilSet.horizontalize,utilSet.verticalize___center,btnSet.toggle_btn_area]}
+                            onClick={() => {methods.toggle()}}
+                        >
+                            <motion.div 
+                                css={[prev_follow ? {backgroundColor:"#80ff00"}:{backgroundColor:"gray"},btnSet.toggle_btn]} 
+                                initial={{x:0}}
+                                animate={prev_follow ? {x:20} : {}}
+                            />
+                        </div>
+                    </div>
                     <div className="header-up__edit-options" 
                         css={[headerSet.header_up_options___edit,utilSet.horizontalize]}>
-                        <motion.div className="btn btn__open"
-                            whileHover={{opacity:0.5}}
-                        >
-                            <button 
-                                css={[btnSet.btn,btnSet.btn___new]}
-                                onClick={methods.newfile}
+                        {Object.keys(methods).filter(prop => prop !== "toggle").map(row => (
+                            <motion.div className="btn"
+                                key={methods[row][1]}
+                                whileHover={{opacity:0.2,x:2}}
                             >
-                                新規作成
-                            </button>
-                        </motion.div>
-                        <motion.div className="btn btn__open"
-                            whileHover={{opacity:0.5}}
-                        >
-                            <button 
-                                css={[btnSet.btn,btnSet.btn___open]}
-                                onClick={methods.open}
-                            >
-                                開く
-                            </button>
-                        </motion.div>
-                        <motion.div className="btn btn__reset"
-                            whileHover={{opacity:0.5}}
-                        >
-                            <button 
-                                css={[btnSet.btn,btnSet.btn___reset]}
-                                onClick={methods.reset}
-                            >
-                                破棄
-                            </button>
-                        </motion.div>
-                        <motion.div className="btn btn__submit"
-                            whileHover={{opacity:0.5}}
-                        >
-                            <button 
-                                css={[btnSet.btn,btnSet.btn___submit]}
-                                onClick={methods.submit}
-                            >
-                                投稿
-                            </button>
-                        </motion.div>
+                                <button 
+                                    css={[btnSet.btn,{background:"repeating-linear-gradient(0deg,#333333,white,#333333)"}]}
+                                    onClick={methods[row][0]}
+                                >
+                                    {methods[row][1]}
+                                </button>
+                            </motion.div>
+                        ))}
+                    </div>
+                    <div className="header-up__when-smartphone"
+                        onClick={() => setIsMenuOpen(true)}
+                        css={{display:"none"}}
+                    >
+                        <motion.svg 
+                            initial={{opacity:1}}
+                            whileHover={{opacity:0.4}}
+                            width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="19" cy="12" r="1"></circle>
+                            <circle cx="5" cy="12" r="1"></circle>
+                        </motion.svg>
+                    
+                        {
+                            isMenuOpen && (
+                                <div css={{
+                                    position:"absolute",
+                                    right:0,
+                                    top:0,
+                                    width:"35%",
+                                    backgroundColor:"white",
+                                    boxShadow:"1px 1px 3px black"
+                                }}>
+                                    <button 
+                                        onClick={() => {setIsMenuOpen(false)}}
+                                    >
+                                        <motion.svg
+                                            whileHover={{scale:1.3,stroke:"red"}}
+                                            width="50"
+                                            height="50"
+                                            viewBox="0 0 50 50"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            stroke="black"
+                                        >
+                                            <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
+                                        </motion.svg>
+                                    </button>
+                                    <div css={[utilSet.verticalize,utilSet.verticalize___center,btnSet.toggle_btn_wrapper]}>
+                                        <p>プレビュー追従</p>
+                                        <div 
+                                            css={[utilSet.horizontalize,utilSet.verticalize___center,btnSet.toggle_btn_area]}
+                                            onClick={() => {methods.toggle()}}
+                                        >
+                                            <motion.div 
+                                                css={[prev_follow ? {backgroundColor:"#80ff00"}:{backgroundColor:"gray"},btnSet.toggle_btn]} 
+                                                initial={{x:0}}
+                                                animate={prev_follow ? {x:20} : {}}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <ul css={utilSet.list_reset}>
+                                            {Object.keys(methods).filter(prop => prop !== "toggle").map(row => (
+                                                <motion.li
+                                                    key={methods[row][1]}
+                                                    whileHover={{backgroundColor:"#d3d3d3"}}
+                                                    css={{borderTop:"1px solid black"}}
+                                                >
+                                                    <button 
+                                                        css={{width:"100%"}}
+                                                        onClick={methods[row][0]}
+                                                    >
+                                                        {methods[row][1]}
+                                                    </button>
+                                                </motion.li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
             </header>
         </>
     )
 }
+
+/**closure機能によって、memo化でsubmit methodを保持すると誤動作を起こす */
+/*(prev,next) => {
+let bools = []
+if(prev.length !== next.length) return false
+for(let i of Array(Object.keys(prev).length)){
+        bools.push(Object.keys(prev)[i]===Object.keys(next)[i])
+    }
+    return !bools.includes(false) //不一致のプロパティを持つならfalseを返す
+}*/
