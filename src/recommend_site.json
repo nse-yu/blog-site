@@ -96,6 +96,13 @@
         "url":"https://emotion.sh/docs/introduction",
         "class":"フロント開発",
         "classcode":2
+    },
+    {
+        "id":265,
+        "name":"Prettierオプション",
+        "url":"https://prettier.io/docs/en/options.html",
+        "class":"テスト",
+        "classcode":6
     }
 ]
  

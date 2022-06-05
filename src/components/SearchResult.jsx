@@ -22,7 +22,7 @@ export default function SearchResult() {
             <main className="result-wrapper"
                 css={[
                     utilSet.verticalize,
-                    {gap:"1rem",width:"100%"},
+                    {gap:"1rem",width:"100%",marginBottom:"100px"},
                     theme => ({
                         color: isLight ? theme.text.default : theme.text.light
                     })

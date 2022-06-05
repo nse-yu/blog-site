@@ -62,7 +62,7 @@ const markdown_styles = css`
             border-left:8px solid #b0c4de;
             &:before{
                 font-size:0.9rem;
-                content:"用語説明"
+                content:"注釈説明"
             }
         }
     };

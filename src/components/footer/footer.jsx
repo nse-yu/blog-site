@@ -43,9 +43,9 @@ export default function Footer({themes}) {
                     </ul>
                 </section>
                 <section className="footer__myInfo" css={[utilSet.verticalize,utilSet.horizontalize___right]}>
-                    <div>長瀬悠</div>
-                    <div>岐阜県中津川市中津川2148-3</div>
-                    <div>080-2657-9801</div>
+                    <div>宮本武蔵</div>
+                    <div>日本</div>
+                    <div>020-3810-6341</div>
                 </section>
                 <section className="footer__media" css={[utilSet.horizontalize]}>
                     <div className="footer__media-logo">
