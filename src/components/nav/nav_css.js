@@ -57,11 +57,18 @@ const nav_list___humberger = css`
         text-align:center;
     }
 `
+const nav_list___dot = css`
+    li{
+        padding:1rem 0;
+        color:white;
+    }
+`
 
 export const navSet = {
     nav_all,
     nav_list,
     nav_list_group,
     nav_list___humberger,
-    nav_list_title
+    nav_list_title,
+    nav_list___dot
 }

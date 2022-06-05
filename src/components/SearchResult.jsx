@@ -33,7 +33,14 @@ export default function SearchResult() {
                 </div>
                 {
                     Object.keys(articles).length ? (
-                        <Cards grid/>
+                        <Cards 
+                            grid 
+                            themes={
+                                theme => ({
+                                    boxShadow: isLight ? theme.shadow.light : theme.shadow.default
+                                })
+                            }
+                        />
                     )
                     :
                     (

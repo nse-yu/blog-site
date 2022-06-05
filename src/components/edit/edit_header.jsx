@@ -2,11 +2,12 @@
 import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { headerSet } from "../header/header_css"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion, useCycle } from "framer-motion"
 import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
 import { useResource } from "../ResourceProvider"
 import { useState } from "react"
+import { navSet } from "../nav/nav_css"
 
 
 export default function EditHeader({methods,prev_follow}) {
@@ -15,7 +16,7 @@ export default function EditHeader({methods,prev_follow}) {
 
     //=================DEFINITION==================//
     //state
-    const [isMenuOpen,setIsMenuOpen] = useState(false)
+    const [isMenuOpen,toggleMenuOpen] = useState(false)
 
     //==================USE EFFECT=================//
     //only first mounted
@@ -109,10 +110,11 @@ export default function EditHeader({methods,prev_follow}) {
                         ))}
                     </div>
                     <div className="header-up__when-smartphone"
-                        onClick={() => setIsMenuOpen(true)}
+                        onClick={() => toggleMenuOpen(!isMenuOpen)}
                         css={{display:"none"}}
                     >
                         <motion.svg 
+                            css={{pointerEvents:"none"}}
                             initial={{opacity:1}}
                             whileHover={{opacity:0.4}}
                             width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -121,65 +123,77 @@ export default function EditHeader({methods,prev_follow}) {
                             <circle cx="5" cy="12" r="1"></circle>
                         </motion.svg>
                     
-                        {
+                        <AnimatePresence>
+                            {
                             isMenuOpen && (
-                                <div css={{
-                                    position:"absolute",
-                                    right:0,
-                                    top:0,
-                                    width:"35%",
-                                    backgroundColor:"white",
-                                    boxShadow:"1px 1px 3px black"
-                                }}>
-                                    <button 
-                                        onClick={() => {setIsMenuOpen(false)}}
-                                    >
-                                        <motion.svg
-                                            whileHover={{scale:1.3,stroke:"red"}}
-                                            width="50"
-                                            height="50"
-                                            viewBox="0 0 50 50"
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            stroke="black"
+                                <motion.nav
+                                    className="header-up__nav-wrapper"
+                                    css={{height:"100vh",width:"50%",position:"absolute",backgroundColor:"rgba(97, 97, 97, 0.875)",top:0,right:0,display:"none"}}
+                                    initial={{x:9000}}
+                                    animate={{x:0}}
+                                    transition={{duration:0.5}}
+                                    exit={{x:9000}}
+                                >
+                                    <ul css={[
+                                        utilSet.horizontalize,
+                                        utilSet.verticalize,
+                                        navSet.nav_list___dot
+                                    ]}>
+                                        <button
+                                            css={{textAlign:"left"}}
                                         >
-                                            <path d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
-                                        </motion.svg>
-                                    </button>
-                                    <div css={[utilSet.verticalize,utilSet.verticalize___center,btnSet.toggle_btn_wrapper]}>
-                                        <p>プレビュー追従</p>
-                                        <div 
-                                            css={[utilSet.horizontalize,utilSet.verticalize___center,btnSet.toggle_btn_area]}
-                                            onClick={() => {methods.toggle()}}
-                                        >
-                                            <motion.div 
-                                                css={[prev_follow ? {backgroundColor:"#80ff00"}:{backgroundColor:"gray"},btnSet.toggle_btn]} 
-                                                initial={{x:0}}
-                                                animate={prev_follow ? {x:20} : {}}
-                                            />
+                                            <motion.svg
+                                                onClick={() => {toggleMenuOpen(!isMenuOpen)}}
+                                                whileHover={{scale:1.3,stroke:"red"}}
+                                                width="50"
+                                                height="50"
+                                                viewBox="0 0 50 50"
+                                                fill="none"
+                                                strokeLinecap="round"
+                                                stroke="black"
+                                            >
+                                                <path
+                                                    css={{pointerEvents:"none"}}
+                                                    d="M 10 10 L 30 30 M 30 10 L 10 30"></path>
+                                            </motion.svg>
+                                        </button>
+                                        <div className="preview-following"
+                                            css={[utilSet.verticalize,utilSet.verticalize___center,btnSet.toggle_btn_wrapper]}>
+                                            <p>プレビュー追従</p>
+                                            <div
+                                                css={[utilSet.horizontalize,utilSet.verticalize___center,btnSet.toggle_btn_area]}
+                                                onClick={() => {methods.toggle()}}
+                                            >
+                                                <motion.div
+                                                    css={[prev_follow ? {backgroundColor:"#80ff00"}:{backgroundColor:"gray"},btnSet.toggle_btn]}
+                                                    initial={{x:0}}
+                                                    animate={prev_follow ? {x:20} : {}}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <ul css={utilSet.list_reset}>
-                                            {Object.keys(methods).filter(prop => prop !== "toggle").map(row => (
-                                                <motion.li
-                                                    key={methods[row][1]}
-                                                    whileHover={{backgroundColor:"#d3d3d3"}}
-                                                    css={{borderTop:"1px solid black"}}
-                                                >
-                                                    <button 
-                                                        css={{width:"100%"}}
-                                                        onClick={methods[row][0]}
+                                        <div className="edit-options">
+                                            <ul css={utilSet.list_reset}>
+                                                {Object.keys(methods).filter(prop => prop !== "toggle").map(row => (
+                                                    <motion.li
+                                                        key={methods[row][1]}
+                                                        whileHover={{backgroundColor:"#d3d3d3"}}
+                                                        css={{borderTop:"1px solid black"}}
                                                     >
-                                                        {methods[row][1]}
-                                                    </button>
-                                                </motion.li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
+                                                        <button
+                                                            css={{width:"100%",color:"white"}}
+                                                            onClick={methods[row][0]}
+                                                        >
+                                                            {methods[row][1]}
+                                                        </button>
+                                                    </motion.li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </ul>
+                                </motion.nav>
                             )
-                        }
+                            }
+                        </AnimatePresence>
                     </div>
                 </div>
             </header>

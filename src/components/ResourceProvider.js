@@ -28,10 +28,6 @@ export default function ResourceProvider({children}) {
         findAll()
     },[])
 
-    useEffect(() => {
-        console.log("provider: ",articles)
-    },[articles])
-
     //=================SET STATES=================//
     //指定したカテゴリに属するArticleを取得
     const onTabSelected = tab => {
@@ -79,7 +75,6 @@ export default function ResourceProvider({children}) {
     }
     //search character
     const searchCharacter = target => {
-        console.log("provider: ",target)
         setSearchWord(target)
         fetch("http://localhost:8080/article/search?q="+encodeURI(target))
             .then(res => res.json())
@@ -91,7 +86,6 @@ export default function ResourceProvider({children}) {
                 setArticles(res_json)
             })
             .catch(err => {
-                console.log("res_json: none")
                 setArticles({}) //ここで返却値nullをcatchしてArticlesを設定しようとしたが、thenで設定するのとで動作に違いがでるため断念
             })
     }
@@ -115,7 +109,6 @@ export default function ResourceProvider({children}) {
         return articles.filter(item => item.articleID === ArticleID)[0]
     }
     function findAll(){
-        console.log("findAll")
         fetch(`http://localhost:8080/article/all`,{
             mode:"cors"
         })

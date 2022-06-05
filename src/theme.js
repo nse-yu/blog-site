@@ -15,8 +15,8 @@ export const baseThemes = {
         light:"black"
     },
     linear:{
-        default:"linear-gradient(#000000,white)",
-        light:"linear-gradient(white,#000000)"
+        default:"linear-gradient(black,white)",
+        light:"linear-gradient(white,black)"
     },
     border:{
         default:"white",
