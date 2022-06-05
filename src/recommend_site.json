@@ -89,6 +89,13 @@
         "url":"https://developer.mozilla.org/ja/docs/Web/SVG/Element#graphics_elements",
         "class":"フロント開発",
         "classcode":2
+    },
+    {
+        "id":674,
+        "name":"emotion",
+        "url":"https://emotion.sh/docs/introduction",
+        "class":"フロント開発",
+        "classcode":2
     }
 ]
  

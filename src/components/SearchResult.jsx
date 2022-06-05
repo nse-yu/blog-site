@@ -12,8 +12,6 @@ export default function SearchResult() {
     const {searchCharacter,isLight,articles} = useResource()
 
     useEffect(() => {
-        console.log("resultParam: ",param.get("q"))
-        console.log("resultArticles: ",articles)
         if(!param.get("q")) return
         searchCharacter(param.get("q"))
     },[param])

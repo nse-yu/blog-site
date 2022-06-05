@@ -28,6 +28,10 @@ export default function ResourceProvider({children}) {
         findAll()
     },[])
 
+    useEffect(() => {
+        console.log("provider: ",articles)
+    },[articles])
+
     //=================SET STATES=================//
     //指定したカテゴリに属するArticleを取得
     const onTabSelected = tab => {
@@ -80,12 +84,15 @@ export default function ResourceProvider({children}) {
         fetch("http://localhost:8080/article/search?q="+encodeURI(target))
             .then(res => res.json())
             .then(res_json => {
-                console.log("res_json: ",res_json)
-                if(res_json) setArticles(res_json)
+                if(!res_json[0].articleID){ //一致記事がない場合は、一番目の要素プロパティがnullになって返される
+                    setArticles({})
+                    return
+                }
+                setArticles(res_json)
             })
             .catch(err => {
-                //console.error(err)
-                setArticles({})
+                console.log("res_json: none")
+                setArticles({}) //ここで返却値nullをcatchしてArticlesを設定しようとしたが、thenで設定するのとで動作に違いがでるため断念
             })
     }
     const wordChanged = target => {

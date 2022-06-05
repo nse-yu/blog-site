@@ -114,7 +114,6 @@ export default function AsideNav({themes}) {
                                 btnSet.mini_btn
                             ]}
                             to="/search"
-                            //whileHover={{scale:1.1,opacity:0.3}}
                             onClick={e => {
                                 wordChanged(ref_search.current.value)
                             }}
