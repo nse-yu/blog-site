@@ -2,11 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Article from "./components/article/article";
 import Top from "./components/top/top";
 import EditTop from "./components/edit/edit_top";
-import AsideNav from "./components/nav/aside_nav";
-import Cards from "./components/cards/Cards";
 import { baseThemes } from "./theme"
 import { ThemeProvider } from "@emotion/react";
 import Categories from "./components/Categories";
+import SearchResult from "./components/SearchResult";
 
 function App() {
   
@@ -25,6 +24,11 @@ function App() {
               </ThemeProvider>
             }/>
             <Route path="/article/:articleID" element={<Article />}/>
+            <Route path="/search" element={
+              <ThemeProvider theme={baseThemes}>
+                <SearchResult />
+              </ThemeProvider>
+            }/>
           </Route>
           <Route path="/edit/:articleID" element={<EditTop />} />
           <Route path="/edit/" element={<EditTop />} />

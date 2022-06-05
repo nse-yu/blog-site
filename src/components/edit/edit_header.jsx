@@ -6,8 +6,6 @@ import { motion } from "framer-motion"
 import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
 import { useResource } from "../ResourceProvider"
-import { memo } from "react"
-import { type } from "@testing-library/user-event/dist/type"
 import { useState } from "react"
 
 

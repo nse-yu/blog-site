@@ -234,7 +234,6 @@ export default function EditTop() {
     //================FOR CARDS TO SCROLL===============//
     //panスクロール対応
     const panned = (e,i) => {
-        console.log("panned in ",e.target)
         const off_x = i.offset.x
         e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
     }

@@ -8,7 +8,17 @@ const btn = css`
     font-weight:bold;
     box-shadow:white 1px 1px 1px;
 `
-
+const mini_btn = css`
+    width:20%;
+    border:1px solid black;
+    border-radius:5px;
+    font-size:0.6rem;
+    text-align:center;
+    margin:auto 0;
+    padding:0.2rem;
+    box-shadow:1px 1px 2px black;
+    background-color:#87cefa;
+`
 const btn___reset = css`
     background-color:#87cefa;
 `
@@ -50,6 +60,7 @@ const toggle_btn = css`
 
 export const btnSet = {
     btn,
+    mini_btn,
     btn___reset,
     btn___submit,
     btn___open,

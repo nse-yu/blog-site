@@ -1,6 +1,7 @@
 import { useCycle } from "framer-motion";
 import { useContext } from "react";
 import { useRef } from "react";
+import { useLayoutEffect } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
@@ -20,15 +21,15 @@ export default function ResourceProvider({children}) {
     const [articles,setArticles] = useState(0)
     const [article,setArticle] = useState("") //falsy狙いで0にする
     const [isLight,turnLight] = useCycle(false,true)
+    const [searchWord,setSearchWord] = useState("")
 
     //==================USE EFFECT=================//
-    //TODO:リロードした後にはarticlesが利用可能になる
-    useEffect(() => {
+    useLayoutEffect(() => { //ここをlayoutにすると、SearchResultの副作用よりも早く実行されるため、searchCharacterで上書きできる
         findAll()
     },[])
 
     //=================SET STATES=================//
-    //active-tab
+    //指定したカテゴリに属するArticleを取得
     const onTabSelected = tab => {
         let fetchString = "http://localhost:8080/" + (tab.id === 1 ? "article/all" : "tag/"+tab.id)
         
@@ -52,7 +53,6 @@ export default function ResourceProvider({children}) {
     }
     //delArticle
     const deleteArticle = id => {
-        console.log(id)
         if(!window.confirm("本当に削除してもよろしいですか？")) return
         fetch(`http://localhost:8080/article/${id}/delete`,{
             method:"delete"
@@ -65,12 +65,31 @@ export default function ResourceProvider({children}) {
             })
             .catch(err => console.log(err))
     } 
-    //activeTab
+    //tabオブジェクトを挿入し、フォーカスしているタブを特定する
     const activeTabChanged = active => {
         setActiveTab(active)
     }
+    //ライト・ダークモード切替
     const toggleIsLight = () => {
         turnLight()
+    }
+    //search character
+    const searchCharacter = target => {
+        console.log("provider: ",target)
+        setSearchWord(target)
+        fetch("http://localhost:8080/article/search?q="+encodeURI(target))
+            .then(res => res.json())
+            .then(res_json => {
+                console.log("res_json: ",res_json)
+                if(res_json) setArticles(res_json)
+            })
+            .catch(err => {
+                //console.error(err)
+                setArticles({})
+            })
+    }
+    const wordChanged = target => {
+        setSearchWord(target)
     }
 
     //==================UTILITY====================//
@@ -89,6 +108,7 @@ export default function ResourceProvider({children}) {
         return articles.filter(item => item.articleID === ArticleID)[0]
     }
     function findAll(){
+        console.log("findAll")
         fetch(`http://localhost:8080/article/all`,{
             mode:"cors"
         })
@@ -96,6 +116,7 @@ export default function ResourceProvider({children}) {
         .then(res_json => setArticles(res_json))
         .catch(console.error)
     }
+    /**指定されたtagIDからtagIDとtagNameの配列を返す */
     const findTagById = id => {
         let tag = []
         tabs_json.forEach(row => {
@@ -126,7 +147,10 @@ export default function ResourceProvider({children}) {
         toggleIsLight,
         deleteArticle,
         findTagById,
-        isLight
+        isLight,
+        searchWord,
+        searchCharacter,
+        wordChanged
     }
 
     return (

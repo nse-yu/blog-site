@@ -6,9 +6,18 @@ import { navSet } from "./nav_css";
 import {motion} from "framer-motion"
 import recommend from "../../recommend_site.json";
 import { useResource } from "../ResourceProvider";
+import { useRef } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { btnSet } from "../others/btn_css";
 
 export default function AsideNav({themes}) {
-    const {distinctObjByTags} = useResource()
+    //=================DEFINITION=================//
+    //ref
+    const ref_search = useRef()
+
+    //==================IMPORT===================//
+    const {distinctObjByTags,wordChanged} = useResource()
+    
 
     return (
         <>
@@ -18,7 +27,7 @@ export default function AsideNav({themes}) {
                     topSet.top_side_all,
                 ]}
             >
-                <nav
+                <nav className="nav-content__sitelist"
                     css={[
                         navSet.nav_list,
                         utilSet.verticalize,
@@ -61,7 +70,7 @@ export default function AsideNav({themes}) {
                         }
                     </ul>
                 </nav>
-                <nav
+                <nav className="nav-content__media"
                     css={[
                         navSet.nav_list,
                         topSet.top_side_box,
@@ -89,6 +98,38 @@ export default function AsideNav({themes}) {
                             <script src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
                         </li>
                     </ul>
+                </nav>
+                <nav className="nav-content__search" 
+                    css={[
+                        navSet.nav_list,
+                        utilSet.verticalize,
+                        topSet.top_side_box__el,
+                        utilSet.horizontalize___left,
+                        themes
+                    ]}
+                >
+                    <div css={utilSet.horizontalize}>
+                        <Link 
+                            css={[
+                                btnSet.mini_btn
+                            ]}
+                            to="/search"
+                            //whileHover={{scale:1.1,opacity:0.3}}
+                            onClick={e => {
+                                wordChanged(ref_search.current.value)
+                            }}
+                        >
+                            検索
+                        </Link>
+                        <input 
+                            type="search" 
+                            ref={ref_search}
+                            css={[
+                                {borderBottom:"1px solid black",width:"80%"},
+                                themes
+                            ]}
+                        />
+                    </div>
                 </nav>
             </aside>
         </>

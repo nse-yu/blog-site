@@ -31,7 +31,7 @@ const header_down = css`
 const header_up_all = css`
     display:flex;
     justify-content:space-between;
-    align-items:center;
+    align-items:flex-start;
 `
 const header_logo__el = css`
     margin-top:0.5rem;
@@ -44,7 +44,7 @@ const header___minimize = css`
 
 //================for edit header================//
 const header_up_all___edit = css`
-
+    align-items:center;
     @media (max-width:600px){
         align-items:center;
         .header-up__prev-following,.header-up__edit-options{

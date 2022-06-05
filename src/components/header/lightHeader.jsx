@@ -2,10 +2,9 @@
 import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { btnSet } from "../others/btn_css"
-import { headerSet } from "../header/header_css"
+import { headerSet } from "./header_css"
 import { useResource } from "../ResourceProvider"
 import { AnimatePresence, motion } from "framer-motion"
-import { navSet } from "../nav/nav_css"
 import { useEffect } from "react"
 import { Link, NavLink } from "react-router-dom"
 import { useState } from "react"
@@ -28,7 +27,7 @@ const sidebar = {
     }
 };
 
-export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
+export default function LightHeader({themes,svgThemes,tabThemesOn,tabThemesOff}) {
     const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
     const [isNavOpen,setIsNavOpen] = useState(false)
 
@@ -41,13 +40,6 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
         headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
 
-    //================callbacks==================//
-    function tabClicked(e) {
-        if(!isNavOpen) return
-        setIsNavOpen(!isNavOpen)
-        if(article) return
-    }
-
     return (
         <header 
             css={[
@@ -59,90 +51,7 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
             ref={headerInfo}
         >
             {console.log("Header")}
-            <AnimatePresence>
-                {
-                    isNavOpen && (
-                        <motion.nav
-                            className="header-up__nav-wrapper"
-                            css={{height:"100vh",width:"50%",position:"absolute",backgroundColor:"rgba(97, 97, 97, 0.875)",top:0,left:0,display:"none"}}
-                            initial={{x:-1000}}
-                            animate={{x:0}}
-                            transition={{duration:0.5}}
-                            exit={{x:-1000}}
-                        >
-                            <ul css={[
-                                utilSet.horizontalize,
-                                utilSet.verticalize,
-                                navSet.nav_list___humberger
-                            ]}>
-                                {tabs_json.map((item,index) => (
-                                    <NavLink 
-                                        className="nav-tab__item" 
-                                        key={index}
-                                        onClick={tabClicked}
-                                        style={({isActive}) => { 
-                                            return (isActive || parseInt(activeTab.id) === item.id) ? 
-                                                {backgroundColor:"black",color:"white",textDecoration:"none"}
-                                                :
-                                                {backgroundColor:"#f8f8ff",color:"black",textDecoration:"none"}
-                                        }}
-                                        to={`/category/${item.name}`}
-                                    >
-                                        <motion.li
-                                            whileHover={{opacity:0.3}}
-                                            data-id={item.id}
-                                            data-name={item.name}
-                                        >
-                                            {item.name}
-                                        </motion.li>
-                                    </NavLink>
-                                ))}
-                            </ul>
-                        </motion.nav>
-                    )
-                }
-            </AnimatePresence>
             <div className="header-up" css={headerSet.header_up_all}>
-                <div className="header-up__nav" 
-                    css={{display:"none",zIndex:3}}
-                    onClick={() => setIsNavOpen(!isNavOpen)}
-                >
-                    <motion.svg 
-                        css={svgThemes}
-                        initial={{opacity:1}}
-                        whileHover={{opacity:0.3}}
-                        transition={{duration:0.4}}
-                        width="31" 
-                        height="31" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                        variants={sidebar}
-                        animate={isNavOpen ? "open" : "closed"}
-                    >
-                        <motion.line 
-                            variants={{
-                                open:{x1:3, y1:6, x2:21, y2:18},
-                                closed:{x1:3, y1:6, x2:21, y2:6}
-                            }}
-                        />
-                        <motion.line 
-                            x1="3" y1="12" x2="21" y2="12"
-                            variants={{
-                                open:{opacity:0},
-                                closed:{opacity:1}
-                            }}
-                        />
-                        <motion.line 
-                            variants={{
-                                open:{x1:3, y1:18, x2:21, y2:6},
-                                closed:{x1:3, y1:18, x2:21, y2:18}
-                            }}
-                        />
-                    </motion.svg>
-                </div>
                 <div className="header-up__logo">
                     <a href="/">
                         <svg width="200px" height="35px" viewBox="0 0 200 50" strokeLinecap="round" strokeLinejoin="round">
@@ -258,34 +167,6 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                         </Link>
                     </div>
                 </div>
-            </div>
-            <div className="header-down" css={headerSet.header_down}>
-                <nav className="nav-tab" css={navSet.nav_all}>
-                    <ul css={[utilSet.horizontalize,utilSet.list_reset]}>
-                        {tabs_json.map((item,index) => (
-                            <NavLink 
-                                className="nav-tab__item" 
-                                key={index}
-                                onClick={tabClicked}
-                                css={({isActive}) => { 
-                                    return (isActive || parseInt(activeTab.id) === item.id) ? 
-                                    tabThemesOn
-                                    :
-                                    tabThemesOff
-                                }}
-                                to={`/category/${item.name}`}
-                            >
-                                <motion.li
-                                    whileHover={{opacity:0.3}}
-                                    data-id={item.id}
-                                    data-name={item.name}
-                                >
-                                    {item.name}
-                                </motion.li>
-                            </NavLink>
-                        ))}
-                    </ul>
-                </nav>
             </div>
         </header>
     )

@@ -7,7 +7,7 @@ import { useResource } from "../ResourceProvider"
 import { Link } from "react-router-dom"
 
 export default function Footer({themes}) {
-    const {tabs_json} = useResource()
+    const {tabs_json,activeTab,activeTabChanged,wordChanged} = useResource()
 
     return (
         <>
@@ -24,6 +24,11 @@ export default function Footer({themes}) {
                                 className="nav-tab__item"
                                 key={index}
                                 to={`/category/${item.name}`}
+                                onClick={() => {
+                                    wordChanged("")
+                                    if(activeTab.id && activeTab.name) return 
+                                    activeTabChanged({id:item.id,name:item.name})
+                                }}
                             >
                                 <motion.li
                                     whileHover={{opacity:0.3,scale:1.13}}

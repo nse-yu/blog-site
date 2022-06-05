@@ -7,7 +7,7 @@ import LoadedImg from "../img/Img"
 import { useResource } from "../ResourceProvider"
 
 export default function Card({article,edittable=false,del=false,themes}) {
-    const {deleteArticle} = useResource()
+    const {deleteArticle,activeTabChanged,activeTab,findTagById} = useResource()
 
     return (
         <AnimatePresence>
@@ -49,6 +49,11 @@ export default function Card({article,edittable=false,del=false,themes}) {
                 <Link 
                     to={edittable ? `/edit/${article.articleID}` : `/article/${article.articleID}`} 
                     css={{height:"100%"}}
+                    onClick={() => {
+                        if(activeTab.id && activeTab.name) return 
+                        let tag = findTagById(article.tagID) //activeTabが空の場合（検索から記事を閲覧した場合）に備える
+                        activeTabChanged({id:article.tagID,name:tag[1]})
+                    }}
                 >
                     <figure css={{height:"inherit"}}>
                         <LoadedImg

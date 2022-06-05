@@ -23,7 +23,8 @@ export default function Article() {
         setCurrentArticle,
         findByArticleId,
         findTagById,
-        isLight
+        isLight,
+        wordChanged
     } = useResource()
     
     //==================DEFINITION==================//
@@ -34,13 +35,13 @@ export default function Article() {
     const tagName = findTagById(article.tagID)[1]
 
     //==================USE EFFECT=================//
-    //paramの情報を使用し、articlesからarticleを読み込む（articlesに依存させないと、順序的にarticlesの取得が後になってしまう）
-    useLayoutEffect(() => {
+    useLayoutEffect(() => { //paramの情報を使用し、articlesからarticleを読み込む（articlesに依存させないと、順序的にarticlesの取得が後になってしまう）
         if(!articles) return
         setCurrentArticle(findByArticleId(articleID))
+        wordChanged("") //searchWordはもう使わないので、破棄する
     },[articles])
-    //画面をトップから始める
-    useEffect(() => {
+
+    useEffect(() => {//画面をトップから始める
         document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
     },[])
 
@@ -71,7 +72,8 @@ export default function Article() {
                                     color: isLight ? theme.text.default : theme.text.light
                                 })
                             ]}>
-                            <Link to="/" 
+                            <a
+                                href="/" 
                                 css={[
                                     theme => ({
                                     color: isLight ? theme.text.default : theme.text.light
@@ -79,7 +81,7 @@ export default function Article() {
                                 ]}
                             >
                                 top
-                            </Link>
+                            </a>
                         </span>
                         <span className="breadcrumb-link" 
                             css={[
