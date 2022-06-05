@@ -277,7 +277,10 @@ export default function EditTop() {
                                 className="open__hidden"
                                 css={[
                                     utilSet.verticalize,
-                                    topSet.top_open_hidden
+                                    topSet.top_open_hidden,
+                                    {
+                                        top:window.pageYOffset + 20
+                                    }
                                 ]}
                                 layout
                                 initial={{x:-700,opacity:0}}
@@ -317,7 +320,10 @@ export default function EditTop() {
                                 css={[
                                     utilSet.verticalize,
                                     topSet.top_open_hidden___imgs,
-                                    {alignItems:"flex-start"}
+                                    {
+                                        alignItems:"flex-start",
+                                        top:ref_tools.current.getBoundingClientRect().top + window.pageYOffset - 20
+                                    }
                                 ]}
                                 layout
                                 initial={{x:-700,opacity:0}}
