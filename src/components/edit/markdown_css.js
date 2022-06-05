@@ -12,6 +12,9 @@ const markdown_styles = css`
         margin-top:1rem;
         padding:0.5rem;
     };
+    em{
+        border-bottom:1px solid black;
+    }
     ul,ol{
         margin-left:2rem;
     }
