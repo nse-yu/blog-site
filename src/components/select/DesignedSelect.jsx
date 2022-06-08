@@ -5,6 +5,7 @@ import { useState } from "react"
 import { utilSet } from "../others/util_css"
 import { designedSet } from "./designed_css"
 import { useResource } from "../ResourceProvider"
+import { useEffect } from "react"
 
 export default function DesignedSelect({changed,tag}) {
     //==================DEFINITION==================//
@@ -25,6 +26,11 @@ export default function DesignedSelect({changed,tag}) {
             })
         }
     }
+
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("DesignedSelect")
+    })
 
     return (
         <>

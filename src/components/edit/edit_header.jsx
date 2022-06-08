@@ -29,9 +29,13 @@ export default function EditHeader({methods,prev_follow}) {
         headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
 
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("EditHeader")
+    })
+
     return (
         <>
-            {console.log("EditHeader")}
             <header 
                 css={[
                     headerSet.header_all,

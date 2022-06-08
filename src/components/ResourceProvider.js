@@ -1,8 +1,8 @@
 import { useCycle } from "framer-motion";
 import { useContext } from "react";
 import { useRef } from "react";
-import { useLayoutEffect } from "react";
 import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
 import tabs_json from "../tabs.json";
@@ -153,11 +153,15 @@ export default function ResourceProvider({children}) {
         wordChanged
     }
 
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Provider")
+    })
+
     return (
         <context.Provider 
             value={values}
         >
-        {console.log("Provider")}
             {children}
         </context.Provider>
     )

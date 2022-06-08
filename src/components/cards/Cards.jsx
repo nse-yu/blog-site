@@ -4,13 +4,17 @@ import { topSet } from "../top/top_css"
 import Card from "../card/card"
 import { useResource } from "../ResourceProvider"
 import {AnimatePresence, motion} from "framer-motion"
+import { useEffect } from "react"
 
 export default function Cards({grid=true,edit=false,pan,del=false,themes}) {
     const {articles} = useResource()
-
+    
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Cards")
+    })
     return (
         <AnimatePresence>
-            {console.log("Cards")}
             <motion.section
                 className="top_cards"
                 css={

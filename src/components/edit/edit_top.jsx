@@ -252,11 +252,15 @@ export default function EditTop() {
                 setImgs(() => [...res_list])
             })
     }
+
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("EditTop")
+    })
     
 
     return (
         <>
-            {console.log("EditTop")}
             <EditHeader 
                 methods={{
                     newfile:[onNewClicked,"新規"],

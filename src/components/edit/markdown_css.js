@@ -6,14 +6,31 @@ const markdown_styles = css`
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-size:1.2rem;
     h1,h2,h3,h4,h5,h6{
+        background-color:#e7e7e7;
         border-left:8px solid black;
         border-bottom:1px solid black;
         margin:0.5rem 0;
         margin-top:1rem;
         padding:0.5rem;
     };
+    h5,h6{
+        background-color:transparent;
+        border-bottom:0;
+        border-color:gray;
+    }
+    h6{
+        border-color:blue;
+        border-width:2px;
+    }
+    blockquote{
+        border:3px solid black;
+        border-radius:5px;
+        padding:0.5rem;
+        margin:0.3rem;
+    }
     em{
         border-bottom:1px solid black;
+        margin:0 0.25rem 0 0;
     }
     ul,ol{
         margin-left:2rem;
@@ -54,9 +71,14 @@ const markdown_styles = css`
         width:80%;
         height:80%;
         box-shadow:1px 2px 6px gray;
+        margin:0.3rem 0;
+        max-height:300px;
+        object-fit:contain;
+        background:repeating-linear-gradient(45deg,#faf0e6 10%,white 30%)
     };
     .footnotes{
         font-size:0.9rem;
+        margin-top:5rem;
         h2{
             font-size:0;
             border-left:8px solid #b0c4de;

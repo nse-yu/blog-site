@@ -48,6 +48,11 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
         if(article) return
     }
 
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Header")
+    })
+
     return (
         <header 
             css={[
@@ -58,7 +63,6 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
             ]}
             ref={headerInfo}
         >
-            {console.log("Header")}
             <AnimatePresence>
                 {
                     isNavOpen && (

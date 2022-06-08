@@ -112,9 +112,16 @@ export const edit_tools = [
         id:15,
         tool:"embedded code（埋め込みコード）",
         dom:<><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></>,
-        desc:`~~~java:hoge.java
+        desc:`~~~
         System.out.println("hogehoge");
         ~~~`,
-        helper:`~~~java:hoge.java\nSystem.out.println("hogehoge");\n~~~`
+        helper:`~~~\nSystem.out.println("hogehoge");\n~~~`
+    },
+    {
+        id:16,
+        tool:"ブロック",
+        dom:<><path d="M3 3h18v18H3zM12 8v8m-4-4h8"/></>,
+        desc:``,
+        helper:`> `
     }
 ]

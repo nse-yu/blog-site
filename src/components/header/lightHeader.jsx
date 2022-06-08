@@ -27,9 +27,8 @@ const sidebar = {
     }
 };
 
-export default function LightHeader({themes,svgThemes,tabThemesOn,tabThemesOff}) {
-    const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
-    const [isNavOpen,setIsNavOpen] = useState(false)
+export default function LightHeader({themes,svgThemes}) {
+    const {headerInfo,headerHeight,article,toggleIsLight,isLight} = useResource()
 
 
     useEffect(() => {
@@ -39,6 +38,11 @@ export default function LightHeader({themes,svgThemes,tabThemesOn,tabThemesOff})
         //ヘッダー高さを取得し、マージン調整
         headerHeight(headerInfo.current.getBoundingClientRect().height)
     },[])
+
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("LightHeader")
+    })
 
     return (
         <header 
@@ -50,7 +54,6 @@ export default function LightHeader({themes,svgThemes,tabThemesOn,tabThemesOff})
             ]}
             ref={headerInfo}
         >
-            {console.log("Header")}
             <div className="header-up" css={headerSet.header_up_all}>
                 <div className="header-up__logo">
                     <a href="/">

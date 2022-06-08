@@ -2,7 +2,7 @@ import { css } from "@emotion/react"
 
 const article_all = css`
     padding:1rem;
-    background:repeating-linear-gradient(135deg,#fdf5e6,#fafff0,#e6e6ff,#e6fff2);
+    background-color:#ffdfaf;
     @media (max-width:600px){
         flex-direction:column;
     }

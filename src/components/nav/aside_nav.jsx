@@ -7,8 +7,9 @@ import {motion} from "framer-motion"
 import recommend from "../../recommend_site.json";
 import { useResource } from "../ResourceProvider";
 import { useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { btnSet } from "../others/btn_css";
+import { useEffect } from "react";
 
 export default function AsideNav({themes}) {
     //=================DEFINITION=================//
@@ -18,10 +19,13 @@ export default function AsideNav({themes}) {
     //==================IMPORT===================//
     const {distinctObjByTags,wordChanged} = useResource()
     
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("AsideNav")
+    })
 
     return (
         <>
-            {console.log("AsideNav")}
             <aside 
                 css={[
                     topSet.top_side_all,

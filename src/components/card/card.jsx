@@ -5,9 +5,16 @@ import {AnimatePresence, motion} from "framer-motion"
 import { Link } from "react-router-dom"
 import LoadedImg from "../img/Img"
 import { useResource } from "../ResourceProvider"
+import { useEffect } from "react"
+
 
 export default function Card({article,edittable=false,del=false,themes}) {
     const {deleteArticle,activeTabChanged,activeTab,findTagById} = useResource()
+
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Card")
+    })
 
     return (
         <AnimatePresence>

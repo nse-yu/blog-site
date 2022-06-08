@@ -16,9 +16,13 @@ export default function SearchResult() {
         searchCharacter(param.get("q"))
     },[param])
 
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("SearchResult")
+    })
+
     return (
         <>
-        {console.log("SearchResult")}
             <main className="result-wrapper"
                 css={[
                     utilSet.verticalize,

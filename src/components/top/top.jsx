@@ -69,11 +69,14 @@ export default function Top() {
     useEffect(() => { //画面をトップから始める
         document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
     })
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Top")
+    })
 
 
     return (
         <>
-            {console.log("Top")}
             {!params.get("q") ? 
                 (   
                 <Header 

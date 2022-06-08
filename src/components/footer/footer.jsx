@@ -5,9 +5,14 @@ import { utilSet } from "../others/util_css"
 import { motion } from "framer-motion"
 import { useResource } from "../ResourceProvider"
 import { Link } from "react-router-dom"
+import { useEffect } from "react"
 
 export default function Footer({themes}) {
     const {tabs_json,activeTab,activeTabChanged,wordChanged} = useResource()
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Footer")
+    })
 
     return (
         <>

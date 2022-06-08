@@ -44,10 +44,14 @@ export default function Article() {
     useEffect(() => {//画面をトップから始める
         document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
     },[])
+    
+    //=========TEST=========//
+    useEffect(() => {
+        console.log("Article")
+    })
 
     return (
         <ThemeProvider theme={baseThemes}>
-            {console.log("Article")}
             <article css={{width:"100%"}}>
                 <section className="article_info" 
                     css={[
