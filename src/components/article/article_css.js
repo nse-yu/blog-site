@@ -20,7 +20,6 @@ const article_desc = css`
     font-weight:600;
 `
 const breadcrumb_wrapper = css`
-    width:100%;
 `
 const breadcrumb_link = css`
     a{

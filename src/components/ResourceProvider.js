@@ -113,7 +113,10 @@ export default function ResourceProvider({children}) {
             mode:"cors"
         })
         .then(res => res.json())
-        .then(res_json => setArticles(res_json))
+        .then(res_json => {
+            setArticles(res_json)
+            console.log(res_json)
+        })
         .catch(console.error)
     }
     /**指定されたtagIDからtagIDとtagNameの配列を返す */

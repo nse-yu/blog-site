@@ -63,54 +63,62 @@ export default function Article() {
                         })
                     ]}
                 >
-                    <div className="breadcrumb" 
-                        css={[
-                            articleSet.breadcrumb_wrapper,
-                            utilSet.horizontalize,
-                            utilSet.horizontalize___right,
-                        ]}>
-                        <span className="breadcrumb-link" 
+                    <div css={[utilSet.horizontalize,{width:"100%"}]}>
+                        <div 
+                            css={theme => ({
+                                color: isLight ? theme.text.default : theme.text.light
+                            })}>
+                            <u>最終更新日時</u>：{article.lastUpdate}
+                        </div>
+                        <div className="breadcrumb"
                             css={[
-                                articleSet.breadcrumb_link,
-                                theme => ({
-                                    color: isLight ? theme.text.default : theme.text.light
-                                })
+                                articleSet.breadcrumb_wrapper,
+                                utilSet.horizontalize,
+                                utilSet.horizontalize___right,
                             ]}>
-                            <a
-                                href="/" 
+                            <span className="breadcrumb-link"
                                 css={[
+                                    articleSet.breadcrumb_link,
                                     theme => ({
-                                    color: isLight ? theme.text.default : theme.text.light
+                                        color: isLight ? theme.text.default : theme.text.light
                                     })
-                                ]}
-                            >
-                                top
-                            </a>
-                        </span>
-                        <span className="breadcrumb-link" 
-                            css={[
-                                articleSet.breadcrumb_link,
-                                theme => ({
-                                    color: isLight ? theme.text.default : theme.text.light
-                                })
-                            ]}>
-                            <Link to={`/category/${tagName}`} 
+                                ]}>
+                                <a
+                                    href="/"
+                                    css={[
+                                        theme => ({
+                                        color: isLight ? theme.text.default : theme.text.light
+                                        })
+                                    ]}
+                                >
+                                    top
+                                </a>
+                            </span>
+                            <span className="breadcrumb-link"
                                 css={[
+                                    articleSet.breadcrumb_link,
                                     theme => ({
-                                    color: isLight ? theme.text.default : theme.text.light
+                                        color: isLight ? theme.text.default : theme.text.light
                                     })
-                                ]}
-                            >{tagName}</Link>
-                        </span>
-                        <span className="breadcrumb-end" 
-                            css={[
-                                articleSet.breadcrumb_link___end,
-                                theme => ({
-                                    color: isLight ? theme.text.default : theme.text.light
-                                })
-                            ]}>
-                            {article.title}
-                        </span>
+                                ]}>
+                                <Link to={`/category/${tagName}`}
+                                    css={[
+                                        theme => ({
+                                        color: isLight ? theme.text.default : theme.text.light
+                                        })
+                                    ]}
+                                >{tagName}</Link>
+                            </span>
+                            <span className="breadcrumb-end"
+                                css={[
+                                    articleSet.breadcrumb_link___end,
+                                    theme => ({
+                                        color: isLight ? theme.text.default : theme.text.light
+                                    })
+                                ]}>
+                                {article.title}
+                            </span>
+                        </div>
                     </div>
                     <div className="article_title">
                         <h1 css={[

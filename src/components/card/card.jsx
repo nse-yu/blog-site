@@ -70,7 +70,10 @@ export default function Card({article,edittable=false,del=false,themes}) {
                             url={article.imgURL} 
                         />
                         <div css={cardSet.card_text}>
-                            <figcaption><h3>{article.title}</h3></figcaption>
+                            <figcaption>
+                                <p css={{opacity:0.4,color:"white",fontSize:"0.6rem"}}>{article.lastUpdate}</p>
+                                <h3>{article.title}</h3>
+                            </figcaption>
                             <p 
                                 className="card_text___toDesc"
                                 css={cardSet.card_text___toDesc}
