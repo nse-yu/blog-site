@@ -21,7 +21,6 @@ const nav_all = css`
 
 //=================リスト系ナビゲーション===============//
 const nav_list = css`
-    border:1px solid white;
     border-radius:5px;
     background-color:white;
     padding:10px;

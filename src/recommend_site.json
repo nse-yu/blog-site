@@ -110,6 +110,13 @@
         "url":"https://jestjs.io/ja/docs/expect",
         "class":"テスト",
         "classcode":6
+    },
+    {
+        "id":528,
+        "name":"機械学習基礎",
+        "url":"https://python.atelierkobato.com/",
+        "class":"機械学習",
+        "classcode":7
     }
 ]
  

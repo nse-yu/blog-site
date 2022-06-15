@@ -6,7 +6,7 @@ const markdown_styles = css`
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-size:1.2rem;
     h1,h2,h3,h4,h5,h6{
-        background-color:#e7e7e7;
+        background:repeating-linear-gradient(135deg,rgba(255,255,255,0.456) 50%,white);
         border-left:8px solid black;
         border-bottom:1px solid black;
         margin:0.5rem 0;
@@ -15,12 +15,13 @@ const markdown_styles = css`
     };
     h5,h6{
         background-color:transparent;
-        border-bottom:0;
         border-color:gray;
+        background:none;
     }
     h6{
-        border-color:blue;
-        border-width:2px;
+        border-bottom:0;
+        border-color:#93d057;
+        border-width:3px;
     }
     blockquote{
         border:3px solid black;
@@ -38,6 +39,7 @@ const markdown_styles = css`
     table{
         border-spacing:0;
         border-collapse:"collapse";
+        margin:0.5rem;
         tr{
             background-color:white;
         };
@@ -53,7 +55,7 @@ const markdown_styles = css`
         };
         td{
             border-top:0;
-            text-align:right;
+            text-align:center;
             background-color:white;
         };
     };

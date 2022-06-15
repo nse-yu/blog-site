@@ -138,11 +138,11 @@ export default function EditTop() {
     
     //FIXME[focus location]:tool-helper挿入時にtextboxへフォーカス & 追従処理
     useEffect(() => {
-        ref_markdown.current.focus()
+        //ref_markdown.current.focus()
 
         if(!isPrevFollow) return
         let max_scroll = ref_preview.current.scrollHeight
-        ref_preview.current.scrollTo(0,max_scroll * ref_markdown.current.selectionStart / ref_markdown.current.value.length - 50) //字数比をスクロール幅にかけ、ある程度マージンを追加
+        ref_preview.current.scrollTo(0,max_scroll * ref_markdown.current.selectionStart / ref_markdown.current.value.length -100) //字数比をスクロール幅にかけ、ある程度マージンを追加
     },[markdown])
 
     //==================ON CHANGE==================//

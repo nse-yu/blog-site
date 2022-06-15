@@ -1,8 +1,10 @@
 import { css } from "@emotion/react"
+import back from "./lines-7124376_1920.png"
 
 const article_all = css`
     padding:1rem;
-    background-color:#ffdfaf;
+    background-image:url(${back});
+    background-repeat:round;
     @media (max-width:600px){
         flex-direction:column;
     }
@@ -44,6 +46,8 @@ const article_bigimg_wrapper__el = css`
 //==============for page markdown===========//
 const article_content = css`
     width:75%;
+    background-color:white;
+    border-radius:10px;
     @media (max-width:600px){
         width:100%;
     }
