@@ -8,6 +8,7 @@ import ResourceProvider, { useResource } from "../ResourceProvider"
 import { useEffect } from "react"
 import { Outlet, useParams, useSearchParams } from "react-router-dom"
 import { useLayoutEffect } from "react"
+import { createBrowserHistory } from "history"
 
 /**tabNameには、Linkからcategory/へのアクセス時に値が入る
  * articleIDには、Linkからarticle/へのアクセス時に値が入る
@@ -30,22 +31,19 @@ export default function Top() {
     //==================DEFINITION==================//
     //queryparams
     const [params,setParams] = useSearchParams()
+    //history
+    const history = createBrowserHistory()
 
     //==================USE EFFECT=================//
     useLayoutEffect(() => { //card選択（onclick） -> 現在active状態のtabをquery paramに追加 ##記事閲覧ページでactive状態のtabを判別するため
         if(!article) return
-        setParams(activeTab)
+        activeTabChanged(history.location.state.tag)
     },[article])
 
     useLayoutEffect(() => { //search文字列をパラメータに格納する
         if(!searchWord) return
         setParams({q:searchWord})
     },[searchWord])
-
-    useEffect(() => { //query paramからactive状態とするtabの情報を読み取る
-        if(!params) return 
-        activeTabChanged({id:params.get("id"),name:params.get("name")})
-    },[params])
 
     useEffect(() => { //記事閲覧ページ以外では、articleが未選択であることの保証
         if(articleID) return
@@ -73,7 +71,6 @@ export default function Top() {
     useEffect(() => {
         console.log("Top")
     })
-
 
     return (
         <>

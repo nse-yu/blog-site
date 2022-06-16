@@ -54,7 +54,13 @@ export default function Card({article,edittable=false,del=false,themes}) {
                     </span>
                 }
                 <Link 
-                    to={edittable ? `/edit/${article.articleID}` : `/article/${article.articleID}`} 
+                    to={
+                        edittable ? 
+                        {pathname:`/edit/${article.articleID}`} 
+                        : 
+                        {pathname:`/article/${article.articleID}`}
+                    } 
+                    state={{tag:activeTab}}
                     css={{height:"100%"}}
                     onClick={() => {
                         if(activeTab.id && activeTab.name) return 

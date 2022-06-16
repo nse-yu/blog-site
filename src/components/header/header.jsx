@@ -28,22 +28,6 @@ const sidebar = {
     }
 }
 
-const shrink = {
-    up:{
-        y:-100,
-        transition:{
-            duration:0.3,
-            //when:"afterChildren"
-        }
-    },
-    down:{
-        y:0,
-        transition:{
-            duration:0.3
-        }
-    }
-}
-
 export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
     //==================IMPORT==================//
     const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
@@ -146,10 +130,9 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                     {!isShrink &&
                         <motion.div className="header-up"
                             css={headerSet.header_up_all}
-                            variants={shrink}
-                            animate={isShrink ? "up" : "down"}
                             layout
-                            exit={{y:-70}}
+                            exit={{y:-20,opacity:0}}
+                            transition={{duration:0.1}}
                         >
                             <div className="header-up__nav"
                                 css={{display:"none",zIndex:3}}

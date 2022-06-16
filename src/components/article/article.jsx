@@ -13,6 +13,7 @@ import { useResource } from "../ResourceProvider"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { useEffect } from "react"
 import { useLayoutEffect } from "react"
+import { createBrowserHistory } from "history"
 
 /**articleはこのページに来てから読み込む */
 export default function Article() {
@@ -30,7 +31,6 @@ export default function Article() {
     //==================DEFINITION==================//
     //param
     const {articleID} = useParams("")
-
     //variable
     const tagName = findTagById(article.tagID)[1]
 
