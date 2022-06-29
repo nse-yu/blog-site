@@ -117,6 +117,20 @@
         "url":"https://python.atelierkobato.com/",
         "class":"機械学習",
         "classcode":7
+    },
+    {
+        "id":285,
+        "name":"例外処理基礎",
+        "url":"https://qiita.com/ts7i/items/d7f6c1cd5a14e55943d4",
+        "class":"開発全般",
+        "classcode":5
+    },
+    {
+        "id":289,
+        "name":"amigoscode",
+        "url":"https://amigoscode.com/courses",
+        "class":"開発全般",
+        "classcode":5
     }
 ]
  

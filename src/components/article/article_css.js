@@ -47,6 +47,7 @@ const article_content = css`
     width:75%;
     background-color:white;
     border-radius:10px;
+    overflow-x:scroll;
     @media (max-width:600px){
         width:100%;
     }
