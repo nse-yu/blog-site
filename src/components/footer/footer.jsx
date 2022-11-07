@@ -1,18 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import {footerSet} from "./footer_css"
 import { utilSet } from "../others/util_css"
 import { motion } from "framer-motion"
-import { useResource } from "../ResourceProvider"
+import { useData } from "../ResourceProvider"
 import { Link } from "react-router-dom"
-import { useEffect } from "react"
 
 export default function Footer({themes}) {
-    const {tabs_json,activeTab,activeTabChanged,wordChanged} = useResource()
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Footer")
-    })
+
+    const {
+        tabs,
+        activeTab,
+        onActiveTabChanged,
+        wordChanged
+    } = useData()
+    
 
     return (
         <>
@@ -24,7 +25,7 @@ export default function Footer({themes}) {
                 <section className="footer__category-list" css={[utilSet.verticalize,{gap:"1rem"}]}>
                     <h1>Category</h1>
                     <ul css={[utilSet.verticalize,utilSet.list_reset,{gap:"0.3rem"}]}>
-                        {tabs_json.map((item,index) => (
+                        {tabs.map((item,index) => (
                             <Link
                                 className="nav-tab__item"
                                 key={index}
@@ -32,7 +33,7 @@ export default function Footer({themes}) {
                                 onClick={() => {
                                     wordChanged("")
                                     if(activeTab.id && activeTab.name) return 
-                                    activeTabChanged({id:item.id,name:item.name})
+                                    onActiveTabChanged({id:item.id,name:item.name})
                                 }}
                             >
                                 <motion.li
@@ -48,9 +49,9 @@ export default function Footer({themes}) {
                     </ul>
                 </section>
                 <section className="footer__myInfo" css={[utilSet.verticalize,utilSet.horizontalize___right]}>
-                    <div>宮本武蔵</div>
+                    <div>nse-yu</div>
                     <div>日本</div>
-                    <div>020-3810-6341</div>
+                    <div>000-0000-0000</div>
                 </section>
                 <section className="footer__media" css={[utilSet.horizontalize]}>
                     <div className="footer__media-logo">

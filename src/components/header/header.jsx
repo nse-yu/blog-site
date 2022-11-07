@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { btnSet } from "../others/btn_css"
 import { headerSet } from "../header/header_css"
-import { useResource } from "../ResourceProvider"
+import { useData } from "../ResourceProvider"
 import { AnimatePresence, LayoutGroup, motion, useCycle } from "framer-motion"
 import { navSet } from "../nav/nav_css"
-import { useEffect, useLayoutEffect } from "react"
+import { useEffect } from "react"
 import { Link, NavLink } from "react-router-dom"
 import { useState } from "react"
 
@@ -29,46 +28,60 @@ const sidebar = {
 }
 
 export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
+
     //==================IMPORT==================//
-    const {headerInfo,headerHeight,tabs_json,article,activeTab,toggleIsLight,isLight} = useResource()
+    const {
+        headerInfo, 
+        onHeightChanged, 
+        tabs,
+        article,
+        activeTab,
+        toggleIsLight,
+        isLight
+    } = useData()
     
+
     //==================DEFINITION==================//
     //state
-    const [isNavOpen,setIsNavOpen] = useState(false)
-    const [isShrink,toggleShrink] = useCycle(false,true)
+    const [isNavOpen,setIsNavOpen]  = useState(false)
+    const [isShrink,toggleShrink]   = useCycle(false,true)
+
 
     //==================EFFECT==================//
-    useEffect(() => { //headerの高さを更新するためのコールバックの定義
-        window.onresize = () => {
-            headerHeight(headerInfo.current.getBoundingClientRect().height)
-        }
-        //ヘッダー高さを取得し、マージン調整
-        headerHeight(headerInfo.current.getBoundingClientRect().height)
-        //通常のイベントでは反応しないので、特別なクラスを使用する（ヘッダーのリサイズで発火）
-        const resizeObserver = new ResizeObserver(entries => {
-            headerHeight(entries[0].target.getBoundingClientRect().height)
-        })
-        //要素イベント監視の開始
-        resizeObserver.observe(headerInfo.current)
-        //一応、アンマウントで監視解除
-        return () => {resizeObserver.disconnect(headerInfo.current)}
-    },[])
-
     useEffect(() => { //animation後にheaderの高さを再更新する
-        headerHeight(headerInfo.current.getBoundingClientRect().height)
+        onHeightChanged(headerInfo.current.getBoundingClientRect().height)
     })
+
+    useEffect(() => { 
+
+        const info = headerInfo.current
+
+        //callback to update the header height
+        window.onresize = () => {
+            onHeightChanged(info.getBoundingClientRect().height)
+        }
+
+        //resize observer
+        const resizeObserver = new ResizeObserver(entries => {
+            onHeightChanged(entries[0].target.getBoundingClientRect().height)
+        })
+
+        //starting to observe
+        resizeObserver.observe(headerInfo.current)
+
+        //disconnect from the observer
+        return () => { resizeObserver.disconnect(info) }
+        
+    },[headerInfo, onHeightChanged])
+
+    
 
     //================callbacks==================//
     function tabClicked(e) {
         if(!isNavOpen) return
         setIsNavOpen(!isNavOpen)
-        if(article) return
     }
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Header")
-    })
 
     return (
         <LayoutGroup>
@@ -99,7 +112,7 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                                     utilSet.verticalize,
                                     navSet.nav_list___humberger
                                 ]}>
-                                    {tabs_json.map((item,index) => (
+                                    {tabs.map((item,index) => (
                                         <NavLink
                                             className="nav-tab__item"
                                             key={index}
@@ -295,7 +308,7 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                 <motion.div className="header-down" css={headerSet.header_down}>
                     <nav className="nav-tab" css={navSet.nav_all}>
                         <ul css={[utilSet.horizontalize,utilSet.list_reset]}>
-                            {tabs_json.map((item,index) => (
+                            {tabs.map((item,index) => (
                                 <NavLink
                                     className="nav-tab__item"
                                     key={index}

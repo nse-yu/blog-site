@@ -1,82 +1,107 @@
 import { useCycle } from "framer-motion";
-import { useContext } from "react";
+import { useContext, useReducer } from "react";
 import { useRef } from "react";
-import { useEffect } from "react";
-import { useLayoutEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
-import tabs_json from "../tabs.json";
+import tabs from "../tabs.json";
 
-const context = createContext()
-export const useResource = () => useContext(context)
+
+const dataContext       = createContext(null)
+const dispatchContext   = createContext(null)
+export const useData            = () => useContext(dataContext)
+export const useDataDispatch    = () => useContext(dispatchContext)
+
+// initialization flags to update variables once
+let initOnce = false
+
 
 export default function ResourceProvider({children}) {
+
     //==================DEFINITION==================//
     //ref
     const headerInfo = useRef()
 
     //state
-    const [activeTab,setActiveTab] = useState(0)
-    const [height,setHeight] = useState()
-    const [articles,setArticles] = useState(0)
-    const [article,setArticle] = useState("") //falsy狙いで0にする
-    const [isLight,turnLight] = useCycle(false,true)
-    const [searchWord,setSearchWord] = useState("")
+    const [activeTab,setActiveTab]      = useState(0)
+    const [height,setHeight]            = useState()
+    const [articles,setArticles]        = useState(0)
+    const [isLight,turnLight]           = useCycle(false,true)
+    const [searchWord,setSearchWord]    = useState("")
+    const [article, dispatchArticle]    = useReducer(articleReducer, "")
 
-    //==================USE EFFECT=================//
-    useLayoutEffect(() => { //ここをlayoutにすると、SearchResultの副作用よりも早く実行されるため、searchCharacterで上書きできる
-        findAll()
-    },[])
+
+    //===============INITIALIZATION=================//
+    if(!initOnce){ 
+        initOnce = true
+        findAll() 
+    }
 
     //=================SET STATES=================//
-    //指定したカテゴリに属するArticleを取得
+    //articles, activeTab
     const onTabSelected = tab => {
-        let fetchString = "http://localhost:8080/" + (tab.id === 1 ? "article/all" : "tag/"+tab.id)
+
+        let fetchString = "http://localhost:5000/" + (tab.id === 1 ? "article/all" : "tag/"+tab.id)
         
         fetch(fetchString)
             .then(res => res.json())
             .then(res_json => setArticles(() => res_json))
             .catch(console.error)
+            
         setActiveTab(tab)
     }
+
+    //activeTab
+    const onActiveTabChanged = active => {
+        setActiveTab(active)
+    }
+
     //height
-    const headerHeight = current => {
+    const onHeightChanged = current => {
+
+        if(current == height){ return }
+        
         setHeight(() => current)
     }
-    //article
-    const setCurrentArticle = current => {
-        setArticle(() => current)
-    }
-    //article
-    const resetCurrentArticle = () => {
-        setArticle("")
-    }
-    //delArticle
+
+    
+    //articles
     const deleteArticle = id => {
-        if(!window.confirm("本当に削除してもよろしいですか？")) return
-        fetch(`http://localhost:8080/article/${id}/delete`,{
+
+        fetch(`http://localhost:5000/article/${id}/delete`,{
             method:"delete"
         })
             .then(res => {
                 if(res.ok) {
-                    window.alert("削除が完了しました。")
                     findAll()
                 }
             })
             .catch(err => console.log(err))
     } 
-    //tabオブジェクトを挿入し、フォーカスしているタブを特定する
-    const activeTabChanged = active => {
-        setActiveTab(active)
-    }
-    //ライト・ダークモード切替
+
+    //isLight
     const toggleIsLight = () => {
         turnLight()
     }
-    //search character
+
+    //articles
+    function findAll(){
+        fetch(`http://localhost:5000/article/all`,{
+            mode:"cors"
+        })
+        .then(res => res.json())
+        .then(res_json => {
+            setArticles(res_json)
+        })
+        .catch(console.error)
+    }
+
+
+    //articles
     const searchCharacter = target => {
-        setSearchWord(target)
-        fetch("http://localhost:8080/article/search?q="+encodeURI(target))
+
+        wordChanged(target)
+
+        fetch("http://localhost:5000/article/search?q="+encodeURI(target))
             .then(res => res.json())
             .then(res_json => {
                 if(!res_json[0].articleID){ //一致記事がない場合は、一番目の要素プロパティがnullになって返される
@@ -89,9 +114,13 @@ export default function ResourceProvider({children}) {
                 setArticles({}) //ここで返却値nullをcatchしてArticlesを設定しようとしたが、thenで設定するのとで動作に違いがでるため断念
             })
     }
+
+    //searchWord
     const wordChanged = target => {
         setSearchWord(target)
     }
+
+
 
     //==================UTILITY====================//
     function distinctObjByTags(objs,tags=[]){
@@ -105,24 +134,17 @@ export default function ResourceProvider({children}) {
             return !bools.includes(true)
         })
     }
+
+
     function findByArticleId(ArticleID){
         return articles.filter(item => item.articleID === ArticleID)[0]
     }
-    function findAll(){
-        fetch(`http://localhost:8080/article/all`,{
-            mode:"cors"
-        })
-        .then(res => res.json())
-        .then(res_json => {
-            setArticles(res_json)
-            console.log(res_json)
-        })
-        .catch(console.error)
-    }
+
+
     /**指定されたtagIDからtagIDとtagNameの配列を返す */
     const findTagById = id => {
         let tag = []
-        tabs_json.forEach(row => {
+        tabs.forEach(row => {
             if(row.id === parseInt(id)){
                 tag.push(id,row.name)
             }
@@ -130,22 +152,34 @@ export default function ResourceProvider({children}) {
         return tag
     }
 
+
+    //==================REDUCER=================//
+    //article
+    function articleReducer(article, action){
+        switch(action.type){
+            case 'set':{
+                return action.data
+            }
+            case 'reset':{
+                return ""
+            }
+        }
+    }
+
     
     //=================ALL TO PASS=================//
-    const values = {
-        tabs_json, //すべてのタブ情報
+    const data = {
+        tabs, //すべてのタブ情報
         onTabSelected, //タブ選択時（クリック時）のコールバック
         headerInfo, //headerへの参照を保持するインスタンス
         height, //headerの高さを保持するstate
-        headerHeight, //headerの高さstateを変更するコールバック
+        onHeightChanged, //headerの高さstateを変更するコールバック
         articles, //取得した記事すべて
-        setCurrentArticle,
-        resetCurrentArticle,
         article,
         activeTab,
         distinctObjByTags,
         findByArticleId,
-        activeTabChanged,
+        onActiveTabChanged,
         findAll,
         toggleIsLight,
         deleteArticle,
@@ -156,16 +190,21 @@ export default function ResourceProvider({children}) {
         wordChanged
     }
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Provider")
-    })
+    const dispatch = {
+        dispatchArticle
+    }
 
     return (
-        <context.Provider 
-            value={values}
+        <dataContext.Provider 
+            value={data}
         >
-            {children}
-        </context.Provider>
+        
+            <dispatchContext.Provider
+                value={dispatch}
+            >
+                {children}
+            </dispatchContext.Provider>
+            
+        </dataContext.Provider>
     )
 }

@@ -39,7 +39,7 @@ export const edit_tools = [
         tool:"picture（画像）",
         dom:<><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M20.4 14.5L16 10 4 20"/></>,
         desc:`![alt](url)（空白無し）`,
-        helper:"![image](http://localhost:8080/img/"
+        helper:"![image](http://localhost:5000/img/"
     },
     {
         id:7,

@@ -1,48 +1,34 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { btnSet } from "../others/btn_css"
 import { headerSet } from "./header_css"
-import { useResource } from "../ResourceProvider"
-import { AnimatePresence, motion } from "framer-motion"
+import { useData } from "../ResourceProvider"
+import { motion } from "framer-motion"
 import { useEffect } from "react"
-import { Link, NavLink } from "react-router-dom"
-import { useState } from "react"
+import { Link } from "react-router-dom"
 
-const sidebar = {
-    open: {
-      transition: {
-        type: "spring",
-        stiffness: 10,
-        restDelta: 2
-      }
-    },
-    closed: {
-      transition: {
-        delay: 0.4,
-        type: "spring",
-        stiffness: 90,
-        damping: 15
-      }
-    }
-};
 
 export default function LightHeader({themes,svgThemes}) {
-    const {headerInfo,headerHeight,article,toggleIsLight,isLight} = useResource()
+
+    //==================IMPORT==================//
+    const {
+        headerInfo,
+        onHeightChanged,
+        article,
+        toggleIsLight,
+        isLight
+    } = useData()
 
 
+    //==================EFFECT==================//
     useEffect(() => {
         window.onresize = () => {
-            headerHeight(headerInfo.current.getBoundingClientRect().height)
+            onHeightChanged(headerInfo.current.getBoundingClientRect().height)
         }
         //ヘッダー高さを取得し、マージン調整
-        headerHeight(headerInfo.current.getBoundingClientRect().height)
-    },[])
+        onHeightChanged(headerInfo.current.getBoundingClientRect().height)
+    },[headerInfo, onHeightChanged])
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("LightHeader")
-    })
 
     return (
         <header 

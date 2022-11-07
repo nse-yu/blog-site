@@ -1,38 +1,43 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { utilSet } from "../others/util_css"
 import { headerSet } from "../header/header_css"
-import { AnimatePresence, motion, useCycle } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { useEffect } from "react"
 import { btnSet } from "../others/btn_css"
-import { useResource } from "../ResourceProvider"
+import { useData } from "../ResourceProvider"
 import { useState } from "react"
 import { navSet } from "../nav/nav_css"
 
 
 export default function EditHeader({methods,prev_follow}) {
+
     //==================IMPORT====================//
-    const {article,headerInfo,headerHeight} = useResource()
+    const {
+        article,
+        headerInfo,
+        onHeightChanged
+    } = useData()
+
 
     //=================DEFINITION==================//
+
     //state
-    const [isMenuOpen,toggleMenuOpen] = useState(false)
+    const [isMenuOpen, toggleMenuOpen] = useState(false)
+
 
     //==================USE EFFECT=================//
     //only first mounted
     useEffect(() => {
+
         window.addEventListener("resize",() => {
-            headerHeight(headerInfo.current.getBoundingClientRect().height)
+            onHeightChanged(headerInfo.current.getBoundingClientRect().height)
         })
        
         //ヘッダー高さを取得し、マージン調整
-        headerHeight(headerInfo.current.getBoundingClientRect().height)
+        onHeightChanged(headerInfo.current.getBoundingClientRect().height)
+        
     },[])
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("EditHeader")
-    })
 
     return (
         <>
@@ -71,12 +76,16 @@ export default function EditHeader({methods,prev_follow}) {
                     {article &&
                         <div className="header-up__current-edit">
                             <motion.p 
+                                css={{
+                                    filter:"drop-shadow(1px 1px 1px #ffffff)",
+                                    fontFamily: "'Kiwi Maru', serif",
+                                    backfaceVisibility:"hidden"
+                                }}
                                 style={{
                                     color:"#dc143c",
-                                    filter:"drop-shadow(1px 1px 1px #ffffff)",
-                                    fontFamily: "'Kiwi Maru', serif"
+                                    opacity:1
                                 }}
-                                animate={{scale:0.95,opacity:0.7,color:"#000000"}}
+                                animate={{scale:0.95,opacity:0.3}}
                                 transition={{duration:1.5,repeatType:"mirror",repeat:"Infinity"}}
                             >
                                 タイトル「{article.title}」を編集中です...

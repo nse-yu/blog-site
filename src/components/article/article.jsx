@@ -1,54 +1,61 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css, ThemeProvider } from "@emotion/react"
+import { ThemeProvider } from "@emotion/react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { articleSet } from "./article_css"
 import { topSet } from "../top/top_css"
 import { utilSet } from "../others/util_css"
 import { markdownSet } from "../edit/markdown_css" 
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import LoadedImg from "../img/Img"
 import AsideNav from "../nav/aside_nav"
 import { baseThemes } from "../../theme"
-import { useResource } from "../ResourceProvider"
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { useData, useDataDispatch } from "../ResourceProvider"
+import { Link, useParams } from "react-router-dom"
 import { useEffect } from "react"
-import { useLayoutEffect } from "react"
-import { createBrowserHistory } from "history"
+
 
 /**articleはこのページに来てから読み込む */
 export default function Article() {
+
     //====================IMPORT====================//
     const {
         article,
         articles,
-        setCurrentArticle,
         findByArticleId,
         findTagById,
         isLight,
         wordChanged
-    } = useResource()
+    } = useData()
+
+    const {
+        dispatchArticle
+    } = useDataDispatch()
     
+
     //==================DEFINITION==================//
     //param
-    const {articleID} = useParams("")
-    //variable
-    const tagName = findTagById(article.tagID)[1]
+    const { articleID } = useParams("")
+    const tagName       = findTagById(article.tagID)[1]
+
 
     //==================USE EFFECT=================//
-    useLayoutEffect(() => { //paramの情報を使用し、articlesからarticleを読み込む（articlesに依存させないと、順序的にarticlesの取得が後になってしまう）
+    useEffect(() => { //paramの情報を使用し、articlesからarticleを読み込む（articlesに依存させないと、順序的にarticlesの取得が後になってしまう）
+
+        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
+        
         if(!articles) return
-        setCurrentArticle(findByArticleId(articleID))
+
+        dispatchArticle(
+            {type:"set", data:findByArticleId(articleID)}
+        )
+
         wordChanged("") //searchWordはもう使わないので、破棄する
+
     },[articles])
 
-    useEffect(() => {//画面をトップから始める
-        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
-    },[])
     
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Article")
-    })
 
     return (
         <ThemeProvider theme={baseThemes}>
@@ -159,6 +166,24 @@ export default function Article() {
                             remarkPlugins={[remarkGfm]}
                             children={article.content}
                             css={markdownSet.markdown_styles}
+                            components={{
+                                code({node, inline, className, children, ...props}) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                    <SyntaxHighlighter
+                                        children={String(children).replace(/\n$/, '')}
+                                        style={dark}
+                                        language={match[1]}
+                                        PreTag="div"
+                                        {...props}
+                                    />
+                                    ) : (
+                                    <code className={className} {...props}>
+                                        {children}
+                                    </code>
+                                    )
+                                }
+                            }}
                         />
                     </section>
                     <div css={articleSet.article_page__line}></div>

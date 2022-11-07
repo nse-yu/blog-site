@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { topSet } from "../top/top_css"
 import {motion} from "framer-motion"
 import LoadedImg from "../img/Img"
@@ -15,25 +14,21 @@ export default function ImgCards({
     pan,
     clicked,
     preUpload=false,
-    changed = f => f
+    uploaded = f => f
 }) {
-    //==================DEFINITION==================//
-    //state
-    const [uploadImg,setUploadImg] = useState("")
 
-    //==================SET STATES==================//
-    //when img has uploaded
-    useEffect(() => {
-        changed()
-    },[uploadImg])
+
+    //==================DEFINITION==================//
 
     //fetch
     const inputChanged = e => {
+
         if(!e.target.files[0]) return
         
         const data = new FormData()
         data.append("img",e.target.files[0])
-        fetch("http://localhost:8080/img/upload",{
+
+        fetch("http://localhost:5000/img/upload",{
             method:"POST",
             mode:"cors",  
             body:data
@@ -41,7 +36,7 @@ export default function ImgCards({
         .then(res => res.json())
         .catch(err => {console.log(err)})
         
-        setUploadImg(e.target.files[0])
+        uploaded(e.target.files[0].name)
     }
 
     return (

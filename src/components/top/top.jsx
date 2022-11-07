@@ -1,76 +1,81 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css, ThemeProvider } from "@emotion/react"
 import Footer from "../footer/footer"
 import Header from "../header/header"
 import LightHeader from "../header/lightHeader"
 import { topSet } from "../top/top_css"
-import ResourceProvider, { useResource } from "../ResourceProvider"
-import { useEffect } from "react"
+import { useData, useDataDispatch } from "../ResourceProvider"
 import { Outlet, useParams, useSearchParams } from "react-router-dom"
-import { useLayoutEffect } from "react"
 import { createBrowserHistory } from "history"
+import { useEffect } from "react"
 
-/**tabNameには、Linkからcategory/へのアクセス時に値が入る
- * articleIDには、Linkからarticle/へのアクセス時に値が入る
- */
+
+/**tabNameには、Linkからcategory/へのアクセス時に, articleIDには、Linkからarticle/へのアクセス時に値が入る*/
 export default function Top() {
+
     //===================IMPORT====================//
     const {
         height,
-        resetCurrentArticle,
         onTabSelected,
-        tabs_json,
+        tabs,
         article,
-        activeTab,
-        activeTabChanged,
+        onActiveTabChanged,
+        findTagById,
         isLight,
-        searchWord
-    } = useResource()
-    const {articleID,tabName} = useParams(0) // article,categoryそれぞれのマッチング変数
+    } = useData()
+
+    const {
+        dispatchArticle
+    } = useDataDispatch()
+    
+
 
     //==================DEFINITION==================//
-    //queryparams
-    const [params,setParams] = useSearchParams()
-    //history
-    const history = createBrowserHistory()
 
-    //==================USE EFFECT=================//
-    useLayoutEffect(() => { //card選択（onclick） -> 現在active状態のtabをquery paramに追加 ##記事閲覧ページでactive状態のtabを判別するため
-        if(!article) return
-        activeTabChanged(history.location.state.tag)
-    },[article])
+    // article,categoryそれぞれのマッチング変数
+    const {articleID, tabName}  = useParams(0) 
 
-    useLayoutEffect(() => { //search文字列をパラメータに格納する
-        if(!searchWord) return
-        setParams({q:searchWord})
-    },[searchWord])
+    // queryparams
+    const [params,  ]           = useSearchParams()
 
-    useEffect(() => { //記事閲覧ページ以外では、articleが未選択であることの保証
-        if(articleID) return
-        resetCurrentArticle()
-    })
+    // history
+    const history       = createBrowserHistory()
+
+    const currentTab    = article ? findTagById(article.tagID) : ""
+
+
+    //===============INITIALIZATION=================//
+
+    // if access to root index(/), force a redirect to the category 0
+    if(!tabName && !articleID && !params.get("q")){ 
+        window.location = "/category/" + tabs[0].name 
+    }
+
     
-    useEffect(() => { //urlで指定されたcategoryと表示されているタブの状態を同期する
-        if(params.get("q") || searchWord) return //searchWordがparamsに入っていることが確定的ではないため、searchWord
+    //親コンポーネントの状態更新は、レンダリング後に行う必要があるため、副作用に実装
+    useEffect(() => {
 
-        if(!tabName && !articleID){ //index(/)へのアクセス時、リダイレクト制御
-            window.location = "/category/"+tabs_json[0].name
+        // card選択（onclick） -> 現在active状態のtabをquery paramに追加 ##記事閲覧ページでactive状態のtabを判別するため
+        if(article){ 
+            onActiveTabChanged({id: currentTab[0], name:currentTab[1]}) 
         }
-        tabs_json.forEach(row => {
+
+        // 記事閲覧ページ以外では、articleが未選択であることの保証
+        if(!articleID) { 
+            dispatchArticle(
+                {type:"reset", data:{}}
+            ) 
+        }
+
+        // get selected tab names from the url and set active tabs 
+        tabs.forEach(row => {
             if(row.name === tabName){ //カテゴリ名からidを取得するため
-                onTabSelected({id:row.id,name:tabName})
+                onTabSelected({id:row.id, name:tabName})
                 return
             }
         })
-    },[tabName,articleID,params])
 
-    useEffect(() => { //画面をトップから始める
-        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
-    })
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Top")
-    })
+    },[articleID, tabName, article])
+
 
     return (
         <>

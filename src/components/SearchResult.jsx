@@ -1,25 +1,33 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
-import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import Cards from "../components/cards/Cards"
 import { resultSet } from "./others/result_css"
 import {utilSet} from "./others/util_css"
-import { useResource } from "./ResourceProvider"
+import { useData } from "./ResourceProvider"
+import { useEffect } from "react"
+
+
 
 export default function SearchResult() {
-    const [param,] = useSearchParams()
-    const {searchCharacter,isLight,articles} = useResource()
 
-    useEffect(() => {
-        if(!param.get("q")) return
-        searchCharacter(param.get("q"))
-    },[param])
+    //=================DEFINITION==================//
+    const [param, ] = useSearchParams()
 
-    //=========TEST=========//
+
+    //===================IMPORT====================//
+    const { searchCharacter, isLight, articles } = useData()
+
+
+    //===============INITIALIZATION================//
     useEffect(() => {
-        console.log("SearchResult")
-    })
+
+        document.scrollingElement.scrollTop = 0 //画面が途中から始まる問題に対処
+        
+        if(param.get("q")){ 
+            searchCharacter(param.get("q")) 
+        }
+    },[])
+    
 
     return (
         <>

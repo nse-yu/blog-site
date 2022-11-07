@@ -1,20 +1,30 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { cardSet } from "./card_css"
 import {AnimatePresence, motion} from "framer-motion"
 import { Link } from "react-router-dom"
 import LoadedImg from "../img/Img"
-import { useResource } from "../ResourceProvider"
-import { useEffect } from "react"
+import { useData } from "../ResourceProvider"
 
 
-export default function Card({article,edittable=false,del=false,themes}) {
-    const {deleteArticle,activeTabChanged,activeTab,findTagById} = useResource()
+export default function Card({
+    article,
+    edittable=false,
+    del=false,
+    delMethod = f => f,
+    themes
+}) {
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Card")
-    })
+    //===================IMPORT====================//
+    const {
+        onActiveTabChanged,
+        activeTab,
+        findTagById
+    } = useData()
+
+    function Del(e){
+        delMethod(e.target.dataset.id)
+    }
+
 
     return (
         <AnimatePresence>
@@ -29,7 +39,7 @@ export default function Card({article,edittable=false,del=false,themes}) {
                 {del && 
                     <span 
                         css={cardSet.cards___deletable}
-                        onClick={e => {deleteArticle(e.target.dataset.id)}}
+                        onClick={Del}
                         data-id={article.articleID}
                     >
                         <motion.svg
@@ -63,9 +73,12 @@ export default function Card({article,edittable=false,del=false,themes}) {
                     state={{tag:activeTab}}
                     css={{height:"100%"}}
                     onClick={() => {
+
                         if(activeTab.id && activeTab.name) return 
+
                         let tag = findTagById(article.tagID) //activeTabが空の場合（検索から記事を閲覧した場合）に備える
-                        activeTabChanged({id:article.tagID,name:tag[1]})
+                        onActiveTabChanged({id:article.tagID, name:tag[1]})
+
                     }}
                 >
                     <figure css={{height:"inherit"}}>
@@ -74,6 +87,7 @@ export default function Card({article,edittable=false,del=false,themes}) {
                                 cardSet.card_img
                             ]}
                             url={article.imgURL} 
+                            motion_animate={del ? {}:{scale:1.1, opacity:0.6}}
                         />
                         <div css={cardSet.card_text}>
                             <figcaption>

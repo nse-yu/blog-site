@@ -1,6 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
-import { click } from "@testing-library/user-event/dist/click"
 import { motion } from "framer-motion"
 
 export default function LoadedImg({
@@ -16,7 +14,7 @@ export default function LoadedImg({
                 whileHover={motion_animate}
                 transition={motion_transition}
                 css={[style_css]}
-                src={`http://localhost:8080/img/${encodeURI(url)}`}
+                src={`http://localhost:5000/img/${encodeURI(url)}`}
                 alt={url}
                 data-url={url}
                 onClick={clicked}

@@ -1,15 +1,12 @@
 import Cards from "./cards/Cards"
-import { useResource } from "./ResourceProvider"
+import { useData } from "./ResourceProvider"
 import  AsideNav  from "../components/nav/aside_nav"
-import { useEffect } from "react"
+
 
 export default function Categories() {
-    const {isLight} = useResource()
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Categories")
-    })
+    //===================IMPORT====================//
+    const {isLight} = useData()
 
     return (
         <>

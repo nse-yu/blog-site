@@ -1,18 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import { topSet } from "../top/top_css"
 import Card from "../card/card"
-import { useResource } from "../ResourceProvider"
+import { useData } from "../ResourceProvider"
 import {AnimatePresence, motion} from "framer-motion"
-import { useEffect } from "react"
 
-export default function Cards({grid=true,edit=false,pan,del=false,themes}) {
-    const {articles} = useResource()
+export default function Cards({
+    grid=true,
+    edit=false,
+    pan,
+    del=false,
+    delMethod = f => f,
+    themes
+}) {
+
+    const {articles} = useData()
     
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("Cards")
-    })
     return (
         <AnimatePresence>
             <motion.section
@@ -32,6 +34,7 @@ export default function Cards({grid=true,edit=false,pan,del=false,themes}) {
                             edittable={edit} 
                             article={articles[key]} 
                             del={del}
+                            delMethod={delMethod}
                             themes={themes}    
                         />
                     ))

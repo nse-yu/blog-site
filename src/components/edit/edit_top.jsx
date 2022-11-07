@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
-import { useResource } from "../ResourceProvider";
+import { useData, useDataDispatch } from "../ResourceProvider";
 import { topSet } from "../top/top_css";
 import { utilSet } from "../others/util_css";
 import { editSet } from "./edit_css";
@@ -9,159 +8,241 @@ import EditHeader from "./edit_header";
 import { edit_tools } from "../../edit_tools";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useReducer } from "react";
 import { markdownSet } from "./markdown_css";
 import Cards from "../cards/Cards";
-import { useLayoutEffect } from "react";
 import DesignedSelect from "../select/DesignedSelect";
 import ImgCards from "../cards/ImgCards";
 import { cardSet } from "../card/card_css";
 import { useParams } from "react-router-dom";
+import usePopup from "../popup/usePopup";
+
+
+let initOnce    = false
+let popMessage  = ""
+let action      = ""
+let onlyAlert   = false
+let deleteId    = ""
+
 
 export default function EditTop() {
+
     const {
         height,
         article,
-        resetCurrentArticle,
+        articles,
         findTagById,
         findAll,
-        articles,
-        setCurrentArticle,
-        findByArticleId
-    } = useResource()
+        findByArticleId,
+        deleteArticle
+    } = useData()
+
+    const {
+        dispatchArticle
+    } = useDataDispatch()
     
     //==================DEFINITION==================//
+
     //variable
-    let unique_id = article ? article.articleID : "" //TODO:投稿済みの記事を読み込んだ際に保持される識別id
+    let unique_id   = article ? article.articleID : "" //TODO:投稿済みの記事を読み込んだ際に保持される識別id
+
+    let tempHelper  = "![image](http://localhost:5000/img/"
+
 
     //param
     const {articleID} = useParams("")
 
     //ref
-    const ref_note = useRef()
-    const ref_preview = useRef()
-    const ref_tools = useRef()
-    const ref_markdown = useRef() //stateのmarkdownは、テキストのみだが、refなら要素自体にアクセスできる
+    const ref_note      = useRef()
+    const ref_preview   = useRef()
+    const ref_tools     = useRef()
+    const ref_markdown  = useRef() //stateのmarkdownは、テキストのみだが、refなら要素自体にアクセスできる
     
     //state
-    const [form,setForm] = useReducer(
-        (form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]}
-    )
-    const [markdown,setMarkdown] = useState(article ? article.content : "") //HACK:state of markdown text
-    const [isOpen,setIsOpen] = useState(false) //HACK:state of hidden list of articles
-    const [isImgOpen,setIsImgOpen] = useState(false) //HACK:state of hidden list of Images
-    const [imgs,setImgs] = useState([])
-    const [noteRect,setNoteRect] = useState({width:0,height:0})
-    const [isPrevFollow,toggleFollow] = useCycle(false,true)
+    const [form,setForm]                = useReducer((form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]})
+    const [markdown,setMarkdown]        = useState(article ? article.content : "") //HACK:state of markdown text
+    const [isOpen,setIsOpen]            = useState(false) //HACK:state of hidden list of articles
+    const [isImgOpen,setIsImgOpen]      = useState(false) //HACK:state of hidden list of Images
+    const [imgs,setImgs]                = useState([])
+    const [noteRect,setNoteRect]        = useState({width:0,height:0})
+    const [isPrevFollow,toggleFollow]   = useCycle(false,true)
+    const [popUp, setPopUp]             = useState(false)
+
+
+    const ok = () => {
+
+        switch(action){
+            case "reset":{
+                setMarkdown("")
+                setForm({title:"",desc:"",img:{},tag:[]})
+                dispatchArticle({
+                    type:"reset", data:{}
+                })
+                break
+            }
+            case "submit":{
+
+                const data = new FormData()
+                data.append("img",form.img)
+                data.append("articleID",unique_id)
+                data.append("title",form.title)
+                data.append("desc",form.desc)
+                data.append("tagID",form.tag[0])
+                data.append("markdown",markdown)
+                
+                fetch("http://localhost:5000/article/post",{
+                    method:"POST",
+                    mode:"cors",  
+                    body:data
+                })
+                .then(res => {
+                    if(res.ok) {
+
+                        cancel()
+
+                        popMessage  = "投稿が完了しました"
+                        action      = "completed"
+                        onlyAlert   = true
+                        setPopUp(true)
+
+                    }
+                    return res.text()
+                })
+                .finally(() => findAll())
+                .catch(err => console.error(err))
+                break
+            }
+            case "new":{
+
+                dispatchArticle({
+                    type:"reset", data:{}
+                })
+        
+                window.location = "/edit" //urlを変更するためにやむを得ず
+                break
+            }
+            case "failed":{
+                onlyAlert = false
+                break
+            }
+            case "completed":{
+                onlyAlert = false
+                break
+            }
+            case "del":{
+                deleteArticle(deleteId)
+            }
+            default:{
+                break
+            }
+        }
+
+        cancel()
+    }
+
+    const cancel = () => {
+        destroy()
+        setPopUp(false)
+    }
+    const [popupRef, display, destroy, isDisplayed] = usePopup(ok, cancel)
+
+
+    //===============INITIALIZATION=================//
+    if(!initOnce){
+
+        findAll()
+
+        if(article) {
+            reloadArticle()
+            setIsOpen(false) //articleがarticle-boxから選択されたらboxをcloseする(選択状態でのcloseを保証する)
+        }
+        
+        initOnce = true
+
+    }
+
+    if(popUp && !isDisplayed){ 
+        display(popMessage, onlyAlert) 
+    }
 
     //==================USE EFFECT=================//
-    //TODO:イベント処理の設定
+    //TODO:メモサイズ処理
     useEffect(() => {
+
         window.onbeforeunload = e => {
-            e.returnValue = "更新しますか"
-            return "更新しますか"
+
+            e.returnValue = ""
+
         }
+
+        setNoteRect({
+            width:ref_note.current.getBoundingClientRect().width - 20,
+            height:ref_note.current.getBoundingClientRect().height * 0.1
+        })
+
         window.onresize = () => {
             setNoteRect({
                 width:ref_note.current.getBoundingClientRect().width - 20,
                 height:ref_note.current.getBoundingClientRect().height * 0.1
             })   
         }  
+
     },[])
 
-    //TODO:articlesの読み込み（優先順位１）
-    useLayoutEffect(() => {
-        findAll()
-    },[])
-
-    //TODO:ノートサイズの変更に応じてstate変更
+    //TODO:追従処理
     useEffect(() => {
-        setNoteRect({
-            width:ref_note.current.getBoundingClientRect().width - 20,
-            height:ref_note.current.getBoundingClientRect().height * 0.1
-        })
-    },[ref_note])
-
-    //FIXME[dependency]:paramで指定されたarticleをarticlesから読み込む（優先順位２）
-    useLayoutEffect(() => {
-        if(!articles || !articleID) return
-        setCurrentArticle(findByArticleId(articleID))
-    },[articleID,articles])
-    
-    //FIXME[error-handling]:再編集時のsumnailを読み込んだ後、フォームを設定する（優先順位３）
-    useEffect(() => {
-        //articleが空の場合にデフォルトのフォーム値を使用する
-        if(!article) return
-
-        fetch("http://localhost:8080/img/"+article.imgURL)
-            .then(res => {
-                const reader = res.body.getReader()
-                return new ReadableStream({
-                    start(controller){
-                        return pump()
-
-                        function pump(){
-                            return reader.read().then(({done,value}) => {
-                                if(done){
-                                    controller.close()
-                                    return
-                                }
-                                controller.enqueue(value)
-                                return pump()
-                            })
-                        }
-                    }
-                })
-            })
-            .then(stream => new Response(stream))
-            .then(response => response.blob())
-            .then(blob => {
-                const file = new File([blob],article.imgURL)
-                return file
-            })
-            .then(file => {
-                setForm({title:article.title,desc:article.desc,img:file,tag:findTagById(article.tagID)}) 
-            })
-            .catch(err => console.error(err))
-
-        setMarkdown(article.content)
-    },[article])
-
-    //TODO:articleがarticle-boxから選択されたらboxをcloseする(選択状態でのcloseを保証する)
-    useEffect(() => {
-        if(!article) return
-        setIsOpen(false)
-    },[article])
-    
-    //FIXME[focus location]:tool-helper挿入時にtextboxへフォーカス & 追従処理
-    useEffect(() => {
-        //ref_markdown.current.focus()
 
         if(!isPrevFollow) return
+
         let max_scroll = ref_preview.current.scrollHeight
         ref_preview.current.scrollTo(0,max_scroll * ref_markdown.current.selectionStart / ref_markdown.current.value.length -100) //字数比をスクロール幅にかけ、ある程度マージンを追加
+    
     },[markdown])
+
+
+    //FIXME[dependency]:paramで指定されたarticleをarticlesから読み込む
+    useEffect(() => {
+
+        if(!articleID) return
+        
+        if(!articles) return
+
+        dispatchArticle({
+            type:"set", data:findByArticleId(articleID)
+        })
+        
+        initOnce = false
+
+    },[articleID, articles])
+    
 
     //==================ON CHANGE==================//
     //form 
     const formChanged = e => {
+
         if(e.target.name === "form_title") {
             setForm({title:e.target.value})
             return
         }
+
         if(e.target.name === "form_desc"){
             setForm({desc:e.target.value})
             return  
         } 
+
         setForm({img:e.target.files[0]})
     }
+
     //tag
     const tagChanged = (id,name) => {
         setForm({tag:[id,name]})
     }
+
     //markdown
     const textareaChanged = e => {
         setMarkdown(() => e.target.value)
@@ -170,18 +251,22 @@ export default function EditTop() {
     //=================ON CLICK====================//
     //tool-helperをカーソル位置に挿入するための処理とimg-helperに関する処理
     const appear = e => {
+        
         if(parseInt(e.target.dataset.id) === 6){
+
+            tempHelper = e.target.dataset.helper
+
             fetchImgUrls()
             setIsImgOpen(!isImgOpen)
+            return
         }
+
         //cursor位置へのhelper挿入
         let cursor = ref_markdown.current.selectionStart
         setMarkdown(() => markdown.slice(0,cursor) + e.target.dataset.helper + markdown.slice(cursor))
+
     }
-    //article-box表示切替
-    const onOpenClicked = () => {
-        setIsOpen(!isOpen)
-    }
+
     //img-box表示切替
     const toggleImgHidden = () => {
         setIsImgOpen(!isImgOpen)
@@ -190,42 +275,56 @@ export default function EditTop() {
     //================FOR EDIT HEADER===============//
     //new file
     const onNewClicked = () => {
-        if(!onResetClicked()) return
-        resetCurrentArticle()
-        window.location = "/edit" //urlを変更するためにやむを得ず
+
+        popMessage  = "変更を破棄してもよろしいですか？"
+        action = "new"
+        setPopUp(true)
+
     }
+
+    const onDeleteClicked = id => {
+
+        deleteId    = id
+        popMessage  = "本当に削除してもよろしいですか？"
+        action      = "del"
+        setPopUp(true)
+
+    }
+
     //clear text
     const onResetClicked = () => {
-        if(!window.confirm("変更を破棄してもよろしいですか？")) return false
-        setMarkdown("")
-        setForm({title:"",desc:"",img:{},tag:[]})
-        return true
+
+        popMessage  = "変更を破棄してもよろしいですか？"
+        action      = "reset"
+        setPopUp(true)
+
     }
+
+    //open articles
+    const onOpenClicked = () => {
+        setIsOpen(!isOpen)
+    }
+
     //submit article
     const onSubmitClicked = () => {
-        if(!window.confirm("投稿しますか？")) return
-        
-        const data = new FormData()
-        data.append("img",form.img)
-        data.append("articleID",unique_id)
-        data.append("title",form.title)
-        data.append("desc",form.desc)
-        data.append("tagID",form.tag[0])
-        data.append("markdown",markdown)
-        
-        fetch("http://localhost:8080/article/post",{
-            method:"POST",
-            mode:"cors",  
-            body:data
-        })
-        .then(res => {
-            if(res.ok) {
-                if(window.confirm("記事の投稿が完了しました。\nホームに戻りますか？")) window.location.href="/"
-            }
-            return res.text()
-        })
-        .catch(err => console.error(err))
+
+        if(!form.img || !form.title || !form.desc || !form.tag[0]){
+
+            popMessage  = "入力内容に不備があります。"
+            action      = "failed"
+            onlyAlert   = true
+            setPopUp(true)
+
+        }else{
+
+            popMessage  = "投稿しますか？"
+            action      = "submit"
+            setPopUp(true)
+
+        }
+
     }
+
     //toggle isPrevFollow callback
     const togglePrevFollowing = () => {
         toggleFollow()
@@ -237,37 +336,84 @@ export default function EditTop() {
         const off_x = i.offset.x
         e.target.scrollBy(off_x > 0 ? -(off_x+300) : -(off_x-300),0) //少量のスクロールで+-300px以上移動する
     }
+
     //img-helper挿入時の後処理
     const onImgClicked = e => {
-        setMarkdown(() => markdown + e.target.dataset.url + ")")
+
+        //cursor位置へのhelper挿入
+        let cursor = ref_markdown.current.selectionStart
+        setMarkdown(() => markdown.slice(0,cursor) + tempHelper + e.target.dataset.url + ")" + markdown.slice(cursor))
         setIsImgOpen(!isImgOpen)
+    }
+
+    const onImgUploaded = fileName => {
+
+        //cursor位置へのhelper挿入
+        let cursor = ref_markdown.current.selectionStart
+        setMarkdown(() => markdown.slice(0,cursor) + tempHelper + fileName + ")" + markdown.slice(cursor))
+
+        setIsImgOpen(!isImgOpen)
+    }
+
+    function reloadArticle() {
+        
+        fetch("http://localhost:5000/img/" + article.imgURL)
+            .then(res => {
+                const reader = res.body.getReader();
+                return new ReadableStream({
+                    start(controller) {
+                        return pump();
+
+                        function pump() {
+                            return reader.read().then(({ done, value }) => {
+                                if (done) {
+                                    controller.close();
+                                    return;
+                                }
+                                controller.enqueue(value);
+                                return pump();
+                            });
+                        }
+                    }
+                });
+            })
+            .then(stream => new Response(stream))
+            .then(response => response.blob())
+            .then(blob => {
+                const file = new File([blob], article.imgURL);
+                return file;
+            })
+            .then(file => {
+                setForm({ title: article.title, desc: article.desc, img: file, tag: findTagById(article.tagID) });
+            })
+            .catch(err => console.error(err));
+
+        setMarkdown(article.content);
     }
 
     //==================UTILITY====================//
     //アップロード済みimgsを取得
     const fetchImgUrls = () => {
-        fetch("http://localhost:8080/img/all")
+
+        fetch("http://localhost:5000/img/all")
             .then(res => res.json())
             .then(res_list => {
                 setImgs(() => [...res_list])
             })
+
     }
 
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("EditTop")
-    })
-    
 
     return (
         <>
+            <div ref={popupRef} />
             <EditHeader 
                 methods={{
-                    newfile:[onNewClicked,"新規"],
-                    open:[onOpenClicked,"開く"],
-                    reset:[onResetClicked,"破棄"],
-                    submit:[onSubmitClicked,"投稿"],
-                    toggle:togglePrevFollowing
+                    newfile :[onNewClicked,"新規"],
+                    open    :[onOpenClicked,"開く"],
+                    reset   :[onResetClicked,"破棄"],
+                    submit  :[onSubmitClicked,"投稿"],
+                    toggle  :togglePrevFollowing
                 }}
                 prev_follow={isPrevFollow}
             />
@@ -311,7 +457,7 @@ export default function EditTop() {
                                     className="hidden_cards_list"
                                     css={[topSet.top_open_hidden___list,editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                 >
-                                    <Cards grid={true} edit={true} pan={panned} del={true}/>
+                                    <Cards grid={true} edit={true} pan={panned} del={true} delMethod={onDeleteClicked}/>
                                 </motion.div>
                             </motion.div>
                         }
@@ -354,7 +500,7 @@ export default function EditTop() {
                                     className="hidden_cards_list"
                                     css={[cardSet.cards_wrapper,editSet.scrollbar_style,editSet.scrollbar_style___verticalize]}
                                 >
-                                    <ImgCards imgs={imgs} pan={panned} preUpload={true} grid={true} clicked={onImgClicked} changed={fetchImgUrls}/>
+                                    <ImgCards imgs={imgs} pan={panned} preUpload={true} grid={true} clicked={onImgClicked} uploaded={onImgUploaded}/>
                                 </motion.div>
                             </motion.div>
                         }
@@ -457,6 +603,24 @@ export default function EditTop() {
                                         remarkPlugins={[remarkGfm]}
                                         children={markdown}
                                         css={markdownSet.markdown_styles}
+                                        components={{
+                                            code({node, inline, className, children, ...props}) {
+                                                const match = /language-(\w+)/.exec(className || '')
+                                                return !inline && match ? (
+                                                <SyntaxHighlighter
+                                                    children={String(children).replace(/\n$/, '')}
+                                                    style={dark}
+                                                    language={match[1]}
+                                                    PreTag="div"
+                                                    {...props}
+                                                />
+                                                ) : (
+                                                <code className={className} {...props}>
+                                                    {children}
+                                                </code>
+                                                )
+                                            }
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -541,4 +705,5 @@ export default function EditTop() {
             </main>
         </>
     )
+
 }

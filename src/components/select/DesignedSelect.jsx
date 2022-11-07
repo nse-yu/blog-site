@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { jsx,css } from "@emotion/react"
 import {AnimatePresence, motion} from "framer-motion"
 import { useState } from "react"
 import { utilSet } from "../others/util_css"
 import { designedSet } from "./designed_css"
-import { useResource } from "../ResourceProvider"
-import { useEffect } from "react"
+import { useData } from "../ResourceProvider"
+
 
 export default function DesignedSelect({changed,tag}) {
     //==================DEFINITION==================//
@@ -13,24 +12,21 @@ export default function DesignedSelect({changed,tag}) {
     const [toggle,setToggle] = useState(false)
 
     //====================IMPORT====================//
-    const {tabs_json} = useResource()
+    const {tabs} = useData()
 
     //=================SET STATES=================//
     const clicked = e => {
+
         setToggle(!toggle)
+        
         if(e.target.classList.contains("select__item")){
-            tabs_json.map(item => {
+            tabs.forEach(item => {
                 if(item.id === Number(e.target.dataset.value)){
                     changed(item.id,item.name)
                 }
             })
         }
     }
-
-    //=========TEST=========//
-    useEffect(() => {
-        console.log("DesignedSelect")
-    })
 
     return (
         <>
@@ -102,7 +98,7 @@ export default function DesignedSelect({changed,tag}) {
                             css={[utilSet.horizontalize]}
                         >
                             {
-                                tabs_json.map((item,idx) => (
+                                tabs.map((item,idx) => (
                                     <motion.span
                                         className="select__item"
                                         key={idx}
