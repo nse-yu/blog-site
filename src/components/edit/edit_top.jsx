@@ -180,6 +180,7 @@ export default function EditTop() {
 
         }
 
+
         setNoteRect({
             width:ref_note.current.getBoundingClientRect().width - 20,
             height:ref_note.current.getBoundingClientRect().height * 0.1
@@ -208,16 +209,14 @@ export default function EditTop() {
     //FIXME[dependency]:paramで指定されたarticleをarticlesから読み込む
     useEffect(() => {
 
-        if(!articleID) return
-        
-        if(!articles) return
+        if(article && !form.title) reloadArticle()
+                
+        if(!articleID || !articles) return
 
         dispatchArticle({
             type:"set", data:findByArticleId(articleID)
         })
         
-        initOnce = false
-
     },[articleID, articles])
     
 

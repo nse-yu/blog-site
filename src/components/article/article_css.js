@@ -2,7 +2,7 @@ import { css } from "@emotion/react"
 import back from "./lines-7124376_1920.png"
 
 const article_all = css`
-    padding:1rem;
+    padding:1rem 2rem;
     background-image:url(${back});
     background-repeat:round;
     @media (max-width:600px){
