@@ -64,13 +64,14 @@ export default function EditTop() {
     const ref_markdown  = useRef() //stateのmarkdownは、テキストのみだが、refなら要素自体にアクセスできる
     
     //state
-    const [form,setForm]                = useReducer((form,latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]})
+    const [form,setForm]                = useReducer((form, latest) => ({...form,...latest}),{title:"",desc:"",img:{},tag:[]})
     const [markdown,setMarkdown]        = useState(article ? article.content : "") //HACK:state of markdown text
     const [isOpen,setIsOpen]            = useState(false) //HACK:state of hidden list of articles
     const [isImgOpen,setIsImgOpen]      = useState(false) //HACK:state of hidden list of Images
     const [imgs,setImgs]                = useState([])
     const [noteRect,setNoteRect]        = useState({width:0,height:0})
-    const [isPrevFollow,toggleFollow]   = useCycle(false,true)
+    const [isPrevFollow, toggleFollow]  = useCycle(false, true)
+    const [isCopyDocs, toggleDocs]      = useCycle(false, true)
     const [popUp, setPopUp]             = useState(false)
 
 
@@ -110,11 +111,61 @@ export default function EditTop() {
                         onlyAlert   = true
                         setPopUp(true)
 
+                    }else{
+
+                        cancel()
+
+                        popMessage  = "投稿に失敗しました"
+                        action      = "failed"
+                        onlyAlert   = true
+                        setPopUp(true)
+
                     }
                     return res.text()
                 })
                 .finally(() => findAll())
                 .catch(err => console.error(err))
+
+                if(!isCopyDocs) break
+
+                const data2 = new FormData()
+                data2.append("articleID",unique_id)
+                data2.append("title",form.title)
+                data2.append("body",markdown)
+                data2.append("origin",window.location.href)
+
+                fetch("http://localhost:5000/docs/generate", {
+                    body: data2,
+                    method: "post",
+                    mode: "cors",
+                    redirect: "follow",
+                    headers: {
+                        "Access-Control-Allow-Origin": window.location.origin
+                    }
+                })
+                .then(res => {
+
+                    switch(res.status){
+
+                        case 201:
+                        case 303:
+                        return [res.status, res.text()]
+                        default:
+                        throw Error('This request failed')
+
+                    }
+
+                })
+                .then(res => {
+                    res[1].then(v => {
+
+                        //if(res[0] === 201) setResposneText(v)
+                        if(res[0] === 303) window.location.href = v
+
+                    })
+                })
+                .catch(e => console.error(e))
+
                 break
             }
             case "new":{
@@ -179,7 +230,6 @@ export default function EditTop() {
             e.returnValue = ""
 
         }
-
 
         setNoteRect({
             width:ref_note.current.getBoundingClientRect().width - 20,
@@ -324,10 +374,15 @@ export default function EditTop() {
 
     }
 
-    //toggle isPrevFollow callback
+    //toggler
     const togglePrevFollowing = () => {
         toggleFollow()
     }
+
+    const toggleCopyDocs = () => {
+        toggleDocs()
+    }
+    
 
     //================FOR CARDS TO SCROLL===============//
     //panスクロール対応
@@ -412,9 +467,11 @@ export default function EditTop() {
                     open    :[onOpenClicked,"開く"],
                     reset   :[onResetClicked,"破棄"],
                     submit  :[onSubmitClicked,"投稿"],
-                    toggle  :togglePrevFollowing
+                    toggle  :togglePrevFollowing,
+                    toggle2 :toggleCopyDocs
                 }}
                 prev_follow={isPrevFollow}
+                copy_docs={isCopyDocs}
             />
             <main css={{marginTop:height}}>
                 <section className="top-all" css={[
