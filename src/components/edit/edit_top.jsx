@@ -187,6 +187,7 @@ export default function EditTop() {
             }
             case "del":{
                 deleteArticle(deleteId)
+                break
             }
             default:{
                 break
@@ -208,11 +209,6 @@ export default function EditTop() {
 
         findAll()
 
-        if(article) {
-            reloadArticle()
-            setIsOpen(false) //articleがarticle-boxから選択されたらboxをcloseする(選択状態でのcloseを保証する)
-        }
-        
         initOnce = true
 
     }
@@ -221,6 +217,7 @@ export default function EditTop() {
         display(popMessage, onlyAlert) 
     }
 
+    
     //==================USE EFFECT=================//
     //TODO:メモサイズ処理
     useEffect(() => {
@@ -245,6 +242,15 @@ export default function EditTop() {
 
     },[])
 
+    useEffect(() => {
+
+        if(!article) return
+
+        reloadArticle() //REQUIRES: article !== null
+        setIsOpen(false)
+    
+    },[article])
+
     //TODO:追従処理
     useEffect(() => {
 
@@ -259,8 +265,11 @@ export default function EditTop() {
     //FIXME[dependency]:paramで指定されたarticleをarticlesから読み込む
     useEffect(() => {
 
-        if(article && !form.title) reloadArticle()
-                
+        /* if(article && !form.title) {
+            reloadArticle()
+            setIsOpen(false)
+        } */
+
         if(!articleID || !articles) return
 
         dispatchArticle({
@@ -410,6 +419,8 @@ export default function EditTop() {
     }
 
     function reloadArticle() {
+
+        console.log(article.title)
         
         fetch("http://localhost:5000/img/" + article.imgURL)
             .then(res => {

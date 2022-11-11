@@ -112,10 +112,10 @@ export const edit_tools = [
         id:15,
         tool:"embedded code（埋め込みコード）",
         dom:<><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></>,
-        desc:`~~~
-        System.out.println("hogehoge");
+        desc:`~~~js
+        console.log("")
         ~~~`,
-        helper:`~~~\nSystem.out.println("hogehoge");\n~~~`
+        helper:`~~~js\nSystem.out.println("hogehoge");\n~~~`
     },
     {
         id:16,

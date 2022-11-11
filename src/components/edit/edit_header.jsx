@@ -9,7 +9,7 @@ import { useState } from "react"
 import { navSet } from "../nav/nav_css"
 
 
-export default function EditHeader({methods,prev_follow}) {
+export default function EditHeader({methods, prev_follow, copy_docs}) {
 
     //==================IMPORT====================//
     const {
@@ -106,9 +106,23 @@ export default function EditHeader({methods,prev_follow}) {
                             />
                         </div>
                     </div>
+                    <div className="header-up__copy-docs" 
+                        css={[utilSet.verticalize,utilSet.verticalize___center,btnSet.toggle_btn_wrapper]}>
+                        <p>GoogleDocsに保存</p>
+                        <div 
+                            css={[utilSet.horizontalize,utilSet.verticalize___center,btnSet.toggle_btn_area]}
+                            onClick={() => {methods.toggle2()}}
+                        >
+                            <motion.div 
+                                css={[copy_docs ? {backgroundColor:"#80ff00"}:{backgroundColor:"gray"},btnSet.toggle_btn]} 
+                                initial={{x:0}}
+                                animate={copy_docs ? {x:20} : {}}
+                            />
+                        </div>
+                    </div>
                     <div className="header-up__edit-options" 
                         css={[headerSet.header_up_options___edit,utilSet.horizontalize]}>
-                        {Object.keys(methods).filter(prop => prop !== "toggle").map(row => (
+                        {Object.keys(methods).filter(prop => !prop.includes("toggle")).map(row => (
                             <motion.div className="btn"
                                 key={methods[row][1]}
                                 whileHover={{opacity:0.2,x:2}}
