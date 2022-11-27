@@ -6,6 +6,13 @@ const markdown_styles = css`
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-size:1rem;
     line-height:2rem;
+    a{
+        color: #00c4d6;
+        &:hover{
+            opacity: 0.3;
+            transition: 0.6s;
+        }
+    }
     i{
         font-weight:900;
     }
@@ -75,7 +82,11 @@ const markdown_styles = css`
             font-style: normal;
             background-color: #ffeb0f75;
             padding: 0.3rem;
+            color: black;
         }
+    }
+    strong{
+        color: red;
     }
     ul,ol{
         margin-left:2rem;
@@ -108,13 +119,13 @@ const markdown_styles = css`
     };
     img{
         border-radius:5px;
-        width:80%;
+        width:50%;
         height:80%;
         box-shadow:1px 2px 6px gray;
         margin:0.3rem 0;
         max-height:300px;
         object-fit:contain;
-        background:repeating-linear-gradient(45deg,#faf0e6 10%,white 30%)
+        background:transparent;
     };
     .footnotes{
         font-size:0.9rem;

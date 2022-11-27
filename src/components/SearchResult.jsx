@@ -34,7 +34,7 @@ export default function SearchResult() {
             <main className="result-wrapper"
                 css={[
                     utilSet.verticalize,
-                    {gap:"1rem",width:"100%",marginBottom:"100px"},
+                    {gap:"1rem",width:"100%",padding: "1rem 0"},
                     theme => ({
                         color: isLight ? theme.text.default : theme.text.light
                     })

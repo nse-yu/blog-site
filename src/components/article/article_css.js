@@ -1,11 +1,13 @@
 import { css } from "@emotion/react"
 import back from "./lines-7124376_1920.png"
 
+const maxWidth = 700
+
 const article_all = css`
     padding:1rem 2rem;
     background-image:url(${back});
     background-repeat:round;
-    @media (max-width:600px){
+    @media (max-width:${maxWidth}px){
         flex-direction:column;
     }
 `
@@ -48,15 +50,18 @@ const article_content = css`
     background-color:white;
     border-radius:10px;
     overflow-x:scroll;
-    @media (max-width:600px){
+    @media (max-width:${maxWidth}px){
         width:100%;
+    }
+    h1, h2, h3, h4, h5, h6{
+        line-height: initial;
     }
 `
 
 //==============for page line==============//
 const article_page__line = css`
     border-right:1px solid black;
-    @media (max-width:600px){
+    @media (max-width:${maxWidth}px){
         border-bottom:1px solid black;
     }
 `

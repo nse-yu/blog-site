@@ -41,8 +41,8 @@ const scrollbar_style = css`
     overflow-y:hidden;
     scroll-behavior:smooth;
     &::-webkit-scrollbar{
-        height: 4px;
-        width: 4px;
+        height: 6px;
+        width: 6px;
     }
     &::-webkit-scrollbar-thumb{
         border-radius: 10px;
@@ -51,7 +51,29 @@ const scrollbar_style = css`
     &::-webkit-scrollbar-track{
         background-color: rgba(0, 0, 0, 0.039);
     }
+`
+const scrollbar_style_dynamic = css`
+    overflow-x:scroll;
+    overflow-y:hidden;
+    scroll-behavior:smooth;
+    background-color: rgba(0, 0, 0, 0);
+    -webkit-background-clip: text;
+    transition: background-color .8s;
+    &::-webkit-scrollbar{
+        height: 7px;
+        width: 7px;
+    }
+    &::-webkit-scrollbar-thumb{
+        border-radius: 10px;
+        background-color: inherit;
+    }
+    &::-webkit-scrollbar-track{
+        background-color: rgba(0, 0, 0, 0.03);
+    }
 
+    &:hover{
+        background-color: rgba(0, 0, 0, 0.3);
+    }
 `
 const scrollbar_style___verticalize = css`
     overflow-y:scroll;
@@ -153,6 +175,7 @@ export const editSet = {
     note_input_down,
     edit_note___left,
     scrollbar_style,
+    scrollbar_style_dynamic,
     scrollbar_style___verticalize,
     tools_annotation,
     note_info___el,

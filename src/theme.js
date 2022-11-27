@@ -27,7 +27,7 @@ export const baseThemes = {
         light:"1px 3px 10px black"
     },
     headerBack:{
-      default:"gray",
+      default:"rgb(35 40 45 / 88%)",
       light:"#fffaf0"  
     }
 }

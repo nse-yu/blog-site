@@ -14,6 +14,9 @@ const card_wrapper = css`
     a{
         text-decoration:none;
     }
+    &:focus-within{
+        box-shadow:1px 3px 10px red;
+    }
 `
 //===============for img==============//
 const card_img = css`

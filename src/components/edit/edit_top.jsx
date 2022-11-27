@@ -484,7 +484,7 @@ export default function EditTop() {
                 prev_follow={isPrevFollow}
                 copy_docs={isCopyDocs}
             />
-            <main css={{marginTop:height}}>
+            <main css={{marginTop:height, background: "white"}}>
                 <section className="top-all" css={[
                     utilSet.verticalize
                 ]}> 
@@ -593,7 +593,7 @@ export default function EditTop() {
                                     css={[
                                         utilSet.horizontalize,
                                         editSet.edit_note_tools,
-                                        editSet.scrollbar_style,
+                                        editSet.scrollbar_style_dynamic,
                                         {width:noteRect.width,height:noteRect.height}
                                     ]}
                                     onPan={panned}

@@ -1,5 +1,7 @@
 import { css } from "@emotion/react"
 
+const maxWidth = 700
+
 const top_all = css`
     display:flex;
     justify-content:space-between;
@@ -7,7 +9,7 @@ const top_all = css`
     gap:2rem;
     background:linear-gradient(#000000,white);
     padding:1rem;
-    @media (max-width: 600px){
+    @media (max-width: ${maxWidth}px){
         flex-direction:column;
     }
 `
@@ -20,7 +22,7 @@ const top_cards = css`
     align-content:center;
     padding:0 1rem;
     width:100%;
-    @media (max-width: 600px){
+    @media (max-width: ${maxWidth}px){
         display:flex;
         flex-direction:column;
     }

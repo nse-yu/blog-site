@@ -47,6 +47,10 @@ const nav_list_group = css`
         font-style:italic;
         color:black;
         margin-top:0.4rem;
+        &:focus-within{
+            border: 2px solid rgb(73 149 219 / 83%);
+            border-radius: 5px;
+        }
     }
 `
 const nav_list___humberger = css`

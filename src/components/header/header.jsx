@@ -330,13 +330,13 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                                     </motion.li>
                                 </NavLink>
                             ))}
-                            <div>
+                            <div className="nav-tab__shrink-btn">
                             {!isShrink ?
                                 <motion.svg
                                     css={{height:"100%"}}
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="27" height="27" viewBox="0 0 24 24"
-                                    fill="none" stroke="#000000"
+                                    fill="none" stroke="#ffffff"
                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                                     whileHover={{stroke:"#ff0000"}}
                                     onClick={toggleShrink}
@@ -348,7 +348,7 @@ export default function Header({themes,svgThemes,tabThemesOn,tabThemesOff}) {
                                     css={{height:"100%"}}
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="27" height="27" viewBox="0 0 24 24"
-                                    fill="none" stroke="#000000"
+                                    fill="none" stroke="#ffffff"
                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                                     whileHover={{stroke:"#ff0000"}}
                                     onClick={toggleShrink}

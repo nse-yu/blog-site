@@ -49,6 +49,13 @@
         "classcode":1
     },
     {
+        "id":294,
+        "name":"寿司打",
+        "url":"https://sushida.net/play.html?soundless",
+        "class":"娯楽",
+        "classcode":1
+    },
+    {
         "id":517,
         "name":"baeldung",
         "url":"https://www.baeldung.com/",
