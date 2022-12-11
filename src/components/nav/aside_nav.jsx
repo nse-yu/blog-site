@@ -5,7 +5,7 @@ import { navSet } from "./nav_css";
 import {motion} from "framer-motion"
 import site from "../../site.json";
 import { useData } from "../ResourceProvider";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Form } from "react-router-dom";
 
 
@@ -19,8 +19,24 @@ export default function AsideNav({themes}) {
 
     //=================DEFINITION=================//
     //ref
-    const ref_search        = useRef()
-    
+    const ref_search = useRef()
+
+
+    useEffect(()=>{
+
+        // scriptを読み込み
+        const script = document.createElement('script');
+        script.src = "https://platform.twitter.com/widgets.js";
+        document.body.appendChild(script);
+        
+
+        // アンマウント時に一応scriptタグを消しておく
+        return () => {
+          document.body.removeChild(script);
+        }
+
+     }, [])
+
 
     return (
         <>
@@ -83,21 +99,18 @@ export default function AsideNav({themes}) {
                 >
                     <ul>
                         <li css={[utilSet.horizontalize,utilSet.horizontalize___left]}>
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                width="40" height="40" viewBox="0 0 24 24" 
-                                css={themes}
-                            >
-                                <path d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm3.193 7c-1.586 0-2.872 1.243-2.872 2.777 0 .217.025.43.074.633a8.251 8.251 0 0 1-5.92-2.902c-.247.41-.389.887-.389 1.397 0 .963.507 1.813 1.278 2.311a2.94 2.94 0 0 1-1.301-.348v.036c0 1.345.99 2.467 2.304 2.723a2.98 2.98 0 0 1-1.298.047c.366 1.103 1.427 1.906 2.683 1.928a5.889 5.889 0 0 1-3.567 1.19c-.231 0-.46-.014-.685-.04A8.332 8.332 0 0 0 9.903 18c5.283 0 8.172-4.231 8.172-7.901 0-.12-.002-.24-.008-.36A5.714 5.714 0 0 0 19.5 8.302a5.869 5.869 0 0 1-1.65.437 2.8 2.8 0 0 0 1.263-1.536 5.87 5.87 0 0 1-1.824.674A2.915 2.915 0 0 0 15.193 7z"/>
-                            </svg>
-                            <a
-                                className="twitter-timeline"
-                                data-width="250"
-                                data-height="400"
-                                href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw"
-                            >
-                                Tweets by nagachon0000</a>
-                            <script src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
+                            <div css={[navSet.twitter_timeline__wrapper]}>
+                                <h2 className="group__title">Twitter</h2>
+                                <a 
+                                    className="twitter-timeline" 
+                                    href="https://twitter.com/nagachon0000?ref_src=twsrc%5Etfw"
+                                    data-width="220" 
+                                    data-height="400" 
+                                    data-chrome="noscrollbar noheader transparent noborders"
+                                >
+                                    Tweets by nagachon0000
+                                </a> 
+                            </div>                
                         </li>
                     </ul>
                 </nav>

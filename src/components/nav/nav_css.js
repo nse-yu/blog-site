@@ -47,9 +47,8 @@ const nav_list_group = css`
         font-style:italic;
         color:black;
         margin-top:0.4rem;
-        &:focus-within{
-            border: 2px solid rgb(73 149 219 / 83%);
-            border-radius: 5px;
+        & a:focus-visible{
+            outline: 2px solid rgb(73 149 219 / 83%);
         }
     }
 `
@@ -66,6 +65,12 @@ const nav_list___dot = css`
         color:white;
     }
 `
+const twitter_timeline__wrapper = css`
+    .group__title{
+        font-family: 'Zen Maru Gothic', sans-serif;
+        padding: 0.5rem;
+    }
+`
 
 export const navSet = {
     nav_all,
@@ -73,5 +78,6 @@ export const navSet = {
     nav_list_group,
     nav_list___humberger,
     nav_list_title,
-    nav_list___dot
+    nav_list___dot,
+    twitter_timeline__wrapper
 }

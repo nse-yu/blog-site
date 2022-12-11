@@ -30,7 +30,7 @@ const header__test = css`
 const header_down = css`
     padding: 0 2rem;
 
-    .nav-tab__item:focus-within{
+    .nav-tab__item:focus-visible{
         opacity: 0.2;
     }
 `
@@ -46,12 +46,11 @@ const header_up_all = css`
         border: 2px solid transparent;
     }
 
-    .header-up__logo:focus-within,
-    .header-up__theme:focus-within,
-    .header-up__github:focus-within,
-    .header-up__edit:focus-within{
-        border: 2px solid rgb(255 255 255 / 83%);
-        border-radius: 5px;
+    .header-up__logo a:focus-visible,
+    .header-up__theme a:focus-visible,
+    .header-up__github a:focus-visible,
+    .header-up__edit a:focus-visible{
+        outline: 2px solid rgb(255 255 255 / 83%);
     }
 `
 const header_logo__el = css`

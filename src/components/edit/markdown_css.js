@@ -41,10 +41,11 @@ const markdown_styles = css`
         font-size:1.5rem;
     }
     h4{
-        border-left: 0.5rem solid #f5deb3;
+        border-top: 0.4rem dotted rgba(102, 102, 102, 0.2);
+        border-bottom: 0.6rem dotted rgba(102, 102, 102, 0.4);
         padding: 0.8rem;
+        margin-bottom: 1.5rem;
         font-size: 1.2rem;
-        color: #ffa802ed;
     }
     h5{
         border-bottom: 0.15rem solid rgba(0, 0, 0, 0.1);
@@ -92,7 +93,8 @@ const markdown_styles = css`
         margin-left:2rem;
     }
     li{
-        margin-bottom:1.2rem;
+        margin-top:0.6rem;
+        margin-bottom:0.6rem;
     }
     table{
         border-spacing:0;
